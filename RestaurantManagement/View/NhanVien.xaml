@@ -3,10 +3,279 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:QuanLyNhaHang.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0"
+                  Margin="10 0 10 0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Name="txtSearch"
+                         Grid.Column="0"
+                         FontFamily="Comfortaa"
+                         FontSize="16"
+                         Foreground="#1C3879"
+                         Margin="10 42 50 32"
+                         materialDesign:HintAssist.Hint="Tìm kiếm">
+                    <TextBox.Text>
+                        <Binding Path="Tìm kiếm"
+                                 UpdateSourceTrigger="PropertyChanged">
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <Button Name="btnDeleteStaff"
+                        Grid.Column="2"
+                        Command="{Binding DeleteCM}"
+                        Background="#1C3879"
+                        Margin="5 5 5 10"
+                        Foreground="White"
+                        FontSize="16"
+                        FontFamily="Comfortaa Light"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Content="Xóa">
+                </Button>
+
+
+                <Button Name="btnCheckStaff"
+                        Grid.Column="1"
+                        Command="{Binding CheckCM}"
+                        Background="#1C3879"
+                        Margin="5 5 10 10"
+                        Foreground="White"
+                        FontSize="16"
+                        FontFamily="Comfortaa Light"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Content="Chấm công">
+                </Button>
+
+
+            </Grid>
+
+
+            <Grid Grid.Row="1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListView ItemsSource="{Binding ListStaff}"
+                              Margin="20 0 20 20"
+                              FontFamily="Comfortaa"
+                              FontSize="16">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Name}"
+                                                Width="300"
+                                                Header="Họ tên" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Position}"
+                                                Width="150"
+                                                Header="Chức vụ" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Phone}"
+                                                Width="220"
+                                                Header="Ngày vào làm" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </ScrollViewer>
+
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1"
+                      Margin="20">
+
+            <Border Background="#EEEE"
+                            CornerRadius="20"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <TextBox materialDesign:HintAssist.Hint="ID"
+                                     Name="txtID"
+                                     FontFamily="Comfortaa"
+                                     FontSize="16"
+                                     Margin="15 23 5 23"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <TextBox materialDesign:HintAssist.Hint="Họ tên"
+                                 Name="txtName"
+                                 FontFamily="Comfortaa"
+                                 FontSize="16"
+                                 Margin="5 23 15 23"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <ComboBox materialDesign:HintAssist.Hint="Chức vụ"
+                                      Name="cboxPosition"
+                                      FontFamily="Comfortaa"
+                                      FontSize="16"
+                                      Margin="15 21 5 25"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                                <ComboBoxItem>
+                                    Bếp trưởng
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Phụ bếp
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Order
+                                </ComboBoxItem>
+                            </ComboBox>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <ComboBox FontFamily="Comfortaa"
+                                      FontSize="16"
+                                      Margin="5 23 15 15">
+                                <ComboBoxItem IsSelected="True">
+                                    Full-time
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Part-time
+                                </ComboBoxItem>
+                            </ComboBox>
+                        </Grid>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <TextBox materialDesign:HintAssist.Hint="Địa chỉ"
+                                     Name="txtAddress"
+                                     FontFamily="Comfortaa"
+                                     FontSize="16"
+                                     Margin="15 23 5 23"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <TextBox materialDesign:HintAssist.Hint="SĐT"
+                                     Name="txtPhone"
+                                     FontFamily="Comfortaa"
+                                     FontSize="16"
+                                     Margin="5 23 15 23"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <DatePicker Grid.Column="0"
+                                    Name="dtBirthday"
+                                    FontFamily="Comfortaa"
+                                    FontSize="15"
+                                    Margin="15 23 5 23"
+                                    materialDesign:HintAssist.Hint="Ngày sinh"
+                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                        <DatePicker Grid.Column="1"
+                                    Name="dtStartWork"
+                                    FontFamily="Comfortaa"
+                                    FontSize="15"
+                                    Margin="5 23 15 23"
+                                    materialDesign:HintAssist.Hint="Ngày vào làm"
+                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                    </Grid>
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <TextBox materialDesign:HintAssist.Hint="Tài khoản"
+                                     Name="txtUsername"
+                                     FontFamily="Comfortaa"
+                                     FontSize="16"
+                                     Margin="15 23 5 23"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <TextBox materialDesign:HintAssist.Hint="Mật khẩu"
+                                     Name="txtPassword"
+                                     FontFamily="Comfortaa"
+                                     FontSize="16"
+                                     Margin="5 23 15 23"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="btnAddStaff"
+                            Grid.Column="0"
+                            Command="{Binding AddCM}"
+                            Background="#1C3879"
+                            Margin="10 5 5 10"
+                            Foreground="White"
+                            FontSize="16"
+                            FontFamily="Comfortaa Light"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Content="Thêm">
+                    </Button>
+                    <Button Name="btnEditStaff"
+                            Grid.Column="1"
+                            Command="{Binding EditCM}"
+                            Background="#1C3879"
+                            Margin="5 5 5 10"
+                            Foreground="White"
+                            FontSize="16"
+                            FontFamily="Comfortaa Light"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Content="Sửa">
+                    </Button>
+                </Grid>
+
+            </Grid>
+
+        </Grid>
     </Grid>
 </UserControl>
