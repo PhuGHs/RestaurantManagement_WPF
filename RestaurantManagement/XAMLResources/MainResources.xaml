@@ -25,4 +25,5 @@
         <Setter Property="FontFamily" Value="Roboto"/>
     </Style>
     <viewmodel:MainViewModel x:Key="MainVM"></viewmodel:MainViewModel>
+    <viewmodel:ChamCongViewModel x:Key="ChamCong"/>
 </ResourceDictionary>

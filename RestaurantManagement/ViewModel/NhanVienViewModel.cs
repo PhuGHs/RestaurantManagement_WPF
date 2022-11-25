@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantManagement.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,8 +38,8 @@ namespace QuanLyNhaHang.ViewModel
             });
             CheckCM = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
-                //ChamCong chamCong = new ChamCong();
-                //chamCong.Show();
+                ChamCong chamCong = new ChamCong();
+                chamCong.Show();
                 return;
             });
         }
