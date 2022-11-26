@@ -25,6 +25,8 @@
     </Window.DataContext>
     <Grid>
         <Border CornerRadius="10"
+                BorderThickness="2"
+                BorderBrush="White"
                 Background="#EEEEEE"/>
         <Button Margin="770,0,0,420"
                 Height="30"

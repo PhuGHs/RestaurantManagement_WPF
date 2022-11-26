@@ -126,7 +126,7 @@
                                  Name="txtName"
                                  FontFamily="Comfortaa"
                                  FontSize="16"
-                                 Margin="15 23 15 23"
+                                 Margin="15 21 15 21"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
                     <Grid Grid.Row="1">
@@ -139,7 +139,7 @@
                                      Name="txtRemaining"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
-                                     Margin="15 24 5 22"
+                                     Margin="15 22 5 21"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                         <Grid Grid.Column="1">
@@ -147,7 +147,7 @@
                                       Name="cboxUnit"
                                       FontFamily="Comfortaa"
                                       FontSize="16"
-                                      Margin="5 23 15 22"
+                                      Margin="5 23 15 21"
                                       Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBoxItem>
                                     Chai
@@ -171,13 +171,13 @@
                                  Name="txtValue"
                                  FontFamily="Comfortaa"
                                  FontSize="16"
-                                 Margin="15 22 5 22"
+                                 Margin="15 21 5 21"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <DatePicker Grid.Column="1"
                                     Name="dtDateIn"
                                     FontFamily="Comfortaa"
                                     FontSize="16"
-                                    Margin="5 22 15 22"
+                                    Margin="5 21 15 21"
                                     materialDesign:HintAssist.Hint="Ngày nhập"
                                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
                     </Grid>
@@ -191,7 +191,7 @@
                                      Name="txtSuplier"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
-                                     Margin="15 23 5 23"
+                                     Margin="15 21 5 21"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                         <Grid Grid.Column="1">
@@ -199,7 +199,7 @@
                                      Name="txtSuplierPhone"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
-                                     Margin="5 23 15 23"
+                                     Margin="5 21 15 21"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                     </Grid>
@@ -208,7 +208,7 @@
                                  Name="txtNote"
                                  FontFamily="Comfortaa"
                                  FontSize="16"
-                                 Margin="15 23 15 23"
+                                 Margin="15 21 15 21"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
 
