@@ -14,6 +14,7 @@ namespace QuanLyNhaHang.ViewModel
         public MenuViewModel()
         {
             OrderFeature = new RelayCommand<MenuItem>((p) => true, (p) => OrderAnItem(p.ID));
+            RemoveItemFeature = new RelayCommand<SelectedMenuItem>((p) => true, (p) => RemoveAnItem(p));
             _menuItems = new ObservableCollection<MenuItem>();
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
             LoadMenuItems();
@@ -22,15 +23,50 @@ namespace QuanLyNhaHang.ViewModel
         #region attributes
         private ObservableCollection<MenuItem> _menuItems;
         private ObservableCollection<SelectedMenuItem> _selectedItems;
+        private decimal dec_subtotal = 0;
+        private string str_subtotal = "0 VND";
         #endregion
 
         #region properties
         public ObservableCollection<MenuItem> MenuItems { get { return _menuItems; } set { _menuItems = value; } }
         public ObservableCollection<SelectedMenuItem> SelectedItems { get { return _selectedItems; } set { _selectedItems = value; } }
+        public string Day
+        {
+            get
+            {
+                return DateTime.Today.DayOfWeek.ToString() + ", " + DateTime.Now.ToString("dd/MM/yyyy");
+            }
+        }
+        public Decimal DecSubtotal
+        {
+            set 
+            {
+                if (value != dec_subtotal)
+                {
+                    dec_subtotal = value;
+                    OnPropertyChanged();
+                }
+            }
+            get { return dec_subtotal; }
+        }
+
+        public string StrSubtotal
+        {
+            set
+            {
+                if(value != str_subtotal)
+                {
+                    str_subtotal = value;
+                    OnPropertyChanged();
+                }
+            }
+            get { return str_subtotal; }
+        }
         #endregion
 
         #region commands
         public ICommand OrderFeature { get; set; }  
+        public ICommand RemoveItemFeature { get; set; }
         #endregion
 
         #region methods
@@ -59,6 +95,8 @@ namespace QuanLyNhaHang.ViewModel
             {
                 if (item.ID == ID)
                 {
+                    DecSubtotal += item.Price;
+                    StrSubtotal = String.Format("{0:0,0 VND}", DecSubtotal);
                     SelectedMenuItem x = checkIfAnItemIsInOrderItems(ID);
                     if (x != null)
                     {
@@ -69,6 +107,19 @@ namespace QuanLyNhaHang.ViewModel
                     SelectedItems.Add(s_item);  
                     break;
                 }
+            }
+        }
+        private void RemoveAnItem(SelectedMenuItem x)
+        {
+            DecSubtotal -= x.Price;
+            StrSubtotal = String.Format("{0:0,0 VND}", DecSubtotal);
+            if (x.Quantity > 1)
+            {
+                x.Quantity--;
+            }
+            else
+            {
+                SelectedItems.Remove(x);
             }
         }
         #endregion

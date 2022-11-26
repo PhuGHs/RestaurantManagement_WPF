@@ -206,7 +206,8 @@
                                             Height="30" 
                                             Foreground="#fff" 
                                             FontWeight="Light" 
-                                            FontSize="16" />
+                                            FontSize="16" 
+                                            Text="{Binding Day}"/>
                                     </StackPanel>
                                     <ComboBox
                                         Grid.Column="1" 
@@ -246,6 +247,8 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
                                                                 <Button 
+                                                                    Command="{Binding ElementName=vm, Path=RemoveItemFeature}"
+                                                                    CommandParameter="{Binding}"
                                                                     Background="Transparent" 
                                                                     BorderThickness="0">
                                                                     <fa:IconImage Icon="TrashCan" Foreground="#1C3879" Height="14" Width="14" />
@@ -287,7 +290,7 @@
                                                FontSize="17" 
                                                FontWeight="SemiBold" 
                                                Width="260"/>
-                                    <TextBlock Text="150.000VND" 
+                                    <TextBlock Text="{Binding Path=StrSubtotal}" 
                                                FontSize="15" 
                                                FontWeight="SemiBold" 
                                                Foreground="#1C3879"/>
