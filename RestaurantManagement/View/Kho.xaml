@@ -30,17 +30,13 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBox Name="txtSearch"
+                         Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"
                          Grid.Column="0"
                          FontFamily="Comfortaa"
                          FontSize="16"
                          Foreground="#1C3879"
-                         Margin="10 42 50 32"
+                         Margin="10 38 50 32"
                          materialDesign:HintAssist.Hint="Tìm kiếm">
-                    <TextBox.Text>
-                        <Binding Path="Tìm kiếm"
-                                 UpdateSourceTrigger="PropertyChanged">
-                        </Binding>
-                    </TextBox.Text>
                 </TextBox>
 
                 <Button Name="btnDeleteWareHouse"
@@ -77,21 +73,22 @@
             <Grid Grid.Row="1">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ListView ItemsSource="{Binding ListWareHouse}"
+                              SelectedItem="{Binding Selected, Mode=OneWayToSource}"
                               Margin="20 0 20 20"
                               FontFamily="Comfortaa"
                               FontSize="16">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Name}"
+                                <GridViewColumn DisplayMemberBinding="{Binding TenNguyenLieu}"
                                                 Width="200"
                                                 Header="Tên sản phẩm" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Remaining}"
+                                <GridViewColumn DisplayMemberBinding="{Binding TonDu}"
                                                 Width="130"
                                                 Header="Tồn dư" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Unit}"
+                                <GridViewColumn DisplayMemberBinding="{Binding DonVi}"
                                                 Width="130"
                                                 Header="Đơn vị" />
-                                <GridViewColumn DisplayMemberBinding="{Binding DateIn}"
+                                <GridViewColumn DisplayMemberBinding="{Binding NgayNhap}"
                                                 Width="180"
                                                 Header="Ngày nhập" />
                             </GridView>
@@ -124,6 +121,7 @@
                     <Grid Grid.Row="0">
                         <TextBox materialDesign:HintAssist.Hint="Tên sản phẩm"
                                  Name="txtName"
+                                 Text="{Binding Name}"
                                  FontFamily="Comfortaa"
                                  FontSize="16"
                                  Margin="15 21 15 21"
@@ -137,6 +135,7 @@
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Tồn dư"
                                      Name="txtRemaining"
+                                     Text="{Binding Remaining}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
                                      Margin="15 22 5 21"
@@ -145,6 +144,7 @@
                         <Grid Grid.Column="1">
                             <ComboBox materialDesign:HintAssist.Hint="Đơn vị"
                                       Name="cboxUnit"
+                                      Text="{Binding Unit}"
                                       FontFamily="Comfortaa"
                                       FontSize="16"
                                       Margin="5 23 15 21"
@@ -153,7 +153,7 @@
                                     Chai
                                 </ComboBoxItem>
                                 <ComboBoxItem>
-                                    Gam
+                                    Kg
                                 </ComboBoxItem>
                                 <ComboBoxItem>
                                     Quả
@@ -169,12 +169,14 @@
                         <TextBox materialDesign:HintAssist.Hint="Đơn giá"
                                  Grid.Column="0"
                                  Name="txtValue"
+                                 Text="{Binding Value}"
                                  FontFamily="Comfortaa"
                                  FontSize="16"
                                  Margin="15 21 5 21"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <DatePicker Grid.Column="1"
                                     Name="dtDateIn"
+                                    Text="{Binding DateIn}"
                                     FontFamily="Comfortaa"
                                     FontSize="16"
                                     Margin="5 21 15 21"
@@ -189,6 +191,7 @@
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Nguồn nhập"
                                      Name="txtSuplier"
+                                     Text="{Binding Suplier}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
                                      Margin="15 21 5 21"
@@ -197,6 +200,7 @@
                         <Grid Grid.Column="1">
                             <TextBox materialDesign:HintAssist.Hint="Liên lạc"
                                      Name="txtSuplierPhone"
+                                     Text="{Binding SuplierPhone}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
                                      Margin="5 21 15 21"
@@ -206,6 +210,7 @@
                     <Grid Grid.Row="4">
                         <TextBox materialDesign:HintAssist.Hint="Ghi chú"
                                  Name="txtNote"
+                                 Text="{Binding Note}"
                                  FontFamily="Comfortaa"
                                  FontSize="16"
                                  Margin="15 21 15 21"
