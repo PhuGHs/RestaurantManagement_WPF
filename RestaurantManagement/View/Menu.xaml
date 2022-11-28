@@ -95,14 +95,17 @@
                                 HorizontalAlignment="Center" 
                                 FontWeight="SemiBold" 
                                 FontSize="14"/>
-                            <ComboBox HorizontalAlignment="Center" 
+                            <ComboBox ItemsSource="{Binding ComboBox_2Items}"
+                                      SelectedItem="{Binding MyComboboxSelection, Mode=TwoWay}"
+                                      HorizontalAlignment="Center" 
                                       HorizontalContentAlignment="Center"
                                       Width="120" 
-                                      FontSize="14" >
-                                <ComboBoxItem IsSelected="True" Content="Giá cao - thấp"/>
-                                <ComboBoxItem Content="Giá thấp - cao" />
-                                <ComboBoxItem Content="A - Z"/>
-                                <ComboBoxItem Content="Z - A"/>
+                                      FontSize="14">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding SortingFeature_Command}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
                             </ComboBox>
                         </StackPanel>
                         <Border Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource SearchBar}">
@@ -161,7 +164,7 @@
                                                 Width="100"
                                                 Background="#1C3879"
                                                 ToolTip="Resource name: MaterialDesignRaisedButton"
-                                                Command="{Binding ElementName=vm, Path=OrderFeature}"
+                                                Command="{Binding ElementName=vm, Path=OrderFeature_Command}"
                                                 CommandParameter="{Binding}">
                                                 _ĐẶT
                                             </Button>
@@ -247,7 +250,7 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
                                                                 <Button 
-                                                                    Command="{Binding ElementName=vm, Path=RemoveItemFeature}"
+                                                                    Command="{Binding ElementName=vm, Path=RemoveItemFeature_Command}"
                                                                     CommandParameter="{Binding}"
                                                                     Background="Transparent" 
                                                                     BorderThickness="0">
@@ -301,7 +304,8 @@
                                             Width="150">
                                         <TextBlock Foreground="Red" Text="HUỶ"/>
                                     </Button>
-                                    <Button Background="Green" 
+                                    <Button Command="{Binding ShowDetailOrder_Command}"
+                                            Background="Green" 
                                             BorderThickness="0" 
                                             Width="150" 
                                             Margin="50 0 0 0">

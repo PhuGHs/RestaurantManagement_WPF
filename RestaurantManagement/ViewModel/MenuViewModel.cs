@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Menu.Models;
+using QuanLyNhaHang.View;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -13,23 +14,52 @@ namespace QuanLyNhaHang.ViewModel
     {
         public MenuViewModel()
         {
-            OrderFeature = new RelayCommand<MenuItem>((p) => true, (p) => OrderAnItem(p.ID));
-            RemoveItemFeature = new RelayCommand<SelectedMenuItem>((p) => true, (p) => RemoveAnItem(p));
+            OrderFeature_Command = new RelayCommand<MenuItem>((p) => true, (p) => OrderAnItem(p.ID));
+            RemoveItemFeature_Command = new RelayCommand<SelectedMenuItem>((p) => true, (p) => RemoveAnItem(p));
+            SortingFeature_Command = new RelayCommand<object>((p) => true, (p) => {
+                if (MyComboboxSelection == "Giá cao -> thấp")
+                {
+                    MenuItems = new ObservableCollection<MenuItem>(MenuItems.OrderByDescending(i => i.Price));
+                }
+                else if (MyComboboxSelection == "Giá thấp -> cao")
+                {
+                    MenuItems = new ObservableCollection<MenuItem>(MenuItems.OrderBy(i => i.Price));
+                }
+                else if (MyComboboxSelection == "A -> Z")
+                {
+                    MenuItems = new ObservableCollection<MenuItem>(MenuItems.OrderBy((i) => i.FoodName));
+                }
+                else if (MyComboboxSelection == "Z -> A")
+                {
+                    MenuItems = new ObservableCollection<MenuItem>(MenuItems.OrderByDescending(i => i.FoodName));
+                }
+            });
+            ShowDetailOrder_Command = new RelayCommand<object>((p) => true, (p) =>
+            {
+                OrderWindow OrderWin = new OrderWindow();
+                OrderWin.ShowDialog();
+            });
             _menuItems = new ObservableCollection<MenuItem>();
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
+            _comboBox_2Items = new ObservableCollection<string>();
             LoadMenuItems();
+            LoadCombobox_2Items();
         }
 
         #region attributes
         private ObservableCollection<MenuItem> _menuItems;
         private ObservableCollection<SelectedMenuItem> _selectedItems;
+        private ObservableCollection<string> _comboBox_2Items;
+        private string myComboboxSelection = "A -> Z";
         private decimal dec_subtotal = 0;
         private string str_subtotal = "0 VND";
         #endregion
 
         #region properties
-        public ObservableCollection<MenuItem> MenuItems { get { return _menuItems; } set { _menuItems = value; } }
+        public ObservableCollection<MenuItem> MenuItems { get { return _menuItems; } set { _menuItems = value; OnPropertyChanged(); } }
         public ObservableCollection<SelectedMenuItem> SelectedItems { get { return _selectedItems; } set { _selectedItems = value; } }
+        public ObservableCollection<string> ComboBox_2Items { get { return _comboBox_2Items; } set { _comboBox_2Items = value; } }
+        public string MyComboboxSelection { get { return myComboboxSelection; } set { myComboboxSelection = value; } }
         public string Day
         {
             get
@@ -65,8 +95,10 @@ namespace QuanLyNhaHang.ViewModel
         #endregion
 
         #region commands
-        public ICommand OrderFeature { get; set; }  
-        public ICommand RemoveItemFeature { get; set; }
+        public ICommand OrderFeature_Command { get; set; }  
+        public ICommand RemoveItemFeature_Command { get; set; }
+        public ICommand SortingFeature_Command { get; set; }
+        public ICommand ShowDetailOrder_Command { get; set; }
         #endregion
 
         #region methods
@@ -87,6 +119,15 @@ namespace QuanLyNhaHang.ViewModel
             _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_6.jpg", ID = 13, FoodName = "Cá Ngừ Đại Dương", Price = 1000000 });
 
             MenuItems = _menuItems;
+        }
+        private void LoadCombobox_2Items()
+        {
+            _comboBox_2Items.Add("Giá cao -> thấp");
+            _comboBox_2Items.Add("Giá thấp -> cao");
+            _comboBox_2Items.Add("A -> Z");
+            _comboBox_2Items.Add("Z -> A");
+
+            ComboBox_2Items = _comboBox_2Items;
         }
 
         private void OrderAnItem(int ID)
