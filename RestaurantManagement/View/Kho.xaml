@@ -138,7 +138,7 @@
                     <Grid Grid.Row="0">
                         <TextBox materialDesign:HintAssist.Hint="Tên sản phẩm"
                                  Margin="15 22 15 22.5"
-                                 Text="{Binding Name}"
+                                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
 
@@ -151,13 +151,13 @@
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Số lượng"
                                      Margin="15 22 5 22.5"
-                                     Text="{Binding Count}"
+                                     Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                         <Grid Grid.Column="1">
                             <DatePicker materialDesign:HintAssist.Hint="Ngày nhập"
                                         Margin="5,0,15,0"
-                                        Text="{Binding DateIn}"
+                                        Text="{Binding DateIn, Mode=OneWayToSource}"
                                         Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
                         </Grid>
                     </Grid>
@@ -171,14 +171,14 @@
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Đơn giá"
                                      Margin="15 22 5 22.5"
-                                     Text="{Binding Value}"
+                                     Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
 
                         <Grid Grid.Column="1">
                             <ComboBox materialDesign:HintAssist.Hint="Đơn vị"
                                       Margin="5,0,15,0"
-                                      Text="{Binding Unit}"
+                                      Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBoxItem>
                                     Kg
@@ -202,13 +202,13 @@
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Nguồn nhập"
                                      Margin="15 22 5 22"
-                                     Text="{Binding Suplier}"
+                                     Text="{Binding Suplier, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                         <Grid Grid.Column="1">
                             <TextBox materialDesign:HintAssist.Hint="Liên lạc"
                                      Margin="5 22 15 22"
-                                     Text="{Binding SuplierInfo}"
+                                     Text="{Binding SuplierInfo, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                     </Grid>

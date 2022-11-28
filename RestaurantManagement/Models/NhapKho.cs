@@ -16,13 +16,13 @@ namespace QuanLyNhaHang.Models
         public string DonGia { get => _DonGia; set => _DonGia = value; }
         private int _SoLuong;
         public int SoLuong { get => _SoLuong; set => _SoLuong = value; }
-        private DateTime _NgayNhap;
-        public DateTime NgayNhap { get => _NgayNhap; set => _NgayNhap = value; }
+        private string _NgayNhap;
+        public string NgayNhap { get => _NgayNhap; set => _NgayNhap = value; }
         private string _NguonNhap;
         public string NguonNhap { get => _NguonNhap; set => _NguonNhap = value; }
         private string _LienLac;
         public string LienLac { get => _LienLac; set => _LienLac = value; }
-        public NhapKho(string ten, string donvi, string dongia, int soluong, DateTime ngaynhap, string nguon, string lienlac)
+        public NhapKho(string ten, string donvi, string dongia, int soluong, string ngaynhap, string nguon, string lienlac)
         {
             TenSP = ten;
             DonVi = donvi;

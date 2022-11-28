@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Collections.ObjectModel;
 using QuanLyNhaHang.Models;
+using System.Windows;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -58,8 +59,8 @@ namespace QuanLyNhaHang.ViewModel
                 }
             } 
         }
-        private ObservableCollection<DateTime> _ListTime;
-        public ObservableCollection<DateTime> ListTime { get => _ListTime; set { _ListTime = value; OnPropertyChanged(); } }
+        private ObservableCollection<string> _ListTime;
+        public ObservableCollection<string> ListTime { get => _ListTime; set { _ListTime = value; OnPropertyChanged(); } }
 
 
         private string _Name;
@@ -70,8 +71,8 @@ namespace QuanLyNhaHang.ViewModel
         public string Unit { get => _Unit; set { _Unit = value; OnPropertyChanged(); } }
         private string _Value;
         public string Value { get => _Value; set { _Value = value; OnPropertyChanged(); } }
-        private DateTime _DateIn;
-        public DateTime DateIn { get => _DateIn; set { _DateIn = value; OnPropertyChanged(); } }
+        private string _DateIn;
+        public string DateIn { get => _DateIn; set { _DateIn = value; OnPropertyChanged(); } }
         private string _Suplier;
         public string Suplier { get => _Suplier; set { _Suplier = value; OnPropertyChanged(); } }
         private string _SuplierInfo;
@@ -111,18 +112,46 @@ namespace QuanLyNhaHang.ViewModel
             OpenConnect();
             ListWareHouse = new ObservableCollection<Kho>();
             ListIn = new ObservableCollection<NhapKho>();
-            ListTime = new ObservableCollection<DateTime>();
+            ListTime = new ObservableCollection<string>();
+            DateIn = DateTime.Now.ToShortDateString();
 
             ListViewDisplay("SELECT * FROM KHO");
 
-            AddCM = new RelayCommand<object>((p) => { return true; }, (p) =>
+            AddCM = new RelayCommand<object>((p) => 
+            {
+                foreach (NhapKho item in ListIn)
+                {
+                    if (Name == item.TenSP && Count == item.SoLuong && DateIn == item.NgayNhap)
+                        return false;
+                }
+                if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
+                    return false;
+                Selected = null;
+                return true;
+            }, (p) =>
             {
                 OpenConnect();
 
-                
+                //MessageBox.Show(DateIn);
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "INSERT INTO CHITIETNHAP(TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES (N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
+                cmd.Connection = sqlCon;
 
-                MyMessageBox mess = new MyMessageBox("Nhập thành công!");
+                string strResult = "";
+                int result = cmd.ExecuteNonQuery();
+                if (result > 0)
+                {
+                    strResult = "Nhập thành công!";
+                }
+                else
+                {
+                    strResult = "Nhập không thành công!";
+                }    
+                MyMessageBox mess = new MyMessageBox(strResult);
                 mess.ShowDialog();
+                ListViewDisplay("SELECT * FROM KHO");
+
 
                 CloseConnect();
             });
@@ -205,7 +234,7 @@ namespace QuanLyNhaHang.ViewModel
                 string donvi = reader.GetString(2);
                 string dongia = reader.GetSqlMoney(3).ToString();
                 int soluong = reader.GetInt16(4);
-                DateTime date = reader.GetDateTime(5);
+                string date = reader.GetDateTime(5).ToShortDateString();
                 string nguon = reader.GetString(6);
                 string lienlac = reader.GetString(7);
                 ListIn.Add(new NhapKho(ten, donvi, dongia, soluong, date, nguon, lienlac));
