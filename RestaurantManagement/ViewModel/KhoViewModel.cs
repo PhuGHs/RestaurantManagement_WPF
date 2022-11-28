@@ -25,35 +25,57 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
                 if (Selected != null)
                 {
-                    Name = Selected.TenNguyenLieu;
-                    Remaining = Selected.TonDu.ToString();
-                    Unit = Selected.DonVi;
-                    Value = Selected.DonGia;
-                    DateIn = Selected.NgayNhap;
-                    Suplier = Selected.NguonNhap;
-                    SuplierPhone = Selected.LienLac;
-                    Note = Selected.GhiChu;
+                    GetInputInfo(Selected.TenSanPham);
                 } 
+                OnPropertyChanged();
             }
         }
+        private ObservableCollection<NhapKho> _ListIn;
+        public ObservableCollection<NhapKho> ListIn { get => _ListIn; set { _ListIn = value; OnPropertyChanged(); } }
+        private string _TimeSelected;
+        public string TimeSelected 
+        { 
+            get => _TimeSelected; 
+            set 
+            {
+                _TimeSelected = value;
+                OnPropertyChanged();
+                if (!String.IsNullOrEmpty(TimeSelected))
+                {
+                    foreach (NhapKho item in ListIn)
+                    {
+                        if (item.NgayNhap.ToString() == TimeSelected)
+                        {
+                            Name = item.TenSP;
+                            Count = item.SoLuong;
+                            Unit = Selected.DonVi;
+                            Value = Selected.DonGia;
+                            DateIn = item.NgayNhap;
+                            Suplier = item.NguonNhap;
+                            SuplierInfo = item.LienLac;
+                        }
+                    }
+                }
+            } 
+        }
+        private ObservableCollection<DateTime> _ListTime;
+        public ObservableCollection<DateTime> ListTime { get => _ListTime; set { _ListTime = value; OnPropertyChanged(); } }
 
 
         private string _Name;
         public string Name { get => _Name; set { _Name = value; OnPropertyChanged(); } }
-        private string _Remaining;
-        public string Remaining { get => _Remaining; set { _Remaining = value; OnPropertyChanged(); } }
+        private int _Count;
+        public int Count { get => _Count; set { _Count = value; OnPropertyChanged(); } }
         private string _Unit;
         public string Unit { get => _Unit; set { _Unit = value; OnPropertyChanged(); } }
         private string _Value;
         public string Value { get => _Value; set { _Value = value; OnPropertyChanged(); } }
-        private string _DateIn;
-        public string DateIn { get => _DateIn; set { _DateIn = value; OnPropertyChanged(); } }
+        private DateTime _DateIn;
+        public DateTime DateIn { get => _DateIn; set { _DateIn = value; OnPropertyChanged(); } }
         private string _Suplier;
         public string Suplier { get => _Suplier; set { _Suplier = value; OnPropertyChanged(); } }
-        private string _SuplierPhone;
-        public string SuplierPhone { get => _SuplierPhone; set { _SuplierPhone = value; OnPropertyChanged(); } }
-        private string _Note;
-        public string Note { get => _Note; set { _Note = value; OnPropertyChanged(); } }
+        private string _SuplierInfo;
+        public string SuplierInfo { get => _SuplierInfo; set { _SuplierInfo = value; OnPropertyChanged(); } }
         private string _Search;
         public string Search 
         { 
@@ -65,11 +87,11 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
                 if (!String.IsNullOrEmpty(Search))
                 {
-                    strQuery = "SELECT * FROM NGUYENLIEU WHERE TENNL LIKE '%" + Search + "%'";
+                    strQuery = "SELECT * FROM KHO WHERE TenSP LIKE '%" + Search + "%'";
                 }
                 else
-                    strQuery = "SELECT * FROM NGUYENLIEU";
-                ListChanged(strQuery);
+                    strQuery = "SELECT * FROM KHO";
+                ListViewDisplay(strQuery);
             } 
         }
 
@@ -78,17 +100,31 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand EditCM { get; set; }
         public ICommand DeleteCM { get; set; }
         public ICommand CheckCM { get; set; }
+
+
         private string strCon = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyNhaHang;Integrated Security=True";
         private SqlConnection sqlCon = null;
+
+
         public KhoViewModel()
         {
             OpenConnect();
             ListWareHouse = new ObservableCollection<Kho>();
-            ListChanged("SELECT * FROM NGUYENLIEU");
+            ListIn = new ObservableCollection<NhapKho>();
+            ListTime = new ObservableCollection<DateTime>();
+
+            ListViewDisplay("SELECT * FROM KHO");
+
             AddCM = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
+                OpenConnect();
+
+                
+
                 MyMessageBox mess = new MyMessageBox("Nhập thành công!");
                 mess.ShowDialog();
+
+                CloseConnect();
             });
             EditCM = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
@@ -112,6 +148,7 @@ namespace QuanLyNhaHang.ViewModel
             });
             CloseConnect();
         }
+
         private void OpenConnect()
         {
             sqlCon = new SqlConnection(strCon);
@@ -120,6 +157,7 @@ namespace QuanLyNhaHang.ViewModel
                 sqlCon.Open();
             }    
         }
+
         private void CloseConnect()
         {
             if (sqlCon.State == ConnectionState.Open)
@@ -127,7 +165,8 @@ namespace QuanLyNhaHang.ViewModel
                 sqlCon.Close();
             }
         }
-        private void ListChanged(string strQuery)
+
+        private void ListViewDisplay(string strQuery)
         {
             OpenConnect();
 
@@ -139,24 +178,42 @@ namespace QuanLyNhaHang.ViewModel
             ListWareHouse.Clear();
             while (reader.Read())
             {
-                string ten = reader.GetString(1);
-                int tondu = reader.GetInt16(2);
-                string donvi = reader.GetString(3);
-                string ngaynhap = reader.GetDateTime(4).ToShortDateString();
-                string nguonnhap = reader.GetString(5);
-                string lienlac = reader.GetString(6);
-                string ghichu = "";
-                if (!reader.IsDBNull(7))
-                    ghichu = reader.GetString(7);
-                string dongia = reader.GetSqlMoney(8).ToString();
-                ListWareHouse.Add(new Kho(ten, tondu, donvi, ngaynhap, nguonnhap, dongia, lienlac, ghichu));
+                string ten = reader.GetString(0);
+                int tondu = reader.GetInt16(1);
+                string donvi = reader.GetString(2);
+                string dongia = reader.GetSqlMoney(3).ToString();
+                ListWareHouse.Add(new Kho(ten, tondu, donvi, dongia));
             }
 
             CloseConnect();
         }
-        bool IsExists()
+
+        private void GetInputInfo(string tensanpham)
         {
-            return true;
+            OpenConnect();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "SELECT * FROM CHITIETNHAP WHERE TenSP = N'" + tensanpham + "'";
+            cmd.Connection = sqlCon;
+            SqlDataReader reader = cmd.ExecuteReader();
+            ListIn.Clear();
+            ListTime.Clear();
+            while (reader.Read())
+            {
+                string ten = reader.GetString(1);
+                string donvi = reader.GetString(2);
+                string dongia = reader.GetSqlMoney(3).ToString();
+                int soluong = reader.GetInt16(4);
+                DateTime date = reader.GetDateTime(5);
+                string nguon = reader.GetString(6);
+                string lienlac = reader.GetString(7);
+                ListIn.Add(new NhapKho(ten, donvi, dongia, soluong, date, nguon, lienlac));
+                ListTime.Add(date);
+            }
+            TimeSelected = ListTime[0].ToString();
+
+            CloseConnect();
         }
     }
 }
