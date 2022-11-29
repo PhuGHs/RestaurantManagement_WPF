@@ -157,7 +157,7 @@
                         <Grid Grid.Column="1">
                             <DatePicker materialDesign:HintAssist.Hint="Ngày nhập"
                                         Margin="5,0,15,0"
-                                        Text="{Binding DateIn, Mode=OneWayToSource}"
+                                        SelectedDate="{Binding DateIn, Mode=TwoWay, ValidatesOnDataErrors=False, UpdateSourceTrigger=PropertyChanged}"
                                         Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
                         </Grid>
                     </Grid>

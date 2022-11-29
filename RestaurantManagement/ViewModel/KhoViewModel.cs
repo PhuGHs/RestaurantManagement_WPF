@@ -72,7 +72,7 @@ namespace QuanLyNhaHang.ViewModel
         private string _Value;
         public string Value { get => _Value; set { _Value = value; OnPropertyChanged(); } }
         private string _DateIn;
-        public string DateIn { get => _DateIn; set { _DateIn = value; OnPropertyChanged(); } }
+        public string DateIn { get => _DateIn; set { _DateIn = value; OnPropertyChanged("DateIn"); } }
         private string _Suplier;
         public string Suplier { get => _Suplier; set { _Suplier = value; OnPropertyChanged(); } }
         private string _SuplierInfo;
@@ -132,7 +132,6 @@ namespace QuanLyNhaHang.ViewModel
             {
                 OpenConnect();
 
-                //MessageBox.Show(DateIn);
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandText = "INSERT INTO CHITIETNHAP(TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES (N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
