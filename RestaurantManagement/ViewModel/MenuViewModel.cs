@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Diacritics.Extensions;
 using Menu.Models;
 using QuanLyNhaHang.View;
 
@@ -39,6 +40,10 @@ namespace QuanLyNhaHang.ViewModel
                 OrderWindow OrderWin = new OrderWindow();
                 OrderWin.ShowDialog();
             });
+            FindDishes = new RelayCommand<object>((p) => true, (p) =>
+            {
+                MenuItems = searchMealItem(SearchText);
+            }); 
             _menuItems = new ObservableCollection<MenuItem>();
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
             _comboBox_2Items = new ObservableCollection<string>();
@@ -53,6 +58,7 @@ namespace QuanLyNhaHang.ViewModel
         private string myComboboxSelection = "A -> Z";
         private decimal dec_subtotal = 0;
         private string str_subtotal = "0 VND";
+        private string _searchText;
         #endregion
 
         #region properties
@@ -92,6 +98,7 @@ namespace QuanLyNhaHang.ViewModel
             }
             get { return str_subtotal; }
         }
+        public string SearchText { get { return _searchText; } set { _searchText = value; OnPropertyChanged(); } }
         #endregion
 
         #region commands
@@ -99,6 +106,7 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand RemoveItemFeature_Command { get; set; }
         public ICommand SortingFeature_Command { get; set; }
         public ICommand ShowDetailOrder_Command { get; set; }
+        public ICommand FindDishes { get; set; }
         #endregion
 
         #region methods
@@ -162,6 +170,18 @@ namespace QuanLyNhaHang.ViewModel
             {
                 SelectedItems.Remove(x);
             }
+        }
+        public ObservableCollection<MenuItem> searchMealItem(string keyword)
+        {
+            ObservableCollection<MenuItem> relatingItems = new ObservableCollection<MenuItem>();
+            foreach (MenuItem x in MenuItems)
+            {
+                if (x.FoodName.RemoveDiacritics().ToLower().Contains(keyword.RemoveDiacritics().ToLower()))
+                {
+                    relatingItems.Add(x);
+                }
+            }
+            return relatingItems;
         }
         #endregion
 

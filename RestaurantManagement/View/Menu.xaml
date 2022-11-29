@@ -110,7 +110,7 @@
                         </StackPanel>
                         <Border Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource SearchBar}">
                             <StackPanel Orientation="Horizontal">
-                                <Button Style="{StaticResource SearchBarButton}" Command="{Binding SearchMealItem}">
+                                <Button Style="{StaticResource SearchBarButton}" Command="{Binding FindDishes}">
                                     <fa:IconImage Icon="MagnifyingGlass" Style="{StaticResource SearchBarIcon}"/>
                                 </Button>
                                 <TextBox 
@@ -121,7 +121,12 @@
                                     Height="35" 
                                     Margin="10 0 0 0" 
                                     FontSize="16" 
-                                    Foreground="#73777B"/>
+                                    Foreground="#73777B"
+                                    Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    />
+                                <StackPanel.InputBindings>
+                                    <KeyBinding Key="Enter" Command="{Binding FindDishes}"/>
+                                </StackPanel.InputBindings>
                             </StackPanel>
                         </Border>
                     </StackPanel>
