@@ -136,18 +136,18 @@ namespace QuanLyNhaHang.ViewModel
                 cmd.CommandText = "INSERT INTO CHITIETNHAP(TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES (N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
                 cmd.Connection = sqlCon;
 
-                string strResult = "";
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
                 {
-                    strResult = "Nhập thành công!";
+                    MyMessageBox mess = new MyMessageBox("Nhập thành công!");
+                    mess.ShowDialog();
+                    GetInputInfo(Name);
                 }
                 else
                 {
-                    strResult = "Nhập không thành công!";
+                    MyMessageBox mess = new MyMessageBox("Nhập không thành công!");
+                    mess.ShowDialog();
                 }    
-                MyMessageBox mess = new MyMessageBox(strResult);
-                mess.ShowDialog();
                 ListViewDisplay("SELECT * FROM KHO");
 
 
@@ -173,19 +173,19 @@ namespace QuanLyNhaHang.ViewModel
                 cmd.CommandText = "UPDATE CHITIETNHAP SET TenSP = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE TenSP = N'" + NameBeforeEdit + "'";
                 cmd.Connection = sqlCon;
 
-                string strResult = "";
                 int result = cmd.ExecuteNonQuery();
 
                 if (result > 0)
                 {
-                    strResult = "Sửa thành công!";
+                    MyMessageBox mess = new MyMessageBox("Sửa thành công!");
+                    mess.ShowDialog();
+                    GetInputInfo(Name);
                 }
                 else
                 {
-                    strResult = "Sửa không thành công!";
+                    MyMessageBox mess = new MyMessageBox("Sửa không thành công!");
+                    mess.ShowDialog();
                 }
-                MyMessageBox mess = new MyMessageBox(strResult);
-                mess.ShowDialog();
                 ListViewDisplay("SELECT * FROM KHO");
 
                 CloseConnect();
