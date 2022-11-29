@@ -49,8 +49,8 @@ namespace QuanLyNhaHang.ViewModel
                         {
                             Name = item.TenSP;
                             Count = item.SoLuong;
-                            Unit = Selected.DonVi;
-                            Value = Selected.DonGia;
+                            Unit = item.DonVi;
+                            Value = item.DonGia;
                             DateIn = item.NgayNhap;
                             Suplier = item.NguonNhap;
                             SuplierInfo = item.LienLac;
@@ -62,7 +62,7 @@ namespace QuanLyNhaHang.ViewModel
         private ObservableCollection<string> _ListTime;
         public ObservableCollection<string> ListTime { get => _ListTime; set { _ListTime = value; OnPropertyChanged(); } }
 
-
+        private string NameBeforeEdit;
         private string _Name;
         public string Name { get => _Name; set { _Name = value; OnPropertyChanged(); } }
         private int _Count;
@@ -126,7 +126,6 @@ namespace QuanLyNhaHang.ViewModel
                 }
                 if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
                     return false;
-                Selected = null;
                 return true;
             }, (p) =>
             {
@@ -154,10 +153,42 @@ namespace QuanLyNhaHang.ViewModel
 
                 CloseConnect();
             });
-            EditCM = new RelayCommand<object>((p) => { return true; }, (p) =>
+            EditCM = new RelayCommand<object>((p) => 
             {
-                MyMessageBox mess = new MyMessageBox("Sửa thành công!");
+                NameBeforeEdit = Name;
+                foreach (NhapKho item in ListIn)
+                {
+                    if (Name == item.TenSP && Count == item.SoLuong && DateIn == item.NgayNhap && Value == item.DonGia && Unit == item.DonVi && Suplier == item.NguonNhap && SuplierInfo == item.LienLac)
+                        return false;
+                }
+                if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
+                    return false;
+                return true;
+            }, (p) =>
+            {
+                OpenConnect();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "UPDATE CHITIETNHAP SET TenSP = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE TenSP = N'" + NameBeforeEdit + "'";
+                cmd.Connection = sqlCon;
+
+                string strResult = "";
+                int result = cmd.ExecuteNonQuery();
+
+                if (result > 0)
+                {
+                    strResult = "Sửa thành công!";
+                }
+                else
+                {
+                    strResult = "Sửa không thành công!";
+                }
+                MyMessageBox mess = new MyMessageBox(strResult);
                 mess.ShowDialog();
+                ListViewDisplay("SELECT * FROM KHO");
+
+                CloseConnect();
             });
             DeleteCM = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
@@ -222,7 +253,7 @@ namespace QuanLyNhaHang.ViewModel
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT * FROM CHITIETNHAP WHERE TenSP = N'" + tensanpham + "'";
+            cmd.CommandText = "SELECT TOP 5 * FROM CHITIETNHAP WHERE TenSP = N'" + tensanpham + "' ORDER BY NgayNhap DESC";
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
             ListIn.Clear();

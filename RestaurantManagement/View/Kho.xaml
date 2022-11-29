@@ -169,7 +169,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Column="0">
-                            <TextBox materialDesign:HintAssist.Hint="Đơn giá"
+                            <TextBox materialDesign:HintAssist.Hint="Giá nhập"
                                      Margin="15 22 5 22.5"
                                      Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
