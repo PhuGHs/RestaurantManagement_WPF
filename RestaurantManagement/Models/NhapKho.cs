@@ -8,6 +8,8 @@ namespace QuanLyNhaHang.Models
 {
     public class NhapKho
     {
+        private int _MaNhap;
+        public int MaNhap { get => _MaNhap; set => _MaNhap = value; }
         private string _TenSP;
         public string TenSP { get => _TenSP; set => _TenSP = value; }
         private string _DonVi;
@@ -22,8 +24,9 @@ namespace QuanLyNhaHang.Models
         public string NguonNhap { get => _NguonNhap; set => _NguonNhap = value; }
         private string _LienLac;
         public string LienLac { get => _LienLac; set => _LienLac = value; }
-        public NhapKho(string ten, string donvi, string dongia, int soluong, string ngaynhap, string nguon, string lienlac)
+        public NhapKho(int ma, string ten, string donvi, string dongia, int soluong, string ngaynhap, string nguon, string lienlac)
         {
+            MaNhap = ma;
             TenSP = ten;
             DonVi = donvi;
             DonGia = dongia;

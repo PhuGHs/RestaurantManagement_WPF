@@ -47,6 +47,7 @@ namespace QuanLyNhaHang.ViewModel
                     {
                         if (item.NgayNhap.ToString() == TimeSelected)
                         {
+                            ID = item.MaNhap;
                             Name = item.TenSP;
                             Count = item.SoLuong;
                             Unit = item.DonVi;
@@ -63,6 +64,8 @@ namespace QuanLyNhaHang.ViewModel
         public ObservableCollection<string> ListTime { get => _ListTime; set { _ListTime = value; OnPropertyChanged(); } }
 
         private string NameBeforeEdit;
+        private int _ID;
+        public int ID { get => _ID; set { _ID = value; OnPropertyChanged(); } }
         private string _Name;
         public string Name { get => _Name; set { _Name = value; OnPropertyChanged(); } }
         private int _Count;
@@ -117,11 +120,13 @@ namespace QuanLyNhaHang.ViewModel
 
             ListViewDisplay("SELECT * FROM KHO");
 
+
+            #region //add command
             AddCM = new RelayCommand<object>((p) => 
             {
                 foreach (NhapKho item in ListIn)
                 {
-                    if (Name == item.TenSP && Count == item.SoLuong && DateIn == item.NgayNhap)
+                    if (ID == item.MaNhap)
                         return false;
                 }
                 if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
@@ -133,7 +138,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT INTO CHITIETNHAP(TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES (N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
+                cmd.CommandText = "INSERT INTO CHITIETNHAP(MaNhap, TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES (" + ID +",N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
                 cmd.Connection = sqlCon;
 
                 int result = cmd.ExecuteNonQuery();
@@ -153,6 +158,9 @@ namespace QuanLyNhaHang.ViewModel
 
                 CloseConnect();
             });
+            #endregion
+
+
             EditCM = new RelayCommand<object>((p) => 
             {
                 NameBeforeEdit = Name;
@@ -170,7 +178,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "UPDATE CHITIETNHAP SET TenSP = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE TenSP = N'" + NameBeforeEdit + "'";
+                cmd.CommandText = "UPDATE CHITIETNHAP SET TenSP = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE MaNhap = " + ID + "";
                 cmd.Connection = sqlCon;
 
                 int result = cmd.ExecuteNonQuery();
@@ -260,6 +268,7 @@ namespace QuanLyNhaHang.ViewModel
             ListTime.Clear();
             while (reader.Read())
             {
+                int ma = reader.GetInt16(0);
                 string ten = reader.GetString(1);
                 string donvi = reader.GetString(2);
                 string dongia = reader.GetSqlMoney(3).ToString();
@@ -267,7 +276,7 @@ namespace QuanLyNhaHang.ViewModel
                 string date = reader.GetDateTime(5).ToShortDateString();
                 string nguon = reader.GetString(6);
                 string lienlac = reader.GetString(7);
-                ListIn.Add(new NhapKho(ten, donvi, dongia, soluong, date, nguon, lienlac));
+                ListIn.Add(new NhapKho(ma, ten, donvi, dongia, soluong, date, nguon, lienlac));
                 ListTime.Add(date);
             }
             TimeSelected = ListTime[0].ToString();
