@@ -126,13 +126,14 @@ namespace QuanLyNhaHang.ViewModel
             #region //add command
             AddCM = new RelayCommand<object>((p) => 
             {
+                if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
+                    return false;
+                OnPropertyChanged("ID");
                 foreach (NhapKho item in ListIn)
                 {
                     if (ID == item.MaNhap)
                         return false;
                 }
-                if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
-                    return false;
                 return true;
             }, (p) =>
             {
@@ -217,13 +218,34 @@ namespace QuanLyNhaHang.ViewModel
                 return true; 
             }, (p) =>
             {
-                MyMessageBox yesno = new MyMessageBox("Bạn có chắc chắn xóa ?", true);
+                OpenConnect();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "DELETE FROM KHO WHERE TenSP = N'" + Selected.TenSanPham + "'";
+                cmd.Connection = sqlCon;
+
+                MyMessageBox yesno = new MyMessageBox("Bạn có chắc chắn xóa?", true);
                 yesno.ShowDialog();
+
                 if (yesno.ACCEPT())
                 {
-                    MyMessageBox mess = new MyMessageBox("Xóa thành công!");
-                    mess.ShowDialog();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result > 0)
+                    {
+                        MyMessageBox mess = new MyMessageBox("Xóa thành công!");
+                        mess.ShowDialog();
+                        RefreshRightCard();
+                    }
+                    else
+                    {
+                        MyMessageBox mess = new MyMessageBox("Xóa không thành công!");
+                        mess.ShowDialog();
+                    }    
                 }
+                ListViewDisplay("SELECT * FROM KHO");
+
+                CloseConnect();
             });
             CheckCM = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
@@ -299,6 +321,20 @@ namespace QuanLyNhaHang.ViewModel
             TimeSelected = ListTime[0].ToString();
 
             CloseConnect();
+        }
+
+        private void RefreshRightCard()
+        {
+            ID = "";
+            Name = "";
+            Count = 0;
+            Unit = "";
+            Value = "";
+            DateIn = "";
+            Suplier = "";
+            SuplierInfo = "";
+
+            Selected = null;
         }
     }
 }
