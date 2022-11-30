@@ -55,6 +55,8 @@ namespace QuanLyNhaHang.ViewModel
                             DateIn = item.NgayNhap;
                             Suplier = item.NguonNhap;
                             SuplierInfo = item.LienLac;
+
+                            IDBeforeEdit = ID;
                         }
                     }
                 }
@@ -63,9 +65,9 @@ namespace QuanLyNhaHang.ViewModel
         private ObservableCollection<string> _ListTime;
         public ObservableCollection<string> ListTime { get => _ListTime; set { _ListTime = value; OnPropertyChanged(); } }
 
-        private string NameBeforeEdit;
-        private int _ID;
-        public int ID { get => _ID; set { _ID = value; OnPropertyChanged(); } }
+        private string IDBeforeEdit;
+        private string _ID;
+        public string ID { get => _ID; set { _ID = value; OnPropertyChanged(); } }
         private string _Name;
         public string Name { get => _Name; set { _Name = value; OnPropertyChanged(); } }
         private int _Count;
@@ -138,7 +140,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT INTO CHITIETNHAP(MaNhap, TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES (" + ID +",N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
+                cmd.CommandText = "INSERT INTO CHITIETNHAP(MaNhap, TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES ('" + ID +"',N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
                 cmd.Connection = sqlCon;
 
                 int result = cmd.ExecuteNonQuery();
@@ -161,44 +163,59 @@ namespace QuanLyNhaHang.ViewModel
             #endregion
 
 
+            #region // edit command
             EditCM = new RelayCommand<object>((p) => 
             {
-                NameBeforeEdit = Name;
                 foreach (NhapKho item in ListIn)
                 {
-                    if (Name == item.TenSP && Count == item.SoLuong && DateIn == item.NgayNhap && Value == item.DonGia && Unit == item.DonVi && Suplier == item.NguonNhap && SuplierInfo == item.LienLac)
+                    if (ID == item.MaNhap && Name == item.TenSP && Count == item.SoLuong && DateIn == item.NgayNhap && Value == item.DonGia && Unit == item.DonVi && Suplier == item.NguonNhap && SuplierInfo == item.LienLac)
                         return false;
                 }
-                if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
+                if (string.IsNullOrEmpty(ID) || string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
                     return false;
                 return true;
             }, (p) =>
             {
                 OpenConnect();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "UPDATE CHITIETNHAP SET TenSP = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE MaNhap = " + ID + "";
-                cmd.Connection = sqlCon;
-
-                int result = cmd.ExecuteNonQuery();
-
-                if (result > 0)
+                if (ID != IDBeforeEdit)
                 {
-                    MyMessageBox mess = new MyMessageBox("Sửa thành công!");
+                    MyMessageBox mess = new MyMessageBox("Không được sửa ID!");
                     mess.ShowDialog();
-                    GetInputInfo(Name);
                 }
                 else
                 {
-                    MyMessageBox mess = new MyMessageBox("Sửa không thành công!");
-                    mess.ShowDialog();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "UPDATE CHITIETNHAP SET TenSP = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE MaNhap = '" + ID + "'";
+                    cmd.Connection = sqlCon;
+
+                    int result = cmd.ExecuteNonQuery();
+
+                    if (result > 0)
+                    {
+                        MyMessageBox mess = new MyMessageBox("Sửa thành công!");
+                        mess.ShowDialog();
+                        GetInputInfo(Name);
+                    }
+                    else
+                    {
+                        MyMessageBox mess = new MyMessageBox("Sửa không thành công!");
+                        mess.ShowDialog();
+                    }
+                    ListViewDisplay("SELECT * FROM KHO");
                 }
-                ListViewDisplay("SELECT * FROM KHO");
 
                 CloseConnect();
             });
-            DeleteCM = new RelayCommand<object>((p) => { return true; }, (p) =>
+            #endregion
+            
+            
+            DeleteCM = new RelayCommand<object>((p) => 
+            {
+                if (Selected == null) return false;
+                return true; 
+            }, (p) =>
             {
                 MyMessageBox yesno = new MyMessageBox("Bạn có chắc chắn xóa ?", true);
                 yesno.ShowDialog();
@@ -268,7 +285,7 @@ namespace QuanLyNhaHang.ViewModel
             ListTime.Clear();
             while (reader.Read())
             {
-                int ma = reader.GetInt16(0);
+                string ma = reader.GetString(0);
                 string ten = reader.GetString(1);
                 string donvi = reader.GetString(2);
                 string dongia = reader.GetSqlMoney(3).ToString();
