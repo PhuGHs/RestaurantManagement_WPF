@@ -9,6 +9,7 @@ using System.Data;
 using System.Collections.ObjectModel;
 using QuanLyNhaHang.Models;
 using System.Windows;
+using System.Windows.Media.Media3D;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -115,6 +116,7 @@ namespace QuanLyNhaHang.ViewModel
         public KhoViewModel()
         {
             OpenConnect();
+
             ListWareHouse = new ObservableCollection<Kho>();
             ListIn = new ObservableCollection<NhapKho>();
             ListTime = new ObservableCollection<string>();
@@ -210,8 +212,9 @@ namespace QuanLyNhaHang.ViewModel
                 CloseConnect();
             });
             #endregion
-            
-            
+
+
+            #region // delete command
             DeleteCM = new RelayCommand<object>((p) => 
             {
                 if (Selected == null) return false;
@@ -247,11 +250,47 @@ namespace QuanLyNhaHang.ViewModel
 
                 CloseConnect();
             });
-            CheckCM = new RelayCommand<object>((p) => { return true; }, (p) =>
+            #endregion
+
+            CheckCM = new RelayCommand<object>((p) => 
             {
-                MyMessageBox mess = new MyMessageBox("Kiểm tra");
-                mess.ShowDialog();
+                if (ListWareHouse == null) return false;
+                return true; 
+            }, (p) =>
+            {
+                OpenConnect();
+
+                string strQuery = "SELECT * FROM KHO WHERE (DonVi = N'Chai' AND TonDu <= 10) OR (DonVi = N'Kg' AND TonDu <= 5) OR (DonVi = N'Quả' AND TonDu <= 10)";
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = strQuery;
+                cmd.Connection = sqlCon;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    ListViewDisplay(strQuery);
+                    MyMessageBox yesno = new MyMessageBox("Bạn có muốn in danh sách?", true);
+                    yesno.ShowDialog();
+                    if (yesno.ACCEPT())
+                    {
+                        MyMessageBox mess = new MyMessageBox("In thành công!");
+                        mess.ShowDialog();
+                    }
+                    else
+                        ListViewDisplay("SELECT * FROM KHO");
+                }
+                else
+                {
+                    MyMessageBox mess = new MyMessageBox("Chưa có sản phẩm nào \n      cần nhập thêm!");
+                    mess.ShowDialog();
+                }    
+
+                CloseConnect();
             });
+            
+
             CloseConnect();
         }
 
@@ -334,7 +373,7 @@ namespace QuanLyNhaHang.ViewModel
             Suplier = "";
             SuplierInfo = "";
 
-            Selected = null;
+            TimeSelected = "";
         }
     }
 }
