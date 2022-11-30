@@ -17,6 +17,15 @@ namespace QuanLyNhaHang.ViewModel
         {
             OrderFeature_Command = new RelayCommand<MenuItem>((p) => true, (p) => OrderAnItem(p.ID));
             RemoveItemFeature_Command = new RelayCommand<SelectedMenuItem>((p) => true, (p) => RemoveAnItem(p));
+            ClearAllSelectedDishes = new RelayCommand<object>((p) => true, (p) => {
+                MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả những món đã chọn?", true);
+                msb.ShowDialog();
+                if (msb.ACCEPT() == false)
+                {
+                    return;
+                }
+                SelectedItems.Clear();
+            });
             SortingFeature_Command = new RelayCommand<object>((p) => true, (p) => {
                 if (MyComboboxSelection == "Giá cao -> thấp")
                 {
@@ -107,6 +116,7 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand SortingFeature_Command { get; set; }
         public ICommand ShowDetailOrder_Command { get; set; }
         public ICommand FindDishes { get; set; }
+        public ICommand ClearAllSelectedDishes { get; set; }
         #endregion
 
         #region methods
