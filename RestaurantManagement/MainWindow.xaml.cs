@@ -14,25 +14,31 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using QuanLyNhaHang.ViewModel;
+using QuanLyNhaHang.View;
 
-namespace Project
+namespace Project;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+    private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if(e.ChangedButton == MouseButton.Left)
         {
-            if(e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
+            this.DragMove();
         }
+    }
+
+    private void ShowUser_Click(object sender, RoutedEventArgs e)
+    {
+        User userSettingPage = new User();
+        userSettingPage.ShowDialog();
     }
 }
