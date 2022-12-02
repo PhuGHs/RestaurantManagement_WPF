@@ -39,6 +39,8 @@ namespace QuanLyNhaHang.ViewModel
                     DateStartWork = Selected.NgayVaoLam;
                     Account = Selected.TaiKhoan;
                     Password = Selected.MatKhau;
+
+                    IDBeforeEdit = ID;
                 }
                 OnPropertyChanged();
             }
@@ -89,6 +91,7 @@ namespace QuanLyNhaHang.ViewModel
         }
         #endregion
 
+        string IDBeforeEdit;
         public ICommand AddCM { get; set; }
         public ICommand EditCM { get; set; }
         public ICommand DeleteCM { get; set; }
@@ -104,6 +107,7 @@ namespace QuanLyNhaHang.ViewModel
             ListStaff = new ObservableCollection<NhanVien>();
             ListViewDisplay("SELECT * FROM NHANVIEN");
 
+            #region //add command
             AddCM = new RelayCommand<object>((p) => 
             {
                 foreach(NhanVien item in ListStaff)
@@ -141,21 +145,101 @@ namespace QuanLyNhaHang.ViewModel
 
                 CloseConnect();
             });
-            EditCM = new RelayCommand<object>((p) => { return true; }, (p) =>
+            #endregion
+
+
+            #region //edit command
+            EditCM = new RelayCommand<object>((p) => 
             {
-                MyMessageBox mess = new MyMessageBox("Sửa thành công!");
-                mess.ShowDialog();
-            });
-            DeleteCM = new RelayCommand<object>((p) => { return true; }, (p) =>
-            {
-                MyMessageBox yesno = new MyMessageBox("Bạn có chắc chắn xóa ?", true);
-                yesno.ShowDialog();
-                if (yesno.ACCEPT())
+                foreach (NhanVien item in ListStaff)
                 {
-                    MyMessageBox mess = new MyMessageBox("Xóa thành công!");
+                    if (ID == item.MaNV && Name == item.HoTen && Position == item.ChucVu && Address == item.DiaChi && Phone == item.SDT && Account == item.TaiKhoan && Password == item.MatKhau && DateBorn == item.NgaySinh && DateStartWork == item.NgayVaoLam)
+                    {
+                        if ((Fulltime == "Full-time" && item.Fulltime) || (Fulltime == "Part-time" && !item.Fulltime))
+                            return false;
+                    }
+                }
+                if (String.IsNullOrEmpty(ID) || String.IsNullOrEmpty(Name) || String.IsNullOrEmpty(Position) || String.IsNullOrEmpty(Fulltime) || String.IsNullOrEmpty(DateStartWork))
+                    return false;
+                return true;
+            }, (p) =>
+            {
+                OpenConnect();
+
+                if (ID != IDBeforeEdit)
+                {
+                    MyMessageBox mess = new MyMessageBox("Không được sửa ID!");
                     mess.ShowDialog();
                 }
+                else
+                {
+                    int ft;
+                    if (Fulltime == "Full-time") ft = 1;
+                    else ft = 0;
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "UPDATE NHANVIEN SET HoTen = N'" + Name + "', ChucVu = N'" + Position + "', DiaChi = N'" + Address + "', Fulltime = " + ft + ", TaiKhoan = '" + Account + "', MatKhau = '" + Password + "', SDT = '" + Phone + "', NgayVaoLam = '" + DateStartWork + "', NgaySinh = '" + DateBorn + "' WHERE MaNV = '" + ID + "'";
+                    cmd.Connection = sqlCon;
+
+                    int result = cmd.ExecuteNonQuery();
+
+                    if (result > 0)
+                    {
+                        MyMessageBox mess = new MyMessageBox("Sửa thành công!");
+                        mess.ShowDialog();
+                        Refresh();
+                    }
+                    else
+                    {
+                        MyMessageBox mess = new MyMessageBox("Sửa không thành công!");
+                        mess.ShowDialog();
+                    }
+                    ListViewDisplay("SELECT * FROM NHANVIEN");
+                }
+
+                CloseConnect();
             });
+            #endregion
+
+
+            DeleteCM = new RelayCommand<object>((p) => 
+            {
+                if (Selected == null) return false;
+                return true; 
+            }, (p) =>
+            {
+                OpenConnect();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "DELETE FROM NHANVIEN WHERE MaNV = '" + Selected.MaNV + "'";
+                cmd.Connection = sqlCon;
+
+                MyMessageBox yesno = new MyMessageBox("Bạn có chắc chắn xóa?", true);
+                yesno.ShowDialog();
+
+                if (yesno.ACCEPT())
+                {
+                    int result = cmd.ExecuteNonQuery();
+                    if (result > 0)
+                    {
+                        MyMessageBox mess = new MyMessageBox("Xóa thành công!");
+                        mess.ShowDialog();
+                        Refresh();
+                    }
+                    else
+                    {
+                        MyMessageBox mess = new MyMessageBox("Xóa không thành công!");
+                        mess.ShowDialog();
+                    }
+                }
+                ListViewDisplay("SELECT * FROM NHANVIEN");
+
+                CloseConnect();
+            });
+
+
             CheckCM = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
                 ChamCong chamCong = new ChamCong();
@@ -208,6 +292,20 @@ namespace QuanLyNhaHang.ViewModel
             {
                 sqlCon.Close();
             }
+        }
+
+        private void Refresh()
+        {
+            ID = "";
+            Name = "";
+            Position = "";
+            Fulltime = "";
+            Address = "";
+            Phone = "";
+            DateBorn = "";
+            DateStartWork = "";
+            Account = "";
+            Password = "";
         }
     }
 }
