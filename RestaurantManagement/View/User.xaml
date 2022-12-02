@@ -21,15 +21,19 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Border 
+            <StackPanel>
+                <Border 
                 VerticalAlignment="Center"
                 Width="120"
                 Height="120"
                 CornerRadius="100"
-                Background="Aqua"
+                Background="Transparent"
                 Grid.Column="0" 
                 BorderThickness="2"
-                BorderBrush="Black" />
+                BorderBrush="#1C3879">
+                    <Image Source="pack://application:,,,/images/logo.png"/>
+                </Border>
+            </StackPanel>
             <StackPanel Grid.Column="1">
                 <TextBlock 
                     Height="60"
@@ -43,17 +47,17 @@
                     Height="60"
                     Text="Nhân Viên"
                     FontSize="22"
-                    FontStyle="Italic" Margin="0,15,0,0"
+                    FontStyle="Italic"
                     />
             </StackPanel>
             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
                 <Button 
-                    Content="Cancel" 
+                    Content="Huỷ" 
                     Width="90" 
                     Background="White" 
                     Foreground="Black"/>
                 <Button 
-                    Content="Save" 
+                    Content="Lưu" 
                     Width="90" 
                     Foreground="White"
                     Background="#1C3879"
@@ -73,13 +77,86 @@
                 Header="Thông tin cá nhân" 
                 Cursor="Hand"
                 IsSelected="True">
-                <Grid/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="250"/>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical">
+                            <DockPanel  Margin="0 30 0 20">
+                                <Label Content="Họ tên" FontWeight="SemiBold" FontSize="20" />
+                                <TextBox HorizontalAlignment="Right" Width="200"  FontSize="20" TextAlignment="Center"/>
+                            </DockPanel>
+                            <DockPanel  Margin="0 30 0 20">
+                                <Label Content="Ngày sinh" FontWeight="SemiBold" FontSize="20" />
+                                <TextBox HorizontalAlignment="Right" Width="200"  FontSize="20" TextAlignment="Center"/>
+                            </DockPanel>
+                            <DockPanel  Margin="0 30 0 20">
+                                <Label Content="Giới tính" FontWeight="SemiBold" FontSize="20" />
+                                <ComboBox HorizontalAlignment="Right" Width="200"  FontSize="20" HorizontalContentAlignment="Center">
+                                    <ComboBoxItem IsSelected="True">Nam</ComboBoxItem>
+                                    <ComboBoxItem>Nữ</ComboBoxItem>
+                                    <ComboBoxItem>Khác</ComboBoxItem>
+                                </ComboBox>
+                            </DockPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Column="2">
+                            <DockPanel  Margin="0 30 0 20">
+                                <Label Content="Mã nhân viên" FontWeight="SemiBold" FontSize="20" />
+                                <TextBox  Width="200" FontSize="20" TextAlignment="Center" HorizontalAlignment="Right" FlowDirection="LeftToRight" IsReadOnly="True"/>
+                            </DockPanel>
+                            <DockPanel  Margin="0 30 0 20">
+                                <Label Content="Chức vụ" FontWeight="SemiBold" FontSize="20" />
+                                <TextBox  Width="200" FontSize="20" TextAlignment="Center" HorizontalAlignment="Right" FlowDirection="LeftToRight"/>
+                            </DockPanel>
+                            <DockPanel  Margin="0 30 0 20">
+                                <Label Content="Số điện thoại" FontWeight="SemiBold" FontSize="20" />
+                                <TextBox  Width="200" Margin="20 0 0 0" FontSize="20" TextAlignment="Center" HorizontalAlignment="Right" FlowDirection="LeftToRight"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </Grid>
+                    <DockPanel Grid.Row="1" Margin="0 30 0 20" Height="60" VerticalAlignment="Top">
+                        <Label Content="Địa chỉ" FontWeight="SemiBold" FontSize="20" />
+                        <TextBox VerticalAlignment="Center" HorizontalAlignment="Right" Width="600"  FontSize="20" TextAlignment="Center"/>
+                    </DockPanel>
+                </Grid>
             </TabItem>
             <TabItem 
-                Header="Thông tin tài khoản" 
+                Header="Đổi mật khẩu" 
                 Cursor="Hand"
                 Foreground="#1C3879">
-                <Grid Background="White" />
+                <Grid>
+                    <StackPanel 
+                        Orientation="Vertical" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center">
+                        <TextBox
+                          Width="220"
+                          FontSize="20"
+                          materialDesign:HintAssist.Hint="Mật khẩu hiện tại"
+                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox
+                          Width="220"
+                          FontSize="20"
+                          materialDesign:HintAssist.Hint="Mật khẩu mới"
+                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox
+                          Width="220"
+                          FontSize="20"
+                          materialDesign:HintAssist.Hint="Nhập lại mật khẩu mới"
+                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <Button 
+                            Margin="0 30 0 0" 
+                            Content="Đổi mật khẩu"
+                            Background="#1C3879"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
