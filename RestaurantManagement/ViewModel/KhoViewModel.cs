@@ -66,6 +66,8 @@ namespace QuanLyNhaHang.ViewModel
         private ObservableCollection<string> _ListTime;
         public ObservableCollection<string> ListTime { get => _ListTime; set { _ListTime = value; OnPropertyChanged(); } }
 
+
+        #region // Right Card
         private string IDBeforeEdit;
         private string _ID;
         public string ID { get => _ID; set { _ID = value; OnPropertyChanged(); } }
@@ -83,6 +85,9 @@ namespace QuanLyNhaHang.ViewModel
         public string Suplier { get => _Suplier; set { _Suplier = value; OnPropertyChanged(); } }
         private string _SuplierInfo;
         public string SuplierInfo { get => _SuplierInfo; set { _SuplierInfo = value; OnPropertyChanged(); } }
+        #endregion
+
+        #region // Search bar
         private string _Search;
         public string Search 
         { 
@@ -101,6 +106,7 @@ namespace QuanLyNhaHang.ViewModel
                 ListViewDisplay(strQuery);
             } 
         }
+        #endregion
 
 
         public ICommand AddCM { get; set; }
@@ -252,6 +258,8 @@ namespace QuanLyNhaHang.ViewModel
             });
             #endregion
 
+
+            #region // check command
             CheckCM = new RelayCommand<object>((p) => 
             {
                 if (ListWareHouse == null) return false;
@@ -289,7 +297,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 CloseConnect();
             });
-            
+            #endregion
 
             CloseConnect();
         }

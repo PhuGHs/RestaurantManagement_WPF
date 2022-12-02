@@ -30,18 +30,13 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox Name="txtSearch"
+                <TextBox Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"
                          Grid.Column="0"
                          FontFamily="Comfortaa"
                          FontSize="16"
                          Foreground="#1C3879"
-                         Margin="10 42 50 32"
+                         Margin="10 40 50 32"
                          materialDesign:HintAssist.Hint="Tìm kiếm">
-                    <TextBox.Text>
-                        <Binding Path="Tìm kiếm"
-                                 UpdateSourceTrigger="PropertyChanged">
-                        </Binding>
-                    </TextBox.Text>
                 </TextBox>
 
                 <Button Name="btnDeleteStaff"
@@ -78,18 +73,19 @@
             <Grid Grid.Row="1">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ListView ItemsSource="{Binding ListStaff}"
+                              SelectedItem="{Binding Selected, Mode=OneWayToSource}"
                               Margin="20 0 20 20"
                               FontFamily="Comfortaa"
                               FontSize="16">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Name}"
+                                <GridViewColumn DisplayMemberBinding="{Binding HoTen}"
                                                 Width="300"
                                                 Header="Họ tên" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Position}"
+                                <GridViewColumn DisplayMemberBinding="{Binding ChucVu}"
                                                 Width="150"
                                                 Header="Chức vụ" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Phone}"
+                                <GridViewColumn DisplayMemberBinding="{Binding NgayVaoLam}"
                                                 Width="220"
                                                 Header="Ngày vào làm" />
                             </GridView>
@@ -121,9 +117,22 @@
 
 
                     <Grid Grid.Row="0">
-                        <TextBox materialDesign:HintAssist.Hint="Họ tên"
-                                 Name="txtName"
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox materialDesign:HintAssist.Hint="ID"
+                                 Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}"
                                  FontFamily="Comfortaa"
+                                 Grid.Column="0"
+                                 FontSize="16"
+                                 Margin="15 21 5 21"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox materialDesign:HintAssist.Hint="Họ tên"
+                                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                 FontFamily="Comfortaa"
+                                 Grid.Column="1"
                                  FontSize="16"
                                  Margin="5 21 15 21"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -135,7 +144,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0">
                             <ComboBox materialDesign:HintAssist.Hint="Chức vụ"
-                                      Name="cboxPosition"
+                                      Text="{Binding Position, UpdateSourceTrigger=PropertyChanged}"
                                       FontFamily="Comfortaa"
                                       FontSize="16"
                                       Margin="15 20 5 23"
@@ -154,6 +163,7 @@
                         <Grid Grid.Column="1">
                             <ComboBox FontFamily="Comfortaa"
                                       FontSize="16"
+                                      Text="{Binding Fulltime, UpdateSourceTrigger=PropertyChanged}"
                                       Margin="5 23 15 15">
                                 <ComboBoxItem IsSelected="True">
                                     Full-time
@@ -171,7 +181,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Địa chỉ"
-                                     Name="txtAddress"
+                                     Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
                                      Margin="15 21 5 21"
@@ -179,7 +189,7 @@
                         </Grid>
                         <Grid Grid.Column="1">
                             <TextBox materialDesign:HintAssist.Hint="SĐT"
-                                     Name="txtPhone"
+                                     Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
                                      Margin="5 21 15 21"
@@ -192,14 +202,14 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
                         <DatePicker Grid.Column="0"
-                                    Name="dtBirthday"
+                                    SelectedDate="{Binding DateBorn, Mode=TwoWay, ValidatesOnDataErrors=False, UpdateSourceTrigger=PropertyChanged}"
                                     FontFamily="Comfortaa"
                                     FontSize="15"
                                     Margin="15 21 5 21"
                                     materialDesign:HintAssist.Hint="Ngày sinh"
                                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
                         <DatePicker Grid.Column="1"
-                                    Name="dtStartWork"
+                                    SelectedDate="{Binding DateStartWork, Mode=TwoWay, ValidatesOnDataErrors=False, UpdateSourceTrigger=PropertyChanged}"
                                     FontFamily="Comfortaa"
                                     FontSize="15"
                                     Margin="5 21 15 21"
@@ -213,7 +223,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Tài khoản"
-                                     Name="txtUsername"
+                                     Text="{Binding Account, UpdateSourceTrigger=PropertyChanged}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
                                      Margin="15 21 5 21"
@@ -221,7 +231,7 @@
                         </Grid>
                         <Grid Grid.Column="1">
                             <TextBox materialDesign:HintAssist.Hint="Mật khẩu"
-                                     Name="txtPassword"
+                                     Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
                                      Margin="5 21 15 21"
