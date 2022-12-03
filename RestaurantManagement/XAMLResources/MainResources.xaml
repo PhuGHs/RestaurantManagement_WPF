@@ -15,9 +15,6 @@
     <DataTemplate DataType="{x:Type viewmodel:TinhTrangBanViewModel}">
         <view:LichSuBan />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type viewmodel:CaiDatViewModel}">
-        <view:LichSuBan />
-    </DataTemplate>
     <Style TargetType="Window" x:Key="Font">
         <Setter Property="FontFamily" Value="Roboto"/>
     </Style>
