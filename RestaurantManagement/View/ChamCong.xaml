@@ -8,7 +8,7 @@
         xmlns:local1="clr-namespace:QuanLyNhaHang.ViewModel"
         mc:Ignorable="d"
         Name="chamCong"
-        Title="ChamCong" Height="450" Width="800"
+        Title="ChamCong" Height="550" Width="950"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="15"
         TextElement.FontFamily="Comfortaa"
@@ -28,7 +28,7 @@
                 BorderThickness="2"
                 BorderBrush="White"
                 Background="#EEEEEE"/>
-        <Button Margin="770,0,0,420"
+        <Button Margin="920,0,0,520"
                 Height="30"
                 Cursor="Hand"
                 Command="{Binding CloseCM}"
@@ -48,7 +48,7 @@
         </Label>
         <Label Foreground="Black"
                FontSize="12"
-               Margin="415,10,285,420">
+               Margin="491,10,209,420">
             Part-time :
         </Label>
         <Grid>
@@ -70,10 +70,13 @@
                     <Border CornerRadius="10"
                             Background="White"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ListView ItemsSource="{Binding ListChamCong}"
+                        <ListView ItemsSource="{Binding ListFulltime}"
                                   Margin="10 0 10 10">
                             <ListView.View>
                                 <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding ID}"
+                                                    Width="100"
+                                                    Header="ID" />
                                     <GridViewColumn DisplayMemberBinding="{Binding Name}"
                                                     Width="200"
                                                     Header="Họ tên" />
@@ -107,10 +110,13 @@
                     <Border CornerRadius="10"
                             Background="White"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ListView ItemsSource="{Binding ListChamCong}"
+                        <ListView ItemsSource="{Binding ListParttime}"
                                   Margin="10 0 10 10">
                             <ListView.View>
                                 <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding ID}"
+                                                    Width="100"
+                                                    Header="ID" />
                                     <GridViewColumn DisplayMemberBinding="{Binding Name}"
                                                     Width="200"
                                                     Header="Họ tên" />
