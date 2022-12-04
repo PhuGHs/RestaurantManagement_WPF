@@ -24,9 +24,6 @@ namespace QuanLyNhaHang.ViewModel
 {
     public class LichSuBanViewModel : BaseViewModel
     {
-
-
-
         private bool isGettingSource;
         public bool IsGettingSource
         {
@@ -87,12 +84,12 @@ namespace QuanLyNhaHang.ViewModel
             set { _ListProduct = value; OnPropertyChanged(); }
         }
 
-        private ObservableCollection<HoaDon> _ListBill;
-        public ObservableCollection<HoaDon> ListBill
-        {
-            get { return _ListBill; }
-            set { _ListBill = value; OnPropertyChanged(); }
-        }
+        //private ObservableCollection<HoaDon> _ListBill;
+        //public ObservableCollection<HoaDon> ListBill
+        //{
+        //    get { return _ListBill; }
+        //    set { _ListBill = value; OnPropertyChanged(); }
+        //}
         private string timkiem;
         public string Search
         {

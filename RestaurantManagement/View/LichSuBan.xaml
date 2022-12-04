@@ -64,7 +64,7 @@
                               FontSize="13"
                               x:Name="filtercbb"
                               SelectedIndex="0"
-                              SelectedItem="{Binding SelectedImportItemFilter}" Foreground="#FF01050F" Background="{x:Null}" BorderBrush="#89090000" OpacityMask="#FFF71717" SelectionChanged="filtercbb_SelectionChanged">
+                              SelectedItem="{Binding SelectedImportItemFilter}" Foreground="#FF01050F" Background="{x:Null}" BorderBrush="#89090000" OpacityMask="#FFF71717">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding CheckImportItemFilterCM}"

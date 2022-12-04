@@ -13,13 +13,13 @@ namespace QuanLyNhaHang.ViewModel
 {
     public class CaiDatViewModel : BaseViewModel
     {
-        public CaiDatViewModel()
-        {
-            connectionString = ConfigurationManager.ConnectionStrings["QuanLyNhaHang"].ToString();
-            UpdateInfoCommand = new RelayCommand<object>((p) => true, (p) => UpdateInfo());
-            OpenConnection();
-            ReadData();
-        }
+        //public CaiDatViewModel()
+        //{
+        //    connectionString = ConfigurationManager.ConnectionStrings["QuanLyNhaHang"].ToString();
+        //    UpdateInfoCommand = new RelayCommand<object>((p) => true, (p) => UpdateInfo());
+        //    OpenConnection();
+        //    ReadData();
+        //}
         #region variables
         private NhanVien _nhanVien;
         public NhanVien NhanVien { get { return _nhanVien; } set { _nhanVien = value; OnPropertyChanged(); } }
