@@ -119,188 +119,188 @@ namespace QuanLyNhaHang.ViewModel
         private SqlConnection sqlCon = null;
 
 
-        public KhoViewModel()
-        {
-            OpenConnect();
+        //public KhoViewModel()
+        //{
+        //    OpenConnect();
 
-            ListWareHouse = new ObservableCollection<Kho>();
-            ListIn = new ObservableCollection<NhapKho>();
-            ListTime = new ObservableCollection<string>();
-            DateIn = DateTime.Now.ToShortDateString();
+        //    ListWareHouse = new ObservableCollection<Kho>();
+        //    ListIn = new ObservableCollection<NhapKho>();
+        //    ListTime = new ObservableCollection<string>();
+        //    DateIn = DateTime.Now.ToShortDateString();
 
-            ListViewDisplay("SELECT * FROM KHO");
-
-
-            #region //add command
-            AddCM = new RelayCommand<object>((p) => 
-            {
-                if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
-                    return false;
-                OnPropertyChanged("ID");
-                foreach (NhapKho item in ListIn)
-                {
-                    if (ID == item.MaNhap)
-                        return false;
-                }
-                return true;
-            }, (p) =>
-            {
-                OpenConnect();
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT INTO CHITIETNHAP(MaNhap, TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES ('" + ID +"',N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
-                cmd.Connection = sqlCon;
-
-                int result = cmd.ExecuteNonQuery();
-                if (result > 0)
-                {
-                    MyMessageBox mess = new MyMessageBox("Nhập thành công!");
-                    mess.ShowDialog();
-                    GetInputInfo(Name);
-                }
-                else
-                {
-                    MyMessageBox mess = new MyMessageBox("Nhập không thành công!");
-                    mess.ShowDialog();
-                }    
-                ListViewDisplay("SELECT * FROM KHO");
+        //    ListViewDisplay("SELECT * FROM KHO");
 
 
-                CloseConnect();
-            });
-            #endregion
+        //    #region //add command
+        //    AddCM = new RelayCommand<object>((p) => 
+        //    {
+        //        if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
+        //            return false;
+        //        OnPropertyChanged("ID");
+        //        foreach (NhapKho item in ListIn)
+        //        {
+        //            if (ID == item.MaNhap)
+        //                return false;
+        //        }
+        //        return true;
+        //    }, (p) =>
+        //    {
+        //        OpenConnect();
+
+        //        SqlCommand cmd = new SqlCommand();
+        //        cmd.CommandType = CommandType.Text;
+        //        cmd.CommandText = "INSERT INTO CHITIETNHAP(MaNhap, TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES ('" + ID +"',N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
+        //        cmd.Connection = sqlCon;
+
+        //        int result = cmd.ExecuteNonQuery();
+        //        if (result > 0)
+        //        {
+        //            MyMessageBox mess = new MyMessageBox("Nhập thành công!");
+        //            mess.ShowDialog();
+        //            GetInputInfo(Name);
+        //        }
+        //        else
+        //        {
+        //            MyMessageBox mess = new MyMessageBox("Nhập không thành công!");
+        //            mess.ShowDialog();
+        //        }    
+        //        ListViewDisplay("SELECT * FROM KHO");
 
 
-            #region // edit command
-            EditCM = new RelayCommand<object>((p) => 
-            {
-                foreach (NhapKho item in ListIn)
-                {
-                    if (ID == item.MaNhap && Name == item.TenSP && Count == item.SoLuong && DateIn == item.NgayNhap && Value == item.DonGia && Unit == item.DonVi && Suplier == item.NguonNhap && SuplierInfo == item.LienLac)
-                        return false;
-                }
-                if (string.IsNullOrEmpty(ID) || string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
-                    return false;
-                return true;
-            }, (p) =>
-            {
-                OpenConnect();
-
-                if (ID != IDBeforeEdit)
-                {
-                    MyMessageBox mess = new MyMessageBox("Không được sửa ID!");
-                    mess.ShowDialog();
-                }
-                else
-                {
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "UPDATE CHITIETNHAP SET TenSP = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE MaNhap = '" + ID + "'";
-                    cmd.Connection = sqlCon;
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result > 0)
-                    {
-                        MyMessageBox mess = new MyMessageBox("Sửa thành công!");
-                        mess.ShowDialog();
-                        GetInputInfo(Name);
-                    }
-                    else
-                    {
-                        MyMessageBox mess = new MyMessageBox("Sửa không thành công!");
-                        mess.ShowDialog();
-                    }
-                    ListViewDisplay("SELECT * FROM KHO");
-                }
-
-                CloseConnect();
-            });
-            #endregion
+        //        CloseConnect();
+        //    });
+        //    #endregion
 
 
-            #region // delete command
-            DeleteCM = new RelayCommand<object>((p) => 
-            {
-                if (Selected == null) return false;
-                return true; 
-            }, (p) =>
-            {
-                OpenConnect();
+        //    #region // edit command
+        //    EditCM = new RelayCommand<object>((p) => 
+        //    {
+        //        foreach (NhapKho item in ListIn)
+        //        {
+        //            if (ID == item.MaNhap && Name == item.TenSP && Count == item.SoLuong && DateIn == item.NgayNhap && Value == item.DonGia && Unit == item.DonVi && Suplier == item.NguonNhap && SuplierInfo == item.LienLac)
+        //                return false;
+        //        }
+        //        if (string.IsNullOrEmpty(ID) || string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
+        //            return false;
+        //        return true;
+        //    }, (p) =>
+        //    {
+        //        OpenConnect();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "DELETE FROM KHO WHERE TenSP = N'" + Selected.TenSanPham + "'";
-                cmd.Connection = sqlCon;
+        //        if (ID != IDBeforeEdit)
+        //        {
+        //            MyMessageBox mess = new MyMessageBox("Không được sửa ID!");
+        //            mess.ShowDialog();
+        //        }
+        //        else
+        //        {
+        //            SqlCommand cmd = new SqlCommand();
+        //            cmd.CommandType = CommandType.Text;
+        //            cmd.CommandText = "UPDATE CHITIETNHAP SET TenSP = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE MaNhap = '" + ID + "'";
+        //            cmd.Connection = sqlCon;
 
-                MyMessageBox yesno = new MyMessageBox("Bạn có chắc chắn xóa?", true);
-                yesno.ShowDialog();
+        //            int result = cmd.ExecuteNonQuery();
 
-                if (yesno.ACCEPT())
-                {
-                    int result = cmd.ExecuteNonQuery();
-                    if (result > 0)
-                    {
-                        MyMessageBox mess = new MyMessageBox("Xóa thành công!");
-                        mess.ShowDialog();
-                        RefreshRightCard();
-                    }
-                    else
-                    {
-                        MyMessageBox mess = new MyMessageBox("Xóa không thành công!");
-                        mess.ShowDialog();
-                    }    
-                }
-                ListViewDisplay("SELECT * FROM KHO");
+        //            if (result > 0)
+        //            {
+        //                MyMessageBox mess = new MyMessageBox("Sửa thành công!");
+        //                mess.ShowDialog();
+        //                GetInputInfo(Name);
+        //            }
+        //            else
+        //            {
+        //                MyMessageBox mess = new MyMessageBox("Sửa không thành công!");
+        //                mess.ShowDialog();
+        //            }
+        //            ListViewDisplay("SELECT * FROM KHO");
+        //        }
 
-                CloseConnect();
-            });
-            #endregion
+        //        CloseConnect();
+        //    });
+        //    #endregion
 
 
-            #region // check command
-            CheckCM = new RelayCommand<object>((p) => 
-            {
-                if (ListWareHouse == null) return false;
-                return true; 
-            }, (p) =>
-            {
-                OpenConnect();
+        //    #region // delete command
+        //    DeleteCM = new RelayCommand<object>((p) => 
+        //    {
+        //        if (Selected == null) return false;
+        //        return true; 
+        //    }, (p) =>
+        //    {
+        //        OpenConnect();
 
-                string strQuery = "SELECT * FROM KHO WHERE (DonVi = N'Chai' AND TonDu <= 10) OR (DonVi = N'Kg' AND TonDu <= 5) OR (DonVi = N'Quả' AND TonDu <= 10)";
+        //        SqlCommand cmd = new SqlCommand();
+        //        cmd.CommandType = CommandType.Text;
+        //        cmd.CommandText = "DELETE FROM KHO WHERE TenSP = N'" + Selected.TenSanPham + "'";
+        //        cmd.Connection = sqlCon;
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = strQuery;
-                cmd.Connection = sqlCon;
+        //        MyMessageBox yesno = new MyMessageBox("Bạn có chắc chắn xóa?", true);
+        //        yesno.ShowDialog();
 
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    ListViewDisplay(strQuery);
-                    MyMessageBox yesno = new MyMessageBox("Bạn có muốn in danh sách?", true);
-                    yesno.ShowDialog();
-                    if (yesno.ACCEPT())
-                    {
-                        MyMessageBox mess = new MyMessageBox("In thành công!");
-                        mess.ShowDialog();
-                    }
-                    else
-                        ListViewDisplay("SELECT * FROM KHO");
-                }
-                else
-                {
-                    MyMessageBox mess = new MyMessageBox("Chưa có sản phẩm nào \n      cần nhập thêm!");
-                    mess.ShowDialog();
-                }    
+        //        if (yesno.ACCEPT())
+        //        {
+        //            int result = cmd.ExecuteNonQuery();
+        //            if (result > 0)
+        //            {
+        //                MyMessageBox mess = new MyMessageBox("Xóa thành công!");
+        //                mess.ShowDialog();
+        //                RefreshRightCard();
+        //            }
+        //            else
+        //            {
+        //                MyMessageBox mess = new MyMessageBox("Xóa không thành công!");
+        //                mess.ShowDialog();
+        //            }    
+        //        }
+        //        ListViewDisplay("SELECT * FROM KHO");
 
-                CloseConnect();
-            });
-            #endregion
+        //        CloseConnect();
+        //    });
+        //    #endregion
 
-            CloseConnect();
-        }
+
+        //    #region // check command
+        //    CheckCM = new RelayCommand<object>((p) => 
+        //    {
+        //        if (ListWareHouse == null) return false;
+        //        return true; 
+        //    }, (p) =>
+        //    {
+        //        OpenConnect();
+
+        //        string strQuery = "SELECT * FROM KHO WHERE (DonVi = N'Chai' AND TonDu <= 10) OR (DonVi = N'Kg' AND TonDu <= 5) OR (DonVi = N'Quả' AND TonDu <= 10)";
+
+        //        SqlCommand cmd = new SqlCommand();
+        //        cmd.CommandType = CommandType.Text;
+        //        cmd.CommandText = strQuery;
+        //        cmd.Connection = sqlCon;
+
+        //        SqlDataReader reader = cmd.ExecuteReader();
+        //        if (reader.Read())
+        //        {
+        //            ListViewDisplay(strQuery);
+        //            MyMessageBox yesno = new MyMessageBox("Bạn có muốn in danh sách?", true);
+        //            yesno.ShowDialog();
+        //            if (yesno.ACCEPT())
+        //            {
+        //                MyMessageBox mess = new MyMessageBox("In thành công!");
+        //                mess.ShowDialog();
+        //            }
+        //            else
+        //                ListViewDisplay("SELECT * FROM KHO");
+        //        }
+        //        else
+        //        {
+        //            MyMessageBox mess = new MyMessageBox("Chưa có sản phẩm nào \n      cần nhập thêm!");
+        //            mess.ShowDialog();
+        //        }    
+
+        //        CloseConnect();
+        //    });
+        //    #endregion
+
+        //    CloseConnect();
+        //}
 
         private void OpenConnect()
         {
