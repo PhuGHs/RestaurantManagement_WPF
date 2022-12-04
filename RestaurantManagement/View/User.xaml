@@ -41,7 +41,7 @@
             <StackPanel Grid.Column="1">
                 <TextBlock 
                     Height="60"
-                    Text="Tên nhân viên"
+                    Text="{Binding NhanVien.HoTen}"
                     FontSize="30"
                     FontWeight="SemiBold"
                     VerticalAlignment="Center" 
@@ -49,7 +49,7 @@
                     Margin="0,20,0,0"/>
                 <TextBlock 
                     Height="60"
-                    Text="Nhân Viên"
+                    Text="{Binding NhanVien.ChucVu}"
                     FontSize="22"
                     FontStyle="Italic"
                     />
@@ -65,7 +65,8 @@
                     Width="90" 
                     Foreground="White"
                     Background="#1C3879"
-                    Margin="20,0,0,0"/>
+                    Margin="20,0,0,0"
+                    Command="{Binding UpdateInfoCommand}"/>
             </StackPanel>
         </Grid>
         <Separator 
@@ -96,23 +97,24 @@
                             <DockPanel  Margin="0 30 0 20">
                                 <Label Content="Họ tên" FontWeight="SemiBold" FontSize="20" />
                                 <TextBox HorizontalAlignment="Right" 
-                                         Text="{Binding NhanVien.HoTen}"
+                                         Text="{Binding NhanVien.HoTen, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                          Width="200"  
                                          FontSize="20" 
                                          TextAlignment="Center"/>
                             </DockPanel>
                             <DockPanel  Margin="0 30 0 20">
                                 <Label Content="Ngày sinh" FontWeight="SemiBold" FontSize="20" />
-                                <TextBox HorizontalAlignment="Right"
-                                         Text="{Binding NhanVien.NgaySinh}"
-                                         Width="200"  
-                                         FontSize="20" 
-                                         TextAlignment="Center"/>
+                                <DatePicker HorizontalAlignment="Right" 
+                                            Width="200" 
+                                            FontSize="20" 
+                                            Text="{Binding NhanVien.NgaySinh, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                            SelectedDateFormat="Short"
+                                            DisplayDate="{Binding NhanVien.NgaySinh, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                             </DockPanel>
                             <DockPanel  Margin="0 30 0 20">
                                 <Label Content="Ngày vào làm" FontWeight="SemiBold" FontSize="20" />
                                 <TextBox HorizontalAlignment="Right" 
-                                         Text="{Binding NhanVien.NgayVaoLam}"
+                                         Text="{Binding NhanVien.NgayVaoLam, StringFormat={}{0:dd/MM/yyyy}}"
                                          Width="200"  
                                          FontSize="20" 
                                          TextAlignment="Center" 
@@ -153,7 +155,7 @@
                             <DockPanel  Margin="0 30 0 20">
                                 <Label Content="Số điện thoại" FontWeight="SemiBold" FontSize="20" />
                                 <TextBox  Width="200" 
-                                          Text="{Binding NhanVien.SDT}"
+                                          Text="{Binding NhanVien.SDT, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                           Margin="20 0 0 0" 
                                           FontSize="20" 
                                           TextAlignment="Center" 
@@ -162,17 +164,21 @@
                             </DockPanel>
                             <DockPanel  Margin="0 30 0 20">
                                 <Label Content="Loại nhân viên" FontWeight="SemiBold" FontSize="20" />
-                                <ComboBox HorizontalAlignment="Right" Width="200"  FontSize="20" HorizontalContentAlignment="Center">
-                                    <ComboBoxItem IsSelected="True">Full-time</ComboBoxItem>
-                                    <ComboBoxItem>Part-time</ComboBoxItem>
-                                </ComboBox>
+                                <TextBox  Width="200" 
+                                          Text="{Binding LoaiNhanVien_Str}"
+                                          Margin="20 0 0 0" 
+                                          FontSize="20" 
+                                          TextAlignment="Center" 
+                                          HorizontalAlignment="Right" 
+                                          FlowDirection="LeftToRight"
+                                          IsReadOnly="True"/>
                             </DockPanel>
                         </StackPanel>
                     </Grid>
                     <DockPanel Grid.Row="1" Margin="0 30 0 20" Height="60" VerticalAlignment="Top">
                         <Label Content="Địa chỉ" FontWeight="SemiBold" FontSize="20" />
                         <TextBox VerticalAlignment="Center" 
-                                 Text="{Binding NhanVien.DiaChi}"
+                                 Text="{Binding NhanVien.DiaChi, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                  HorizontalAlignment="Right" 
                                  Width="600"  FontSize="20" TextAlignment="Center"/>
                     </DockPanel>
