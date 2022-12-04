@@ -27,6 +27,9 @@
     <DataTemplate DataType="{x:Type viewmodel:NhanVienViewModel}">
         <view:NhanVien />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewmodel:ThongKeViewModel}">
+        <view:ThongKe />
+    </DataTemplate>
     <Style TargetType="Window" x:Key="Font">
         <Setter Property="FontFamily" Value="Roboto"/>
     </Style>
