@@ -164,7 +164,7 @@
                                 <fa:IconImage Icon="Bell" />
                             </Button>
 
-                            <Button Style="{StaticResource HeaderProfileButton}">
+                            <Button Style="{StaticResource HeaderProfileButton}" Click="ShowUser_Click">
                                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                     <Border Style="{StaticResource HeaderProfileAvatar}" />
                                     <TextBlock Margin="5 0 0 0" Text="Lê Văn Phú"  TextAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderProfileName}"/>
