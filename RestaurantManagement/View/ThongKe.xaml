@@ -100,7 +100,7 @@
                               FontSize="10"></lvc:Axis>
                 </lvc:CartesianChart.AxisX>
                 <lvc:CartesianChart.AxisY>
-                    <lvc:Axis Title="Đồng" 
+                    <lvc:Axis Title="Triệu đồng" 
                               Foreground="#1C3879"
                               FontFamily="Comfortaa"
                               FontSize="16"

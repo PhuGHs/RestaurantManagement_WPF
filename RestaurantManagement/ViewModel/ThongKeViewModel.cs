@@ -16,13 +16,13 @@ namespace QuanLyNhaHang.ViewModel
         public ThongKeViewModel()
         {
             SeriesCollection = new SeriesCollection();
-            Formatter = value => value.ToString("N");
+            Formatter = value => value.ToString("G");
             DayMonthCheckingCommand = new RelayCommand<Months>((p) => true, (p) => DayMonthCheck());
             MonthYearCheckingCommand = new RelayCommand<Years>((p) => true, (p) => MonthYearCheck());
             LoadMonth();
             LoadYear();
         }
-        int i = 0;
+        #region Variables and Properties
         private ObservableCollection<Months> months = new ObservableCollection<Months>();
         public ObservableCollection<Months> Months
         {
@@ -109,7 +109,7 @@ namespace QuanLyNhaHang.ViewModel
                 }
             }
         }
-
+        #endregion
         #region Commands
         public ICommand DayMonthCheckingCommand { get; set; }
         public ICommand MonthYearCheckingCommand { get; set; }
@@ -177,8 +177,8 @@ namespace QuanLyNhaHang.ViewModel
 
                 //Tinh so tien thu duoc
 
-                ProfitbyMonth[i] = rd.Next(5000000 - (500000 - 1)) + 500000; //Dang mac dinh, fix sau
-                DecSumofProfit += ProfitbyMonth[i];
+                ProfitbyMonth[i] = rd.Next(50 - (2 - 1)) + 2; //Dang mac dinh, fix sau
+                DecSumofProfit += ProfitbyMonth[i] * 1000000;
                 SumofProfit = String.Format("{0:0,0 VND}", DecSumofProfit);
             }
             SeriesCollection.Add(new LineSeries
@@ -197,8 +197,8 @@ namespace QuanLyNhaHang.ViewModel
 
                 //Tinh so tien thu duoc
 
-                PaidbyMonth[i] = rd.Next(5000000 - (500000 - 1)) + 500000; //Dang mac dinh, fix sau
-                DecSumofPaid += PaidbyMonth[i];
+                PaidbyMonth[i] = rd.Next(50 - (2 - 1)) + 2; //Dang mac dinh, fix sau
+                DecSumofPaid += PaidbyMonth[i] * 1000000;
                 SumofPaid = String.Format("{0:0,0 VND}", DecSumofPaid);
             }
             SeriesCollection.Add(new LineSeries
@@ -227,8 +227,8 @@ namespace QuanLyNhaHang.ViewModel
 
 
                 //Tinh so tien thu duoc 
-                ProfitbyYear[i] = rd.Next(500000000 - (500000 - 1)) + 500000;  //De mac dinh, fix sau
-                DecSumofProfit += ProfitbyYear[i];
+                ProfitbyYear[i] = rd.Next(500 - (50 - 1)) + 50;  //De mac dinh, fix sau
+                DecSumofProfit += ProfitbyYear[i] * 1000000;
                 SumofProfit = String.Format("{0:0,0 VND}", DecSumofProfit);
             }
             SeriesCollection.Add(new LineSeries
@@ -248,8 +248,8 @@ namespace QuanLyNhaHang.ViewModel
 
 
                 //Tinh so tien thu duoc 
-                PaidbyYear[i] = rd.Next(500000000 - (500000 - 1)) + 500000;  //De mac dinh, fix sau
-                DecSumofPaid += PaidbyYear[i];
+                PaidbyYear[i] = rd.Next(500 - (50 - 1)) + 50;  //De mac dinh, fix sau
+                DecSumofPaid += PaidbyYear[i] * 1000000;
                 SumofPaid = String.Format("{0:0,0 VND}", DecSumofPaid);
             }
             SeriesCollection.Add(new LineSeries
