@@ -108,7 +108,7 @@ namespace QuanLyNhaHang.ViewModel
                 ListViewDisplay(str);
             }
         }
-        private string strCon = @"Data Source=.\DESKTOP-ADQ1342;Initial Catalog=QuanLyNhaHan;Integrated Security=True";
+        private string strCon = @"Data Source=.\DESKTOP-ADQ1342;Initial Catalog=QuanLyNhaHang;Integrated Security=True";
         private SqlConnection sqlCon = null;
 
         public ICommand LoadImportPageCM { get; set; }

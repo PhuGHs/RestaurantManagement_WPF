@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              TextElement.FontFamily="Comfortaa Light"
              TextElement.FontSize="15"
-             d:DesignHeight="660" d:DesignWidth="1060">
+             d:DesignHeight="670" d:DesignWidth="1070">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -143,12 +143,12 @@
 
                         <TextBox materialDesign:HintAssist.Hint="ID"
                                  Grid.Column="0"
-                                 Margin="15 22 15 22.5"
+                                 Margin="15 22 5 22.5"
                                  Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox materialDesign:HintAssist.Hint="Tên sản phẩm"
                                  Grid.Column="1"
-                                 Margin="15 22 15 22.5"
+                                 Margin="5 22 15 22.5"
                                  Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>

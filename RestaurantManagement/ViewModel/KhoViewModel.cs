@@ -132,7 +132,7 @@ namespace QuanLyNhaHang.ViewModel
 
 
         //    #region //add command
-        //    AddCM = new RelayCommand<object>((p) => 
+        //    AddCM = new RelayCommand<object>((p) =>
         //    {
         //        if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
         //            return false;
@@ -149,7 +149,7 @@ namespace QuanLyNhaHang.ViewModel
 
         //        SqlCommand cmd = new SqlCommand();
         //        cmd.CommandType = CommandType.Text;
-        //        cmd.CommandText = "INSERT INTO CHITIETNHAP(MaNhap, TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES ('" + ID +"',N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'"+ DateIn +"',N'" + Suplier + "','" + SuplierInfo + "')";
+        //        cmd.CommandText = "INSERT INTO CHITIETNHAP(MaNhap, TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES ('" + ID + "',N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'" + DateIn + "',N'" + Suplier + "','" + SuplierInfo + "')";
         //        cmd.Connection = sqlCon;
 
         //        int result = cmd.ExecuteNonQuery();
@@ -163,7 +163,7 @@ namespace QuanLyNhaHang.ViewModel
         //        {
         //            MyMessageBox mess = new MyMessageBox("Nhập không thành công!");
         //            mess.ShowDialog();
-        //        }    
+        //        }
         //        ListViewDisplay("SELECT * FROM KHO");
 
 
@@ -173,7 +173,7 @@ namespace QuanLyNhaHang.ViewModel
 
 
         //    #region // edit command
-        //    EditCM = new RelayCommand<object>((p) => 
+        //    EditCM = new RelayCommand<object>((p) =>
         //    {
         //        foreach (NhapKho item in ListIn)
         //        {
@@ -221,10 +221,10 @@ namespace QuanLyNhaHang.ViewModel
 
 
         //    #region // delete command
-        //    DeleteCM = new RelayCommand<object>((p) => 
+        //    DeleteCM = new RelayCommand<object>((p) =>
         //    {
         //        if (Selected == null) return false;
-        //        return true; 
+        //        return true;
         //    }, (p) =>
         //    {
         //        OpenConnect();
@@ -250,7 +250,7 @@ namespace QuanLyNhaHang.ViewModel
         //            {
         //                MyMessageBox mess = new MyMessageBox("Xóa không thành công!");
         //                mess.ShowDialog();
-        //            }    
+        //            }
         //        }
         //        ListViewDisplay("SELECT * FROM KHO");
 
@@ -260,10 +260,10 @@ namespace QuanLyNhaHang.ViewModel
 
 
         //    #region // check command
-        //    CheckCM = new RelayCommand<object>((p) => 
+        //    CheckCM = new RelayCommand<object>((p) =>
         //    {
         //        if (ListWareHouse == null) return false;
-        //        return true; 
+        //        return true;
         //    }, (p) =>
         //    {
         //        OpenConnect();
@@ -293,7 +293,7 @@ namespace QuanLyNhaHang.ViewModel
         //        {
         //            MyMessageBox mess = new MyMessageBox("Chưa có sản phẩm nào \n      cần nhập thêm!");
         //            mess.ShowDialog();
-        //        }    
+        //        }
 
         //        CloseConnect();
         //    });
@@ -347,7 +347,7 @@ namespace QuanLyNhaHang.ViewModel
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT TOP 5 * FROM CHITIETNHAP WHERE TenSP = N'" + tensanpham + "' ORDER BY NgayNhap DESC";
+            cmd.CommandText = "SELECT TOP 10 * FROM CHITIETNHAP WHERE TenSP = N'" + tensanpham + "' ORDER BY NgayNhap DESC";
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
             ListIn.Clear();

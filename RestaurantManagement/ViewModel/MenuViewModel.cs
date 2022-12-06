@@ -18,7 +18,7 @@ namespace QuanLyNhaHang.ViewModel
             OrderFeature_Command = new RelayCommand<MenuItem>((p) => true, (p) => OrderAnItem(p.ID));
             RemoveItemFeature_Command = new RelayCommand<SelectedMenuItem>((p) => true, (p) => RemoveAnItem(p));
             ClearAllSelectedDishes = new RelayCommand<object>((p) => true, (p) => {
-                MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả những món đã chọn?", true);
+                MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả \n   những món đã chọn?", true);
                 msb.ShowDialog();
                 if (msb.ACCEPT() == false)
                 {

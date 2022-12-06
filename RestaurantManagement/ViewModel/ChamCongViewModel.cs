@@ -24,14 +24,14 @@ namespace QuanLyNhaHang.ViewModel
         private SqlConnection sqlCon = null;
 
         public ICommand CloseCM { get; set; }
-        //public ChamCongViewModel()
-        //{
-        //    CloseCM = new RelayCommand<Window>((p) => { return true; }, (p) =>
-        //    {
-        //        if (p == null) return;
-        //        p.Close();
-        //    });
-        //}
+        public ChamCongViewModel()
+        {
+            CloseCM = new RelayCommand<Window>((p) => { return true; }, (p) =>
+            {
+                if (p == null) return;
+                p.Close();
+            });
+        }
 
         private void ListViewDisplay(string strQuery)
         {

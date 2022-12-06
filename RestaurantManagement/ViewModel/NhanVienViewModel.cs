@@ -108,9 +108,9 @@ namespace QuanLyNhaHang.ViewModel
         //    ListViewDisplay("SELECT * FROM NHANVIEN");
 
         //    #region //add command
-        //    AddCM = new RelayCommand<object>((p) => 
+        //    AddCM = new RelayCommand<object>((p) =>
         //    {
-        //        foreach(NhanVien item in ListStaff)
+        //        foreach (NhanVien item in ListStaff)
         //        {
         //            if (item.MaNV == ID) return false;
         //        }
@@ -149,7 +149,7 @@ namespace QuanLyNhaHang.ViewModel
 
 
         //    #region //edit command
-        //    EditCM = new RelayCommand<object>((p) => 
+        //    EditCM = new RelayCommand<object>((p) =>
         //    {
         //        foreach (NhanVien item in ListStaff)
         //        {
@@ -203,10 +203,11 @@ namespace QuanLyNhaHang.ViewModel
         //    #endregion
 
 
-        //    DeleteCM = new RelayCommand<object>((p) => 
+        //    #region //delete command
+        //    DeleteCM = new RelayCommand<object>((p) =>
         //    {
         //        if (Selected == null) return false;
-        //        return true; 
+        //        return true;
         //    }, (p) =>
         //    {
         //        OpenConnect();
@@ -238,6 +239,7 @@ namespace QuanLyNhaHang.ViewModel
 
         //        CloseConnect();
         //    });
+        //    #endregion
 
 
         //    CheckCM = new RelayCommand<object>((p) => { return true; }, (p) =>
@@ -263,7 +265,7 @@ namespace QuanLyNhaHang.ViewModel
             ListStaff.Clear();
             while (reader.Read())
             {
-                string id = reader.GetInt16(0).ToString();
+                string id = reader.GetString(0);
                 string ten = reader.GetString(1);
                 string chucvu = reader.GetString(2);
                 string diachi = reader.GetString(3);

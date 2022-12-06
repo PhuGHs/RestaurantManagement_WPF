@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyNhaHang"
         mc:Ignorable="d"
-        Title="MyMessageBox" Height="150" Width="400" 
+        Title="MyMessageBox" Height="150" Width="330" 
         WindowStyle="None" 
         AllowsTransparency="True" 
         Background="Transparent"
@@ -20,7 +20,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Label Name="lbMessage"
-               Margin="15"
+               Margin="5"
                VerticalContentAlignment="Center"
                HorizontalContentAlignment="Center"
                FontFamily="Comfortaa"
@@ -43,7 +43,6 @@
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -60,7 +59,7 @@
                         FontFamily="Comfortaa"
                         FontSize="16">
                 </Button>
-                <Button Grid.Column="2"
+                <Button Grid.Column="1"
                         Name="btnNO"
                         Content="NO"
                         Click="btnNO_Click"
