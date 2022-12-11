@@ -6,10 +6,11 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using QuanLyNhaHang.DataProvider;
 
 namespace QuanLyNhaHang.ViewModel
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : DBConnection, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
