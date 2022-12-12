@@ -91,7 +91,8 @@
 
         <Grid Grid.Row="2" 
               Margin="10">
-            <lvc:CartesianChart Series="{Binding SeriesCollection}" 
+            <lvc:CartesianChart Series="{Binding SeriesCollection}"
+                                Visibility="{Binding Visibility}"
                                 LegendLocation="Bottom">
                 <lvc:CartesianChart.AxisX>
                     <lvc:Axis Labels="{Binding Labels}"

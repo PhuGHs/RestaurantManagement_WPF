@@ -8,11 +8,15 @@ using System.Windows.Input;
 using LiveCharts;
 using LiveCharts.Wpf;
 using RestaurantManagement.Models;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Data;
 
 namespace QuanLyNhaHang.ViewModel
 {
     public class ThongKeViewModel : BaseViewModel
     {
+        string connectstring = ConfigurationManager.ConnectionStrings["QuanLyNhaHang"].ConnectionString;
         public ThongKeViewModel()
         {
             SeriesCollection = new SeriesCollection();
@@ -62,6 +66,7 @@ namespace QuanLyNhaHang.ViewModel
         private string sumofprofit = "0 VND";
         private double dec_sumofpaid = 0;
         private string sumofpaid = "0 VND";
+        private string visibility = "hidden";
         public string SumofProfit
         {
             get { return sumofprofit; }
@@ -81,6 +86,11 @@ namespace QuanLyNhaHang.ViewModel
         {
             get { return dec_sumofpaid; }
             set { dec_sumofpaid = value; OnPropertyChanged(); }
+        }
+        public string Visibility
+        {
+            get { return visibility; }
+            set { visibility = value; OnPropertyChanged(); }
         }
 
         private Months selectedMonth = new Months("-1");
@@ -115,6 +125,7 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand MonthYearCheckingCommand { get; set; }
 
         #endregion
+        #region Methods
         public void LoadMonth()
         {
             months.Add(new Months("1"));
@@ -150,12 +161,133 @@ namespace QuanLyNhaHang.ViewModel
             DecSumofProfit = 0;
             DecSumofPaid = 0;
         }
+        public double GetBillofDay(string day)
+        {
+            double d = 0;
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+
+                cmd.CommandText = "Select SUM(TRIGIA) from HOADON where NgHD = @nghd";
+                cmd.Parameters.AddWithValue("@nghd", day);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    try
+                    {
+                        d = reader.GetSqlMoney(0).ToDouble();
+                    }
+                    catch
+                    {
+                        d = 0;
+                    }
+                }
+                con.Close();
+                return d;
+            }
+        }
+        public double GetBillofMonth(string month, string year)
+        {
+            double d = 0;
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+
+                cmd.CommandText = "Select SUM(TRIGIA) from HOADON where MONTH(NgHD) = @month and YEAR(NgHD) = @year";
+                cmd.Parameters.AddWithValue("@month", month);
+                cmd.Parameters.AddWithValue("@year", year);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    try
+                    {
+                        d = reader.GetSqlMoney(0).ToDouble();
+                    }
+                    catch
+                    {
+                        d = 0;
+                    }
+                }
+                con.Close();
+                return d;
+            }
+        }
+        public double GetPaidofDay(string day)
+        {
+            double d = 0;
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+
+                cmd.CommandText = "Select SUM(TONG) from (select DonGia * SoLuong as TONG from CHITIETNHAP where NgayNhap = @ngnh) as TONGGIA";
+                cmd.Parameters.AddWithValue("@ngnh", day);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    try
+                    {
+                        d = reader.GetSqlMoney(0).ToDouble();
+                    }
+                    catch
+                    {
+                        d = 0;
+                    }
+                }
+                con.Close();
+                return d;
+            }
+        }
+        public double GetPaidofMonth(string month, string year)
+        {
+            double d = 0;
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+
+                cmd.CommandText = "Select SUM(TONG) from (select DonGia * SoLuong as TONG from CHITIETNHAP where MONTH(NgayNhap) = @month and YEAR(NgayNhap) = @year) as TONGGIA";
+                cmd.Parameters.AddWithValue("@month", month);
+                cmd.Parameters.AddWithValue("@year", year);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    try
+                    {
+                        d = reader.GetSqlMoney(0).ToDouble();
+                    }
+                    catch
+                    {
+                        d = 0;
+                    }
+                }
+                con.Close();
+                return d;
+            }
+        }
         public void DayMonthCheck()
         {
             SeriesCollection.Clear();
             ResetSum();
             if (int.Parse(SelectedYear.Year) == -1 || int.Parse(selectedMonth.Month) == -1) return;
+            
             int NumofDay = DateTime.DaysInMonth(int.Parse(SelectedYear.Year), int.Parse(SelectedMonth.Month));
+            Visibility = "Visibility";
+
             double[] month = new double[NumofDay];
             string[] months = new string[NumofDay];
             for (int i = 0; i < month.Length; i++)
@@ -164,7 +296,7 @@ namespace QuanLyNhaHang.ViewModel
                 months[i] = "Ngày " + month[i].ToString();
             }
             Labels = months;
-            Random rd = new Random(); //Khuc nay demo chart, sau xoa
+            
             //Mang doanh thu
             double[] ProfitbyMonth = new double[NumofDay];
             for (int i = 0; i < NumofDay; i++)
@@ -172,13 +304,9 @@ namespace QuanLyNhaHang.ViewModel
                 //Lay ngay dang xet
                 DateTime day = new DateTime(int.Parse(SelectedYear.Year), int.Parse(SelectedMonth.Month), i + 1);
 
-                //Lay tat ca hoa don trong ngay
-
-
-                //Tinh so tien thu duoc
-
-                ProfitbyMonth[i] = rd.Next(50 - (2 - 1)) + 2; //Dang mac dinh, fix sau
-                DecSumofProfit += ProfitbyMonth[i] * 1000000;
+                //Tinh so tien thu duoc theo ngay cua thang
+                ProfitbyMonth[i] = GetBillofDay(day.ToShortDateString()) / 1000000; 
+                DecSumofProfit += GetBillofDay(day.ToShortDateString());
                 SumofProfit = String.Format("{0:0,0 VND}", DecSumofProfit);
             }
             SeriesCollection.Add(new LineSeries
@@ -186,19 +314,17 @@ namespace QuanLyNhaHang.ViewModel
                 Title = "Thu",
                 Values = new ChartValues<double>(ProfitbyMonth)
             });
+
+            //Mang chi ra
             double[] PaidbyMonth = new double[NumofDay];
             for (int i = 0; i < NumofDay; i++)
             {
                 //Lay ngay dang xet
                 DateTime day = new DateTime(int.Parse(SelectedYear.Year), int.Parse(SelectedMonth.Month), i + 1);
 
-                //Lay tat ca hoa don trong ngay
-
-
-                //Tinh so tien thu duoc
-
-                PaidbyMonth[i] = rd.Next(50 - (2 - 1)) + 2; //Dang mac dinh, fix sau
-                DecSumofPaid += PaidbyMonth[i] * 1000000;
+                //Tinh so tien chi ra theo ngay cua thang
+                PaidbyMonth[i] = GetPaidofDay(day.ToShortDateString()) / 1000000;
+                DecSumofPaid += GetPaidofDay(day.ToShortDateString());
                 SumofPaid = String.Format("{0:0,0 VND}", DecSumofPaid);
             }
             SeriesCollection.Add(new LineSeries
@@ -212,23 +338,18 @@ namespace QuanLyNhaHang.ViewModel
             SeriesCollection.Clear();
             ResetSum();
             if (int.Parse(SelectedYear.Year) == -1 || int.Parse(selectedMonth.Month) == -1) return;
+
+            Visibility = "Visibility";
             Labels = new[] { "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12" };
-            Random rd = new Random(); //Khuc nay demo chart, sau xoa
+
             //Mang doanh thu
             double[] ProfitbyYear = new double[12];
             for (int i = 0; i < 12; i++)
             {
-                //Lay ngay dau va cuoi cua thang
-                DateTime dayBegin = new DateTime(int.Parse(SelectedYear.Year), i + 1, 1);
-                int numOfDay = DateTime.DaysInMonth(int.Parse(SelectedYear.Year), i + 1);
-                DateTime dayEnd = new DateTime(int.Parse(SelectedYear.Year), i + 1, numOfDay);
+                //Tinh so tien thu duoc theo thang cua nam 
 
-                //Lay tat ca hoa don trong thang
-
-
-                //Tinh so tien thu duoc 
-                ProfitbyYear[i] = rd.Next(500 - (50 - 1)) + 50;  //De mac dinh, fix sau
-                DecSumofProfit += ProfitbyYear[i] * 1000000;
+                ProfitbyYear[i] = GetBillofMonth(i.ToString(), SelectedYear.Year) / 1000000;  
+                DecSumofProfit += GetBillofMonth(i.ToString(), SelectedYear.Year);
                 SumofProfit = String.Format("{0:0,0 VND}", DecSumofProfit);
             }
             SeriesCollection.Add(new LineSeries
@@ -236,20 +357,15 @@ namespace QuanLyNhaHang.ViewModel
                 Title = "Thu",
                 Values = new ChartValues<double>(ProfitbyYear)
             });
+
+            //Mang chi ra
             double[] PaidbyYear = new double[12];
             for (int i = 0; i < 12; i++)
             {
-                //Lay ngay dau va cuoi cua thang
-                DateTime dayBegin = new DateTime(int.Parse(SelectedYear.Year), i + 1, 1);
-                int numOfDay = DateTime.DaysInMonth(int.Parse(SelectedYear.Year), i + 1);
-                DateTime dayEnd = new DateTime(int.Parse(SelectedYear.Year), i + 1, numOfDay);
+                //Tinh so tien chi ra theo thang cua nam
 
-                //Lay tat ca hoa don trong thang
-
-
-                //Tinh so tien thu duoc 
-                PaidbyYear[i] = rd.Next(500 - (50 - 1)) + 50;  //De mac dinh, fix sau
-                DecSumofPaid += PaidbyYear[i] * 1000000;
+                PaidbyYear[i] = GetPaidofMonth(i.ToString(), SelectedYear.Year) / 1000000; 
+                DecSumofPaid += GetPaidofMonth(i.ToString(), SelectedYear.Year);
                 SumofPaid = String.Format("{0:0,0 VND}", DecSumofPaid);
             }
             SeriesCollection.Add(new LineSeries
@@ -258,5 +374,6 @@ namespace QuanLyNhaHang.ViewModel
                 Values = new ChartValues<double>(PaidbyYear)
             });
         }
+        #endregion
     }
 }
