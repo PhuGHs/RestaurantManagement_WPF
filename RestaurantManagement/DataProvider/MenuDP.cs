@@ -70,5 +70,75 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
+
+        public void PayABill(Int16 soban)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Exec PAY_A_BILL_PD @trigia, @manv, @soban, @ngayHD, @trangthai";
+                cmd.Parameters.AddWithValue("@trigia", Calculate_Sum(soban));
+                cmd.Parameters.AddWithValue("@manv", "NV01");
+                cmd.Parameters.AddWithValue("@soban", soban);
+                cmd.Parameters.AddWithValue("@ngayHD", DateTime.Now);
+                cmd.Parameters.AddWithValue("@trangthai", "Đã thanh toán");
+                cmd.Connection = SqlCon;
+                DBOpen();
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                DBClose();
+            }
+        }
+
+        #region complementary functions
+        public Decimal Calculate_Sum(Int16 Soban)
+        {
+            Decimal sum = 0;
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Exec GET_SUM_OF_PRICE_PD @soban";
+                cmd.Parameters.AddWithValue("@soban", Soban);
+                cmd.Connection = SqlCon;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                if(reader.Read())
+                {
+                    sum = reader.GetDecimal(0);
+                }
+                reader.Close();
+                return sum;
+            }
+            finally
+            {
+                DBClose();
+            }
+        }
+        public int Get_Quantity(Int16 Soban)
+        {
+            int quantity = 0;
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Select SUM(Soluong) from CHEBIEN where SoBan = @soban";
+                cmd.Parameters.AddWithValue("@soban", Soban);
+                cmd.Connection = SqlCon;
+                SqlDataReader reader = cmd.ExecuteReader();
+                if(reader.Read())
+                {
+                    quantity = reader.GetInt16(0);
+                }
+                reader.Close();
+                return quantity;
+            }
+            finally
+            {
+                DBClose();
+            }
+        }
+        #endregion
     }
 }

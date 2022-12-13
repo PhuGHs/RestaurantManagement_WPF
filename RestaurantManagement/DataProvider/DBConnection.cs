@@ -20,7 +20,7 @@ namespace QuanLyNhaHang.DataProvider
             if(SqlCon == null)
             {
                 SqlCon = new SqlConnection(_connectionString);
-            }
+             }
         }
 
         public void DBOpen()
