@@ -67,6 +67,7 @@ namespace QuanLyNhaHang.ViewModel
                             SuplierInfo = item.LienLac;
 
                             IDBeforeEdit = ID;
+                            NameBeforeEdit = Name;
                         }
                     }
                 }
@@ -80,6 +81,7 @@ namespace QuanLyNhaHang.ViewModel
         private string IDBeforeEdit;
         private string _ID;
         public string ID { get => _ID; set { _ID = value; OnPropertyChanged(); } }
+        private string NameBeforeEdit;
         private string _Name;
         public string Name { get => _Name; set { _Name = value; OnPropertyChanged(); } }
         private int _Count;
@@ -213,6 +215,14 @@ namespace QuanLyNhaHang.ViewModel
             {
                 OpenConnect();
 
+
+                if (Name != NameBeforeEdit)
+                {
+                    MyMessageBox mess = new MyMessageBox("Không được sửa Tên sản phẩm!");
+                    Name = NameBeforeEdit;
+                    mess.ShowDialog();
+                }
+                else
                 if (ID != IDBeforeEdit)
                 {
                     MyMessageBox mess = new MyMessageBox("Không được sửa Mã nhập!");
