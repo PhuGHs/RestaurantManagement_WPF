@@ -7,6 +7,7 @@
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
+             xmlns:nav="clr-namespace:QuanLyNhaHang.State.Navigator"
              xmlns:vm="clr-namespace:QuanLyNhaHang.ViewModel"
              d:DesignHeight="660" d:DesignWidth="1060"
              Background="Transparent"
@@ -331,6 +332,8 @@
                                             BorderBrush="#1C3879" 
                                             BorderThickness="1"
                                             Width="150"
+                                            Command="{Binding SwitchCustomerTable}"
+                                            CommandParameter="{x:Static nav:TypeOfView.TinhTrangBan}"
                                            >
                                         <TextBlock 
                                             Foreground="White" 
@@ -341,7 +344,8 @@
                                     <Button Background="LightGreen" 
                                             BorderThickness="0" 
                                             Width="150" 
-                                            Margin="50 0 0 0">
+                                            Margin="50 0 0 0"
+                                            Command="{Binding PayBillCommand}">
                                         <TextBlock Foreground="Black" 
                                                    Text="THANH TOÁN" 
                                                    FontSize="15" 

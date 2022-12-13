@@ -9,9 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Data;
+using QuanLyNhaHang.Command;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using Diacritics.Extensions;
 using QuanLyNhaHang.Models;
 using QuanLyNhaHang.View;
@@ -20,7 +19,7 @@ using QuanLyNhaHang.State.Navigator;
 
 namespace QuanLyNhaHang.ViewModel
 {
-    public class MenuViewModel : BaseViewModel
+    public class MenuViewModel : BaseViewModel, INavigator
     {
         public MenuViewModel()
         {
@@ -30,13 +29,20 @@ namespace QuanLyNhaHang.ViewModel
             OrderFeature_Command = new RelayCommand<MenuItem>((p) => true, (p) => OrderAnItem(p.ID));
             RemoveItemFeature_Command = new RelayCommand<SelectedMenuItem>((p) => true, (p) => RemoveAnItem(p));
             ClearAllSelectedDishes = new RelayCommand<object>((p) => true, (p) => {
-                MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả \n   những món đã chọn?", true);
-                msb.ShowDialog();
-                if (msb.ACCEPT() == false)
+                if (SelectedItems.Count > 0)
+                {
+                    MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả \n   những món đã chọn?", true);
+                    msb.ShowDialog();
+                    if (msb.ACCEPT() == false)
+                    {
+                        return;
+                    }
+                    SelectedItems.Clear();
+                }
+                else
                 {
                     return;
                 }
-                SelectedItems.Clear();
             });
             SortingFeature_Command = new RelayCommand<object>((p) => true, (p) => {
                 if (MyComboboxSelection == "Giá cao -> thấp")
@@ -64,7 +70,7 @@ namespace QuanLyNhaHang.ViewModel
             FindDishes = new RelayCommand<object>((p) => true, (p) => searchMealItems(SearchText));
             Inform_Chef_Of_OrderedDishes = new RelayCommand<object>((p) => true, (p) =>
             {
-                foreach(SelectedMenuItem orderDish in SelectedItems)
+                foreach (SelectedMenuItem orderDish in SelectedItems)
                 {
                     MenuDP.Flag.InformChef(orderDish.ID, 9, orderDish.Quantity);
                 }
@@ -74,18 +80,24 @@ namespace QuanLyNhaHang.ViewModel
             });
             SwitchCustomerTable = new RelayCommand<object>((p) => true, (p) =>
             {
-                
+                SelectViewModelCommand.Execute(p);
+            });
+            PayBillCommand = new RelayCommand<object>((p) => true, (p) =>
+            {
+                MenuDP.Flag.PayABill(9);
+                MyMessageBox msb = new MyMessageBox("Thanh toán thành công!");
             });
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
             _comboBox_2Items = new ObservableCollection<string>();
             LoadCombobox_2Items();
         }
-
+          
         #region attributes
         private ObservableCollection<MenuItem> _menuItems;
-        private Menu mn;
         private ObservableCollection<SelectedMenuItem> _selectedItems;
         private ObservableCollection<string> _comboBox_2Items;
+        private BaseViewModel _currentViewModel;
+        private string _currentTitle;
         private string myComboboxSelection = "A -> Z";
         private decimal dec_subtotal = 0;
         private string str_subtotal = "0 VND";
@@ -140,7 +152,12 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand FindDishes { get; set; }
         public ICommand ClearAllSelectedDishes { get; set; }
         public ICommand Inform_Chef_Of_OrderedDishes { get; set; }
-        public ICommand SwitchCustomerTable { get ; set; }
+        public ICommand SwitchCustomerTable { get; set; }
+        public ICommand PayBillCommand { get; set; }
+        public BaseViewModel CurrentViewModel { get => _currentViewModel; set { _currentViewModel = value; OnPropertyChanged(nameof(_currentViewModel)); } }
+        public string CurrentTitle { get => _currentTitle; set { _currentTitle = value; OnPropertyChanged(nameof(_currentTitle)); } }
+
+        public ICommand SelectViewModelCommand => new SelectViewModelCommand(this, this);
         #endregion
 
         #region methods

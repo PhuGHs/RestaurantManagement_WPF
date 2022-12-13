@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using QuanLyNhaHang.DataProvider;
+using QuanLyNhaHang.State.Navigator;
 
 namespace QuanLyNhaHang.ViewModel
 {
