@@ -1,24 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Data.SqlClient;
 using System.Data;
 using System.Collections.ObjectModel;
 using QuanLyNhaHang.Models;
-using System.Windows;
-using System.Windows.Media.Media3D;
 using System.Windows.Forms;
-using System.Drawing.Printing;
 using System.IO;
-using System.Reflection.Metadata;
-using System.Xml.Linq;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using Document = iTextSharp.text.Document;
-using System.Data.Common;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -110,7 +101,7 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
                 if (!String.IsNullOrEmpty(Search))
                 {
-                    strQuery = "SELECT * FROM KHO WHERE TenSP LIKE '%" + Search + "%'";
+                    strQuery = "SELECT * FROM KHO WHERE TenSenPham LIKE '%" + Search + "%'";
                 }
                 else
                     strQuery = "SELECT * FROM KHO";
@@ -161,12 +152,13 @@ namespace QuanLyNhaHang.ViewModel
                 {
                     if (ID == reader.GetString(0)) return false;
                 }
+                reader.Close();
 
                 CloseConnect();
 
                 if (Count <= 0) return false;
                 if (!isMoney(Value)) return false;
-                if (!isNumber(SuplierInfo)) return false;
+                if (SuplierInfo != null && !isNumber(SuplierInfo)) return false;
                 return true;
             }, (p) =>
             {
@@ -174,10 +166,26 @@ namespace QuanLyNhaHang.ViewModel
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT INTO CHITIETNHAP(MaNhap, TenSP, DonVi, DonGia, SoLuong, NgayNhap, NguonNhap, LienLac) VALUES ('" + ID + "',N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'" + DateIn + "',N'" + Suplier + "','" + SuplierInfo + "')";
+                cmd.CommandText = "SELECT * FROM KHO WHERE TenSanPham = N'" + Name + "'";
                 cmd.Connection = sqlCon;
 
-                int result = cmd.ExecuteNonQuery();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (!reader.Read())
+                {
+                    reader.Close();
+                    cmd.CommandText = "INSERT INTO KHO VALUES(N'" + Name + "', " + 0 + ", N'" + Unit + "', " + Value + ")";
+                    cmd.ExecuteNonQuery();
+                }
+                CloseConnect();
+
+                OpenConnect();
+
+                SqlCommand sqlCmd = new SqlCommand();
+                sqlCmd.CommandType = CommandType.Text;
+                sqlCmd.CommandText = "INSERT INTO CHITIETNHAP VALUES ('" + ID + "',N'" + Name + "',N'" + Unit + "'," + Value + "," + Count + ",'" + DateIn + "',N'" + Suplier + "','" + SuplierInfo + "')";
+                sqlCmd.Connection = sqlCon;
+
+                int result = sqlCmd.ExecuteNonQuery();
                 if (result > 0)
                 {
                     MyMessageBox mess = new MyMessageBox("Nhập thành công!");
@@ -189,6 +197,8 @@ namespace QuanLyNhaHang.ViewModel
                     MyMessageBox mess = new MyMessageBox("Nhập không thành công!");
                     mess.ShowDialog();
                 }
+
+
                 ListViewDisplay("SELECT * FROM KHO");
 
 
@@ -209,7 +219,7 @@ namespace QuanLyNhaHang.ViewModel
                     return false;
                 if (Count <= 0) return false;
                 if (!isMoney(Value)) return false;
-                if (!isNumber(SuplierInfo)) return false;
+                if (SuplierInfo != null && !isNumber(SuplierInfo)) return false;
                 return true;
             }, (p) =>
             {
@@ -233,7 +243,7 @@ namespace QuanLyNhaHang.ViewModel
                 {
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "UPDATE CHITIETNHAP SET TenSP = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE MaNhap = '" + ID + "'";
+                    cmd.CommandText = "UPDATE CHITIETNHAP SET TenSanPham = N'" + Name + "', DonVi = N'" + Unit + "', DonGia = " + Value + ", SoLuong = " + Count + ", NgayNhap = '" + DateIn + "', NguonNhap = N'" + Suplier + "', LienLac = '" + SuplierInfo + "' WHERE MaNhap = '" + ID + "'";
                     cmd.Connection = sqlCon;
 
                     int result = cmd.ExecuteNonQuery();
@@ -264,7 +274,7 @@ namespace QuanLyNhaHang.ViewModel
                 return true;
             }, (p) =>
             {
-                OpenConnect();
+                bool delete = false;
 
                 if (Selected.TonDu > 0)
                 {
@@ -272,31 +282,19 @@ namespace QuanLyNhaHang.ViewModel
                     yn.ShowDialog();
                     if (yn.ACCEPT())
                     {
-                        SqlCommand cmd = new SqlCommand();
-                        cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "DELETE FROM KHO WHERE TenSP = N'" + Selected.TenSanPham + "'";
-                        cmd.Connection = sqlCon;
-
-                        int result = cmd.ExecuteNonQuery();
-                        if (result > 0)
-                        {
-                            MyMessageBox mess = new MyMessageBox("Xóa thành công!");
-                            mess.ShowDialog();
-                            RefreshRightCard();
-                        }
-                        else
-                        {
-                            MyMessageBox mess = new MyMessageBox("Xóa không thành công!");
-                            mess.ShowDialog();
-                        }
-                        ListViewDisplay("SELECT * FROM KHO");
+                        delete = true;
                     }
                 }
                 else
+                    delete = true;
+
+                if (delete)
                 {
+                    OpenConnect();
+
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "DELETE FROM KHO WHERE TenSP = N'" + Selected.TenSanPham + "'";
+                    cmd.CommandText = "DELETE FROM KHO WHERE TenSanPham = N'" + Selected.TenSanPham + "'";
                     cmd.Connection = sqlCon;
 
                     int result = cmd.ExecuteNonQuery();
@@ -312,9 +310,9 @@ namespace QuanLyNhaHang.ViewModel
                         mess.ShowDialog();
                     }
                     ListViewDisplay("SELECT * FROM KHO");
-                }
 
-                CloseConnect();
+                    CloseConnect();
+                }    
             });
             #endregion
 
@@ -477,7 +475,7 @@ namespace QuanLyNhaHang.ViewModel
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT TOP 10 * FROM CHITIETNHAP WHERE TenSP = N'" + tensanpham + "' ORDER BY NgayNhap DESC";
+            cmd.CommandText = "SELECT TOP 10 * FROM CHITIETNHAP WHERE TenSanPham = N'" + tensanpham + "' ORDER BY NgayNhap DESC";
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
             ListIn.Clear();
@@ -497,6 +495,7 @@ namespace QuanLyNhaHang.ViewModel
             }
             if (ListTime.Count > 0)
                 TimeSelected = ListTime[0].ToString();
+            reader.Close();
 
             CloseConnect();
         }
