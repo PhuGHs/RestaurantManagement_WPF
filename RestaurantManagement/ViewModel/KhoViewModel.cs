@@ -101,10 +101,10 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
                 if (!String.IsNullOrEmpty(Search))
                 {
-                    strQuery = "SELECT * FROM KHO WHERE TenSenPham LIKE '%" + Search + "%'";
+                    strQuery = "SELECT * FROM KHO WHERE Xoa = 0 AND TenSenPham LIKE '%" + Search + "%'";
                 }
                 else
-                    strQuery = "SELECT * FROM KHO";
+                    strQuery = "SELECT * FROM KHO WHERE Xoa = 0";
                 ListViewDisplay(strQuery);
             } 
         }
@@ -130,7 +130,7 @@ namespace QuanLyNhaHang.ViewModel
             ListTime = new ObservableCollection<string>();
             DateIn = DateTime.Now.ToShortDateString();
 
-            ListViewDisplay("SELECT * FROM KHO");
+            ListViewDisplay("SELECT * FROM KHO WHERE Xoa = 0");
 
 
             #region //add command
@@ -173,9 +173,21 @@ namespace QuanLyNhaHang.ViewModel
                 if (!reader.Read())
                 {
                     reader.Close();
-                    cmd.CommandText = "INSERT INTO KHO VALUES(N'" + Name + "', " + 0 + ", N'" + Unit + "', " + Value + ")";
+                    cmd.CommandText = "INSERT INTO KHO VALUES(N'" + Name + "', " + 0 + ", N'" + Unit + "', " + Value + ", 0)";
                     cmd.ExecuteNonQuery();
                 }
+                else
+                {
+                    int xoa = reader.GetInt16(4);
+                    if (xoa > 0)
+                    {
+                        reader.Close();
+                        cmd.CommandText = "UPDATE KHO SET TonDu = 0, Xoa = 0 WHERE TenSanPham = N'" + Name + "'";
+                        cmd.ExecuteNonQuery();
+                    }    
+                    else
+                        reader.Close();
+                }    
                 CloseConnect();
 
                 OpenConnect();
@@ -199,7 +211,7 @@ namespace QuanLyNhaHang.ViewModel
                 }
 
 
-                ListViewDisplay("SELECT * FROM KHO");
+                ListViewDisplay("SELECT * FROM KHO WHERE Xoa = 0");
 
 
                 CloseConnect();
@@ -220,7 +232,11 @@ namespace QuanLyNhaHang.ViewModel
                 if (Count <= 0) return false;
                 if (!isMoney(Value)) return false;
                 if (SuplierInfo != null && !isNumber(SuplierInfo)) return false;
-                return true;
+                foreach(NhapKho item in ListIn)
+                {
+                    if (ID == item.MaNhap) return true;
+                }
+                return false;
             }, (p) =>
             {
                 OpenConnect();
@@ -259,7 +275,7 @@ namespace QuanLyNhaHang.ViewModel
                         MyMessageBox mess = new MyMessageBox("Sửa không thành công!");
                         mess.ShowDialog();
                     }
-                    ListViewDisplay("SELECT * FROM KHO");
+                    ListViewDisplay("SELECT * FROM KHO WHERE Xoa = 0");
                 }
 
                 CloseConnect();
@@ -294,7 +310,7 @@ namespace QuanLyNhaHang.ViewModel
 
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "DELETE FROM KHO WHERE TenSanPham = N'" + Selected.TenSanPham + "'";
+                    cmd.CommandText = "UPDATE KHO SET Xoa = 1 WHERE TenSanPham = N'" + Selected.TenSanPham + "'";
                     cmd.Connection = sqlCon;
 
                     int result = cmd.ExecuteNonQuery();
@@ -309,7 +325,7 @@ namespace QuanLyNhaHang.ViewModel
                         MyMessageBox mess = new MyMessageBox("Xóa không thành công!");
                         mess.ShowDialog();
                     }
-                    ListViewDisplay("SELECT * FROM KHO");
+                    ListViewDisplay("SELECT * FROM KHO WHERE Xoa = 0");
 
                     CloseConnect();
                 }    
