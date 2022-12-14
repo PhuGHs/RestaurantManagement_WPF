@@ -15,11 +15,12 @@ using Diacritics.Extensions;
 using QuanLyNhaHang.Models;
 using QuanLyNhaHang.View;
 using QuanLyNhaHang.DataProvider;
+using QuanLyNhaHang.ViewModel;
 using QuanLyNhaHang.State.Navigator;
 
 namespace QuanLyNhaHang.ViewModel
 {
-    public class MenuViewModel : BaseViewModel, INavigator
+    public class MenuViewModel : BaseViewModel
     {
         public MenuViewModel()
         {
@@ -77,15 +78,15 @@ namespace QuanLyNhaHang.ViewModel
                 MyMessageBox msb = new MyMessageBox("Đã báo chế biến thành công!");
                 msb.Show();
                 SelectedItems.Clear();
+                DecSubtotal = 0;
             });
-            SwitchCustomerTable = new RelayCommand<object>((p) => true, (p) =>
-            {
-                SelectViewModelCommand.Execute(p);
-            });
+            //SwitchCustomerTable = new RelayCommand<object>((p) => true, (p) =>
+            //{
+            //    NAV.SelectViewModelCommand.Execute(p);
+            //});
             PayBillCommand = new RelayCommand<object>((p) => true, (p) =>
             {
-                MenuDP.Flag.PayABill(9);
-                MyMessageBox msb = new MyMessageBox("Thanh toán thành công!");
+                 MenuDP.Flag.PayABill(9);
             });
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
             _comboBox_2Items = new ObservableCollection<string>();
@@ -96,8 +97,6 @@ namespace QuanLyNhaHang.ViewModel
         private ObservableCollection<MenuItem> _menuItems;
         private ObservableCollection<SelectedMenuItem> _selectedItems;
         private ObservableCollection<string> _comboBox_2Items;
-        private BaseViewModel _currentViewModel;
-        private string _currentTitle;
         private string myComboboxSelection = "A -> Z";
         private decimal dec_subtotal = 0;
         private string str_subtotal = "0 VND";
@@ -154,10 +153,6 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand Inform_Chef_Of_OrderedDishes { get; set; }
         public ICommand SwitchCustomerTable { get; set; }
         public ICommand PayBillCommand { get; set; }
-        public BaseViewModel CurrentViewModel { get => _currentViewModel; set { _currentViewModel = value; OnPropertyChanged(nameof(_currentViewModel)); } }
-        public string CurrentTitle { get => _currentTitle; set { _currentTitle = value; OnPropertyChanged(nameof(_currentTitle)); } }
-
-        public ICommand SelectViewModelCommand => new SelectViewModelCommand(this, this);
         #endregion
 
         #region methods

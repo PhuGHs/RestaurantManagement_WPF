@@ -16,7 +16,7 @@ using System.Collections.ObjectModel;
 using QuanLyNhaHang.ViewModel;
 using QuanLyNhaHang.View;
 
-namespace Project;
+namespace QuanLyNhaHang;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -27,7 +27,6 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
-
     private void Border_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if(e.ChangedButton == MouseButton.Left)

@@ -332,7 +332,7 @@
                                             BorderBrush="#1C3879" 
                                             BorderThickness="1"
                                             Width="150"
-                                            Command="{Binding SwitchCustomerTable}"
+                                            Command="{Binding DataContext.Navigator.SelectViewModelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                                             CommandParameter="{x:Static nav:TypeOfView.TinhTrangBan}"
                                            >
                                         <TextBlock 

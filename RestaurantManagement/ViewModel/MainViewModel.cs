@@ -13,7 +13,7 @@ namespace QuanLyNhaHang.ViewModel
 
     public class MainViewModel : BaseViewModel
     {
-        public INavigator Navigator { get; set; } = new Navigator();
+        public static INavigator Navigator { get; set; } = new Navigator();
         public HeaderViewModel Header { get; set; } = new HeaderViewModel();
     }
 }
