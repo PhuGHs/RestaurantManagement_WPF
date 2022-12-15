@@ -55,12 +55,13 @@ namespace QuanLyNhaHang.DataProvider
             try
             {
                 SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = "Exec Inform_Chef_PD @mamon, @soban, @soluong, @ngaycb, @trangthai";
+                cmd.CommandText = "Exec Inform_Chef_PD @mamon, @soban, @soluong, @ngaycb, @trangthai, @trangthaiban";
                 cmd.Parameters.AddWithValue("@mamon", maMon);
                 cmd.Parameters.AddWithValue("@soban", soban);
                 cmd.Parameters.AddWithValue("@soluong", soluong);
                 cmd.Parameters.AddWithValue("@ngaycb", DateTime.Now);
                 cmd.Parameters.AddWithValue("@trangthai", "Đang chế biến");
+                cmd.Parameters.AddWithValue("@trangthaiban", "Đang được sử dụng");
                 DBOpen();
                 cmd.Connection = SqlCon;
                 cmd.ExecuteNonQuery();
@@ -85,9 +86,15 @@ namespace QuanLyNhaHang.DataProvider
                 cmd.Connection = SqlCon;
                 DBOpen();
                 cmd.ExecuteNonQuery();
+                DBClose();
+
+                Fill_CTHD(getDishQuantity(soban));
+                DBClose();
             }
             finally
             {
+                MyMessageBox msb = new MyMessageBox("Thanh toán thành công!");
+                msb.Show();
                 DBClose();
             }
         }
@@ -117,6 +124,26 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
+        public DataTable getDishQuantity(Int16 soban)
+        {
+            DataTable dt = new DataTable(); 
+            try
+            {
+                DBOpen();
+                SqlCommand cmd_GetQuantity = new SqlCommand();
+
+                cmd_GetQuantity.CommandText = "Exec GET_QUANTITY_OF_EACH_DISH_PD @soban";
+                cmd_GetQuantity.Parameters.AddWithValue("@soban", soban);
+                cmd_GetQuantity.Connection = SqlCon;
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd_GetQuantity);
+                adapter.Fill(dt);;
+            }
+            finally
+            {
+                DBClose();
+            }
+            return dt;
+        }
         public int Get_Quantity(Int16 Soban)
         {
             int quantity = 0;
@@ -137,6 +164,21 @@ namespace QuanLyNhaHang.DataProvider
             finally
             {
                 DBClose();
+            }
+        }
+        public void Fill_CTHD(DataTable dt)
+        {
+            SqlCommand cmd_InsertDetail = new SqlCommand();
+            cmd_InsertDetail.CommandText = "Exec INSERT_DETAIL_PD @mamon1, @soluong";
+            DBOpen();
+            cmd_InsertDetail.Connection = SqlCon;
+            foreach(DataRow row in dt.Rows)
+            {
+                cmd_InsertDetail.Parameters.AddWithValue("@mamon1", row["MaMon"]);
+                cmd_InsertDetail.Parameters.AddWithValue("@soluong", row["SoLuong"]);
+
+                cmd_InsertDetail.ExecuteNonQuery();
+                cmd_InsertDetail.Parameters.Clear();
             }
         }
         #endregion

@@ -73,7 +73,7 @@ namespace QuanLyNhaHang.ViewModel
             {
                 foreach (SelectedMenuItem orderDish in SelectedItems)
                 {
-                    MenuDP.Flag.InformChef(orderDish.ID, 9, orderDish.Quantity);
+                    MenuDP.Flag.InformChef(orderDish.ID, 2, orderDish.Quantity);
                 }
                 MyMessageBox msb = new MyMessageBox("Đã báo chế biến thành công!");
                 msb.Show();
@@ -86,7 +86,7 @@ namespace QuanLyNhaHang.ViewModel
             //});
             PayBillCommand = new RelayCommand<object>((p) => true, (p) =>
             {
-                 MenuDP.Flag.PayABill(9);
+                MenuDP.Flag.PayABill(2);
             });
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
             _comboBox_2Items = new ObservableCollection<string>();
