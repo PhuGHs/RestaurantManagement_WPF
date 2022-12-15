@@ -101,7 +101,7 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
                 if (!String.IsNullOrEmpty(Search))
                 {
-                    strQuery = "SELECT * FROM KHO WHERE Xoa = 0 AND TenSenPham LIKE '%" + Search + "%'";
+                    strQuery = "SELECT * FROM KHO WHERE Xoa = 0 AND TenSanPham LIKE N'%" + Search + "%'";
                 }
                 else
                     strQuery = "SELECT * FROM KHO WHERE Xoa = 0";

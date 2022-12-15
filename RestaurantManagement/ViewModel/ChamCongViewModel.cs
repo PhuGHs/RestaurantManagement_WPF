@@ -134,7 +134,7 @@ namespace QuanLyNhaHang.ViewModel
 
                         SqlCommand cmd = new SqlCommand();
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "SELECT c.*, n.HoTen FROM CHITIETCHAMCONG AS c JOIN NHANVIEN AS n ON c.MaNV = n.MaNV WHERE MONTH(NgayCC) = " + GetMonth(MonthSelected) + " AND YEAR(NgayCC) = " + DateTime.Now.Year + " ORDER BY MaNV, NgayCC ASC";
+                        cmd.CommandText = "SELECT c.*, n.TenNV FROM CHITIETCHAMCONG AS c JOIN NHANVIEN AS n ON c.MaNV = n.MaNV WHERE MONTH(NgayCC) = " + GetMonth(MonthSelected) + " AND YEAR(NgayCC) = " + DateTime.Now.Year + " ORDER BY MaNV, NgayCC ASC";
                         cmd.Connection = sqlCon;
                         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -252,7 +252,7 @@ namespace QuanLyNhaHang.ViewModel
                 string ten = reader.GetString(1);
                 string chucvu = reader.GetString(2);
                 string ft;
-                if (reader.GetBoolean(4)) ft = "Full-time";
+                if (reader.GetBoolean(3)) ft = "Full-time";
                 else ft = "Part-time";
 
                 ListStaff.Add(new NhanVienCC(ma, ten, chucvu, ft));
