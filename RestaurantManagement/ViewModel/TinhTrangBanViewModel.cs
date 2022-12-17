@@ -161,6 +161,7 @@ namespace QuanLyNhaHang.ViewModel
                     Dec_sumofbill = 0;
                     SumofBill = String.Format("{0:0,0 VND}", Dec_sumofbill);
                     SelectedItems.Clear();
+                    TitleOfBill = "";
                     break;
                 }
             }
