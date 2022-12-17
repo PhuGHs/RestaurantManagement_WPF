@@ -16,7 +16,7 @@ using System.Collections.ObjectModel;
 using QuanLyNhaHang.ViewModel;
 using QuanLyNhaHang.View;
 
-namespace QuanLyNhaHang;
+namespace Project;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml

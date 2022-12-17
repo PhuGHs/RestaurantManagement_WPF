@@ -82,7 +82,7 @@ namespace QuanLyNhaHang.DataProvider
                 cmd.Parameters.AddWithValue("@manv", "NV01");
                 cmd.Parameters.AddWithValue("@soban", soban);
                 cmd.Parameters.AddWithValue("@ngayHD", DateTime.Now);
-                cmd.Parameters.AddWithValue("@trangthai", "Đã thanh toán");
+                cmd.Parameters.AddWithValue("@trangthai", "Paid");
                 cmd.Connection = SqlCon;
                 DBOpen();
                 cmd.ExecuteNonQuery();

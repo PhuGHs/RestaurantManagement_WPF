@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:viewmodel="clr-namespace:QuanLyNhaHang.ViewModel"
                     xmlns:view="clr-namespace:QuanLyNhaHang.View"
-                    xmlns:nav="clr-namespace:QuanLyNhaHang.State.Navigator"
                     >
     <DataTemplate DataType="{x:Type viewmodel:MenuViewModel}">
         <view:Menu />
