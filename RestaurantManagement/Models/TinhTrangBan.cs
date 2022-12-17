@@ -9,18 +9,61 @@ using System.Threading.Tasks;
 namespace TinhTrangBan.Models
 {
     public class TinhTrangBan { }
-    public class NameOfColor : BaseViewModel
+    public class Table : BaseViewModel
     {
-        private string _color;
-        public string Color
+        private string numoftable;
+        private int status;
+        private string coloroftable;
+        private int id;
+        private int id_bill;
+        public string NumOfTable
         {
-            get { return _color; }
+            get { return numoftable; }
             set
             {
-                _color = value;
+                numoftable = value;
                 OnPropertyChanged();
             }
-        }       
+        }
+
+        public int Status
+        {
+            get { return status; }
+            set
+            {
+                status = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Coloroftable
+        {
+            get { return coloroftable; }
+            set
+            {
+                coloroftable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ID
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                OnPropertyChanged();
+            }
+        }
+        public int Bill_ID
+        {
+            get { return id_bill; }
+            set
+            {
+                id_bill = value;
+                OnPropertyChanged();
+            }
+        }
     }
     public class SelectedMenuItems : BaseViewModel
     {
@@ -30,9 +73,8 @@ namespace TinhTrangBan.Models
         private Decimal _price;
         private int _quantity;
         #endregion
-        public SelectedMenuItems(int ID, string foodName, Decimal price, int quantity)
+        public SelectedMenuItems(string foodName, Decimal price, int quantity)
         {
-            _id = ID;
             _foodName = foodName;
             _price = price;
             _quantity = quantity;

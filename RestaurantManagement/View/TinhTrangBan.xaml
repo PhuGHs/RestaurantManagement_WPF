@@ -23,165 +23,27 @@
                     Width="3" 
                     Margin="0 30"/>
         <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Disabled">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
-                </Grid.RowDefinitions>
+            <ItemsControl x:Name="item"
+                          ItemsSource="{Binding Tables,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Width="145"
+                                Height="100"
+                                Margin="10"
+                                Content="{Binding NumOfTable}"
+                                Background="{Binding Coloroftable}"
+                                Command="{Binding ElementName=vm, Path=StatusOfTableCommand}"
+                                CommandParameter="{Binding}">
 
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding StatusOfTableCommand}">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 1"/>
-                    </Button>
-                    <Button Grid.Column="1"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 2"/>
-                    </Button>
-                    <Button Grid.Column="2"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 3"/>
-                    </Button>
-
-                </Grid>
-
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 4"/>
-                    </Button>
-                    <Button Grid.Column="1"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 5"/>
-                    </Button>
-                    <Button Grid.Column="2"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 6"/>
-                    </Button>
-
-                </Grid>
-
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 7"/>
-                    </Button>
-                    <Button Grid.Column="1"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 8"/>
-                    </Button>
-                    <Button Grid.Column="2"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 9"/>
-                    </Button>
-
-                </Grid>
-
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 10"/>
-                    </Button>
-                    <Button Grid.Column="1"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 11"/>
-                    </Button>
-                    <Button Grid.Column="2"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 12"/>
-                    </Button>
-
-                </Grid>
-
-                <Grid Grid.Row="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 13"/>
-                    </Button>
-                    <Button Grid.Column="1"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 14"/>
-                    </Button>
-                    <Button Grid.Column="2"
-                        Width="145"
-                        Height="100"
-                        Background="{Binding Background}"
-                        Command="{Binding }">
-                        <TextBlock Foreground="White" FontSize="25" Text="Bàn 15"/>
-                    </Button>
-
-                </Grid>
-            </Grid>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
         <Grid Grid.Column="1">
@@ -195,6 +57,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="100"/>
                         <RowDefinition Height="360"/>
+                        <RowDefinition Height="80"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Border Grid.Row="0" 
@@ -207,7 +70,7 @@
                                        Foreground="#fff" 
                                        FontWeight="SemiBold" 
                                        FontSize="35"
-                                       Text="bàn 3"> <!--Chỉnh lại binding-->
+                                       Text="{Binding TitleOfBill}">
                             </TextBlock>
                         </Grid>
                     </Border>
@@ -221,35 +84,34 @@
                                                 <Border BorderThickness="0,0,0,1" BorderBrush="#1C3879" Width="{Binding ActualWidth, ElementName=border}" Height="50">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="50"/>
                                                             <ColumnDefinition Width="150"/>
                                                             <ColumnDefinition Width="60"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
 
-                                                        <TextBlock Grid.Column="1"  
+                                                        <TextBlock Grid.Column="0"  
                                                                            TextAlignment="Left" 
                                                                            VerticalAlignment="Center" 
                                                                            FontSize="14" 
                                                                            FontWeight="SemiBold"
-                                                                           Text="{Binding }"/>
+                                                                           Text="{Binding FoodName}"/>
                                                         <!--chỉnh hiển thị foodname-->
 
-                                                        <TextBlock Grid.Column="2"  
+                                                        <TextBlock Grid.Column="1"  
                                                                            TextAlignment="Center" 
                                                                            FontSize="14" 
                                                                            FontWeight="SemiBold" 
                                                                            VerticalAlignment="Center"
-                                                                           Text="{Binding }"/>
+                                                                           Text="{Binding Quantity}"/>
                                                         <!--chỉnh hiển thị quantity-->
 
-                                                        <TextBlock Grid.Column="3"  
+                                                        <TextBlock Grid.Column="2"  
                                                                            ToolTip="Đơn giá" 
                                                                            TextAlignment="Right" 
                                                                            VerticalAlignment="Center" 
                                                                            FontSize="14" 
                                                                            FontWeight="SemiBold" 
-                                                                           Text="{Binding }"/>
+                                                                           Text="{Binding PriceVNDCurrency}"/>
                                                         <!--chỉnh hiển thị giá của món đó-->
                                                     </Grid>
                                                 </Border>
@@ -263,28 +125,43 @@
                     <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0 15 0 0">
                         <Separator Margin="20 20"/>
                         <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" Margin="10 0 0 0" >
-                            <TextBlock Text="Tổng"
-                                       FontSize="17" 
-                                       FontWeight="SemiBold" 
-                                       Width="300"/>
-                            <TextBlock Text="{Binding SumofBill}" 
-                                       FontSize="15" 
-                                       FontWeight="SemiBold" 
-                                       Foreground="#1C3879"/>
-                            <!--Chỉnh hiện thị tổng giá binding path=-->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Text="Tổng"
+                                           FontSize="17" 
+                                           FontWeight="SemiBold" 
+                                           Width="300"/>
+                                
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding SumofBill}" 
+                                           FontSize="15" 
+                                           FontWeight="SemiBold" 
+                                           Foreground="#1C3879"/>
+                                <!--Chỉnh hiện thị tổng giá binding path=-->
+                            </Grid>
+                            
                         </StackPanel>
 
-                        <Button HorizontalAlignment="Center"
+                        
+                    </StackPanel>
+                    <Button     Grid.Row="3"
+                                HorizontalAlignment="Center"
                                 Background="Red" 
                                 BorderBrush="Yellow" 
                                 Width="150"
-                                Command="{Binding}"> <!--Chỉnh để thanh toán-->                           
-                            <TextBlock 
+                                Command="{Binding GetPaymentCommand}">
+                        <!--Chỉnh để thanh toán-->
+                        <TextBlock 
                                 Foreground="White" 
                                 Text="THANH TOÁN"
                                             />
-                        </Button>
-                    </StackPanel>
+                    </Button>
+
                 </Grid>
             </Border>
         </Grid>
