@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using QuanLyNhaHang.ViewModel;
 
 namespace QuanLyNhaHang.Models
 {
-    public class NhanVien
+    public class NhanVien : BaseViewModel
     {
         private string _MaNV;
         public string MaNV { get => _MaNV; set => _MaNV = value; }
@@ -30,7 +31,7 @@ namespace QuanLyNhaHang.Models
         private string _MatKhau;
         public string MatKhau { get => _MatKhau; set => _MatKhau = value; }
         private BitmapImage _anhdaidien;
-        public BitmapImage AnhDaiDien { get => _anhdaidien; set => _anhdaidien = value; }
+        public BitmapImage AnhDaiDien { get => _anhdaidien; set { _anhdaidien = value; OnPropertyChanged(); }  }
         public NhanVien(string id, string ten, string chucvu, string diachi, bool fulltime, string sdt, string ngayvl, string ngsinh)
         {
             MaNV = id;

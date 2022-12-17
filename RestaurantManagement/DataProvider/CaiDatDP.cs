@@ -79,6 +79,27 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
+        public void ChangeProfileImage_SaveToDB(NhanVien nv)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                string ID = getAccountIDFromTaiKhoan();
+                cmd.CommandText = "Update TaiKhoan set AnhDaiDien = @anhdaidien where ID = @id";
+                cmd.Parameters.AddWithValue("@id", ID);
+                cmd.Parameters.AddWithValue("@anhdaidien", Converter.ImageConverter.ConvertImageToBytes(nv.AnhDaiDien));
+
+                DBOpen();
+                cmd.Connection = SqlCon;
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                DBClose();
+                MyMessageBox msb = new MyMessageBox("Đã thay đổi ảnh đại diện!");
+                msb.Show();
+            }
+        }
         #region complementary methods
         public string getMaNVFromTaiKhoan()
         {
@@ -90,6 +111,17 @@ namespace QuanLyNhaHang.DataProvider
                 MaNV = dr["MaNV"].ToString();
             }
             return MaNV;
+        }
+        public string getAccountIDFromTaiKhoan()
+        {
+            string ID = "";
+            DataTable dt = new DataTable();
+            dt = LoadInitialData("Select * from TaiKhoan");
+            foreach (DataRow dr in dt.Rows)
+            {
+                ID = dr["Id"].ToString();
+            }
+            return ID;
         }
         #endregion
     }

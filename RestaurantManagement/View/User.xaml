@@ -38,11 +38,15 @@
                 BorderBrush="#1C3879">
                     <Ellipse Height="120" Width="120">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="{Binding NhanVien.AnhDaiDien}" Stretch="UniformToFill"/>
+                            <ImageBrush ImageSource="{Binding NhanVien.AnhDaiDien, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
                         </Ellipse.Fill>
                     </Ellipse>
                 </Border>
-                <Button Background="Transparent" Width="60" BorderThickness="0" ToolTip="Đổi ảnh đại diện">
+                <Button Background="Transparent" 
+                        Width="60" 
+                        Command="{Binding ChangeProfileImage}"
+                        BorderThickness="0" 
+                        ToolTip="Đổi ảnh đại diện">
                     <fa:IconImage Icon="Edit" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#1C3879"/>
                 </Button>
             </StackPanel>
@@ -202,21 +206,25 @@
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center">
                         <TextBox
+                          Text="{Binding CurrentPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Width="220"
                           FontSize="20"
                           materialDesign:HintAssist.Hint="Mật khẩu hiện tại"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox
+                          Text="{Binding NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Width="220"
                           FontSize="20"
                           materialDesign:HintAssist.Hint="Mật khẩu mới"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox
+                          Text="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Width="220"
                           FontSize="20"
                           materialDesign:HintAssist.Hint="Nhập lại mật khẩu mới"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <Button 
+                            Command="{Binding ChangePassword}"
                             Margin="0 30 0 0" 
                             Content="Đổi mật khẩu"
                             Background="#1C3879"/>

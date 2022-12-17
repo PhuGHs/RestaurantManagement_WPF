@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using QuanLyNhaHang.Models;
 using System.Windows.Input;
 using QuanLyNhaHang.DataProvider;
+using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -22,9 +24,35 @@ namespace QuanLyNhaHang.ViewModel
             {
                 CaiDatDP.Flag.UpdateInfo(NhanVien.HoTen, NhanVien.DiaChi, NhanVien.SDT, NhanVien.NgaySinh, NhanVien.MaNV);
             });
+            ChangeProfileImage = new RelayCommand<object>((p) => true, (p) =>
+            {
+                OpenFileDialog open = new OpenFileDialog();
+                open.Title = "Thay ảnh đại diện";
+                open.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" + "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" + "Portable Network Graphic (*.png)|*.png";
+
+                if (open.ShowDialog() == DialogResult.OK)
+                {
+                    BitmapImage bmi = new BitmapImage();
+                    bmi.BeginInit();
+                    bmi.CacheOption = BitmapCacheOption.OnLoad;
+                    bmi.UriSource = new Uri(open.FileName);
+                    bmi.EndInit();
+                    NhanVien.AnhDaiDien = bmi;
+                }
+                CaiDatDP.Flag.ChangeProfileImage_SaveToDB(NhanVien);
+            });
+            ChangePassword = new RelayCommand<object>((p) => true, (p) =>
+            {
+
+            });
         }
-        #region variables
+        #region attributes
         private NhanVien _nhanVien;
+        private string _currentPassword;
+        private string _newPassword;
+        private string _confirmPassword;
+        #endregion
+        #region variables
         public NhanVien NhanVien { get { return _nhanVien; } set { _nhanVien = value; OnPropertyChanged(); } }
         public string LoaiNhanVien_Str
         {
@@ -48,9 +76,42 @@ namespace QuanLyNhaHang.ViewModel
                 }
             }
         }
+        public string CurrentPassword
+        {
+            get => _currentPassword;
+            set
+            {
+                _currentPassword = value; OnPropertyChanged();
+            }
+        }
+        public string NewPassword
+        {
+            get => _newPassword;
+            set
+            {
+                _newPassword = value; OnPropertyChanged();
+            }
+        }
+        public string ConfirmPassword
+        {
+            get => _confirmPassword;
+            set
+            {
+                _confirmPassword = value; OnPropertyChanged();
+            }
+        }
         #endregion
         #region commands
         public ICommand UpdateInfoCommand { get; set; } 
+        public ICommand ChangeProfileImage { get; set; }
+        public ICommand ChangePassword { get; set; }
+        #endregion
+
+        #region complementary functions
+        public bool CheckIfCurrentPasswordIsMatchOrNot()
+        {
+            return CurrentPassword == NhanVien.MatKhau;
+        }
         #endregion
     }
 }
