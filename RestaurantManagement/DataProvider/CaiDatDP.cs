@@ -28,13 +28,38 @@ namespace QuanLyNhaHang.DataProvider
         {
             NhanVien nv = null;
             string MaNV = getMaNVFromTaiKhoan();
+            string pw = getAccountPasswordFromTaiKhoan();
             DataTable dt = new DataTable();
             dt = LoadInitialData("Select * from NhanVien where MaNV = '" + MaNV + "'");
             foreach(DataRow dr in dt.Rows)
             {
                 nv = new NhanVien(dr["MaNV"].ToString(), dr["TenNV"].ToString(), dr["ChucVu"].ToString(), dr["DiaChi"].ToString(), (bool)dr["FullTime"], dr["SDT"].ToString(), dr["NgayVaoLam"].ToString(), dr["NgaySinh"].ToString());
             }
+            nv.MatKhau = pw;
             return nv;
+        }
+        public void ChangePassword(string pw)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                //var hashPassword = PasswordHasher.Hash(pw);
+                string ID = getAccountIDFromTaiKhoan();
+                cmd.CommandText = "Update TaiKhoan set MatKhau = @hashedPassword where ID = @id";
+                cmd.Parameters.AddWithValue("@hashedPassword", pw);
+                cmd.Parameters.AddWithValue("@id", ID);
+                DBOpen();
+
+                cmd.Connection = SqlCon;
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                DBClose();
+                MyMessageBox msb = new MyMessageBox("Đổi mật khẩu thành công!");
+                msb.Show();
+            }
+             
         }
         
         public void UpdateInfo(string HoTen, string Diachi, string SDT, string NgaySinh, string MaNV)
@@ -122,6 +147,31 @@ namespace QuanLyNhaHang.DataProvider
                 ID = dr["Id"].ToString();
             }
             return ID;
+        }
+        public string getAccountPasswordFromTaiKhoan()
+        {
+            try
+            {
+                string pw = "";
+                string ID = getAccountIDFromTaiKhoan();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Select MatKhau from TAIKHOAN WHERE ID = @id";
+                cmd.Parameters.AddWithValue("@id", ID);
+                DBOpen();
+                cmd.Connection = SqlCon;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                if(reader.Read())
+                {
+                    pw = reader.GetString(0);
+                }
+                reader.Close();
+                return pw;
+            }
+            finally
+            {
+                DBClose();
+            }
         }
         #endregion
     }

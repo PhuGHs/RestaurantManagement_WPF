@@ -11,6 +11,7 @@ using System.Windows.Input;
 using QuanLyNhaHang.DataProvider;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -41,9 +42,32 @@ namespace QuanLyNhaHang.ViewModel
                 }
                 CaiDatDP.Flag.ChangeProfileImage_SaveToDB(NhanVien);
             });
+            CurrentPasswordChangedCommand = new RelayCommand<PasswordBox>((p) => true, (p) =>
+            {
+                CurrentPassword = p.Password;
+            });
+            NewPasswordChangedCommand = new RelayCommand<PasswordBox>((p) => true, (p) =>
+            {
+                NewPassword = p.Password;   
+            });
+            ConfirmPasswordChangedCommand = new RelayCommand<PasswordBox>((p) => true, (p) =>
+            {
+                ConfirmPassword = p.Password;   
+            });
             ChangePassword = new RelayCommand<object>((p) => true, (p) =>
             {
-
+                if(OverallPasswordValidation())
+                {
+                    CaiDatDP.Flag.ChangePassword(NewPassword);
+                    ConfirmPassword = "";
+                    NewPassword = "";
+                    CurrentPassword = "";
+                }
+                else
+                {
+                    MyMessageBox msb = new MyMessageBox("Mật khẩu sai!");
+                    msb.Show();
+                }
             });
         }
         #region attributes
@@ -105,12 +129,23 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand UpdateInfoCommand { get; set; } 
         public ICommand ChangeProfileImage { get; set; }
         public ICommand ChangePassword { get; set; }
+        public ICommand CurrentPasswordChangedCommand { get; set; }
+        public ICommand NewPasswordChangedCommand { get; set; }
+        public ICommand ConfirmPasswordChangedCommand { get; set; }
         #endregion
 
         #region complementary functions
-        public bool CheckIfCurrentPasswordIsMatchOrNot()
+        public bool CheckIfCurrentPasswordIsMatch()
         {
             return CurrentPassword == NhanVien.MatKhau;
+        }
+        public bool CheckConfirmPassword()
+        {
+            return ConfirmPassword == NewPassword;
+        }
+        public bool OverallPasswordValidation()
+        {
+            return CheckIfCurrentPasswordIsMatch() && CheckConfirmPassword();
         }
         #endregion
     }
