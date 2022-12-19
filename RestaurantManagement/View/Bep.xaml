@@ -4,13 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:local="clr-namespace:QuanLyNhaHang.View"
+             xmlns:local="clr-namespace:QuanLyNhaHang.View" xmlns:vm="clr-namespace:QuanLyNhaHang.ViewModel"
              mc:Ignorable="d" 
              TextElement.FontFamily="Comfortaa Light"
              TextElement.FontSize="14"
              d:DesignHeight="670" 
              d:DesignWidth="1070" 
              Background="White">
+   
     <Grid Background="White">
         <Grid>
             <Grid.RowDefinitions>
@@ -28,10 +29,10 @@
                     Grid.Column="0"
                     Margin="10">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ListView ItemsSource="{Binding ListDone}"
-                          SelectedItem="{Binding Selected}"
+                        <ListView x:Name="ListDone" ItemsSource="{Binding ListDone}"
+                          SelectedItem="{Binding DoneSelected}"
                           FontSize="16"
-                          Margin="10 50 10 10">
+                          Margin="10 50 10 10" d:ItemsSource="{d:SampleData ItemCount=5}">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn DisplayMemberBinding="{Binding TenMon}"
@@ -56,7 +57,7 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto"
                           Grid.Column="1">
                         <ListView ItemsSource="{Binding ListOrder}"
-                          SelectedItem="{Binding Selected}"
+                          SelectedItem="{Binding OrderSelected}"
                           FontSize="16"
                           Margin="10 50 10 10">
                             <ListView.View>
@@ -70,6 +71,7 @@
                                     <GridViewColumn DisplayMemberBinding="{Binding SoBan}"
                                             Width="130"
                                             Header="Số bàn" />
+                                    
                                 </GridView>
                             </ListView.View>
                         </ListView>
