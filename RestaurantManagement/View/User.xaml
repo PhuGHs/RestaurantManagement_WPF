@@ -8,7 +8,7 @@
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" 
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="Thông tin nhân viên" Height="740" Width="800" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Thông tin cá nhân tài khoản" Height="740" Width="800" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:CaiDatViewModel />
     </Window.DataContext>
@@ -73,7 +73,8 @@
                     Width="90" 
                     BorderBrush="#1C3879"
                     Background="Transparent"
-                    Foreground="Black"/>
+                    Foreground="Black"
+                    Command="{Binding CancelCommand}"/>
                 <Button 
                     Content="Lưu" 
                     Width="90" 
@@ -199,10 +200,11 @@
                 </Grid>
             </TabItem>
             <TabItem 
+                
                 Header="Đổi mật khẩu" 
                 Cursor="Hand"
                 Foreground="#1C3879">
-                <Grid>
+                <Grid x:Name="Container">
                     <StackPanel 
                         Orientation="Vertical" 
                         HorizontalAlignment="Center" 
@@ -308,11 +310,12 @@
                                 HorizontalAlignment="Center" 
                                 VerticalAlignment="Center"/>
                         </StackPanel>
-                        <Button 
+                        <Button
+                            Click="doimatkhau_click"
                             Command="{Binding ChangePassword}"
                             Margin="0 30 0 0" 
                             Content="Đổi mật khẩu"
-                            Background="#1C3879"/>
+                            Background="#1C3879"  />
                     </StackPanel>
                 </Grid>
             </TabItem>

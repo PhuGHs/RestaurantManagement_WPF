@@ -64,5 +64,16 @@ namespace QuanLyNhaHang.View
             confirmpasswordTxtBox.Visibility = Visibility.Collapsed;
             confirmPassword.Visibility = Visibility.Visible;
         }
+
+        private async void doimatkhau_click(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(1000);
+            confirmpasswordTxtBox.Text = String.Empty;
+            newpasswordTxtBox.Text = String.Empty;
+            currentpasswordTxtBox.Text = String.Empty;
+            confirmPassword.Password = String.Empty;
+            newPassword.Password = String.Empty;
+            currentPassword.Password = String.Empty;
+        }
     }
 }

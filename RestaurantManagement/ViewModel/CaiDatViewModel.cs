@@ -25,6 +25,11 @@ namespace QuanLyNhaHang.ViewModel
             {
                 CaiDatDP.Flag.UpdateInfo(NhanVien.HoTen, NhanVien.DiaChi, NhanVien.SDT, NhanVien.NgaySinh, NhanVien.MaNV);
             });
+            CancelCommand = new RelayCommand<object>((p) => true, (p) =>
+            {
+                NhanVien = CaiDatDP.Flag.GetCurrentEmployee();
+                CaiDatDP.Flag.LoadProfileImage(NhanVien);
+            });
             ChangeProfileImage = new RelayCommand<object>((p) => true, (p) =>
             {
                 OpenFileDialog open = new OpenFileDialog();
@@ -39,6 +44,9 @@ namespace QuanLyNhaHang.ViewModel
                     bmi.UriSource = new Uri(open.FileName);
                     bmi.EndInit();
                     NhanVien.AnhDaiDien = bmi;
+
+                    MyMessageBox msb = new MyMessageBox("Đã thay đổi ảnh đại diện!");
+                    msb.Show();
                 }
                 CaiDatDP.Flag.ChangeProfileImage_SaveToDB(NhanVien);
             });
@@ -56,18 +64,11 @@ namespace QuanLyNhaHang.ViewModel
             });
             ChangePassword = new RelayCommand<object>((p) => true, (p) =>
             {
-                if(OverallPasswordValidation())
+                if(PasswordValidation())
                 {
                     CaiDatDP.Flag.ChangePassword(NewPassword);
-                    ConfirmPassword = "";
-                    NewPassword = "";
-                    CurrentPassword = "";
                 }
-                else
-                {
-                    MyMessageBox msb = new MyMessageBox("Mật khẩu sai!");
-                    msb.Show();
-                }
+                return;
             });
         }
         #region attributes
@@ -126,26 +127,36 @@ namespace QuanLyNhaHang.ViewModel
         }
         #endregion
         #region commands
-        public ICommand UpdateInfoCommand { get; set; } 
+        public ICommand UpdateInfoCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
         public ICommand ChangeProfileImage { get; set; }
         public ICommand ChangePassword { get; set; }
         public ICommand CurrentPasswordChangedCommand { get; set; }
         public ICommand NewPasswordChangedCommand { get; set; }
         public ICommand ConfirmPasswordChangedCommand { get; set; }
         #endregion
-
         #region complementary functions
-        public bool CheckIfCurrentPasswordIsMatch()
+        public bool PasswordValidation()
         {
-            return CurrentPassword == NhanVien.MatKhau;
-        }
-        public bool CheckConfirmPassword()
-        {
-            return ConfirmPassword == NewPassword;
-        }
-        public bool OverallPasswordValidation()
-        {
-            return CheckIfCurrentPasswordIsMatch() && CheckConfirmPassword();
+            if (String.IsNullOrEmpty(CurrentPassword) || String.IsNullOrEmpty(NewPassword) || String.IsNullOrEmpty(ConfirmPassword))
+            {
+                MyMessageBox msb = new MyMessageBox("Hãy nhập đầy đủ mật khẩu!");
+                msb.Show();
+                return false;
+            }
+            else if (ConfirmPassword != NewPassword)
+            {
+                MyMessageBox msb = new MyMessageBox("Mật khẩu xác nhận và mật khẩu mới \n \tkhông trùng với nhau!");
+                msb.Show();
+                return false;
+            }
+            else if (CurrentPassword != NhanVien.MatKhau)
+            {
+                MyMessageBox msb = new MyMessageBox("Mật khẩu sai!");
+                msb.Show();
+                return false;
+            }
+            return true;
         }
         #endregion
     }

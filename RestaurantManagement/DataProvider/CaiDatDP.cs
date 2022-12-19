@@ -121,8 +121,6 @@ namespace QuanLyNhaHang.DataProvider
             finally
             {
                 DBClose();
-                MyMessageBox msb = new MyMessageBox("Đã thay đổi ảnh đại diện!");
-                msb.Show();
             }
         }
         #region complementary methods
