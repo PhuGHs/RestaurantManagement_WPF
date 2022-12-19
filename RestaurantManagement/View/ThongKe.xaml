@@ -91,7 +91,8 @@
 
         <Grid Grid.Row="2" 
               Margin="10">
-            <lvc:CartesianChart Series="{Binding SeriesCollection}" 
+            <lvc:CartesianChart Series="{Binding SeriesCollection}"
+                                Visibility="{Binding Visibility}"
                                 LegendLocation="Bottom">
                 <lvc:CartesianChart.AxisX>
                     <lvc:Axis Labels="{Binding Labels}"
@@ -100,7 +101,7 @@
                               FontSize="10"></lvc:Axis>
                 </lvc:CartesianChart.AxisX>
                 <lvc:CartesianChart.AxisY>
-                    <lvc:Axis Title="Đồng" 
+                    <lvc:Axis Title="Triệu đồng" 
                               Foreground="#1C3879"
                               FontFamily="Comfortaa"
                               FontSize="16"
