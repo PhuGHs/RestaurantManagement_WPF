@@ -35,7 +35,6 @@ namespace QuanLyNhaHang.ViewModel
         private string titleofbill = "";
         private decimal dec_sumofbill = 0;
         private string sumofbill = "0 VND";
-        int A = 0;
         int IDofPaidTable = 0;
         #endregion
 
@@ -87,6 +86,8 @@ namespace QuanLyNhaHang.ViewModel
         }
         public void DisplayBill(int BillID)
         {
+            SelectedItems.Clear();
+            Dec_sumofbill = 0;
             string FoodName;
             decimal Price;
             int Quantity;
@@ -137,8 +138,7 @@ namespace QuanLyNhaHang.ViewModel
                     {
                         table.Coloroftable = "Red";
                         table.Status = 1;
-                        table.Bill_ID = 1000; //Demo hiển thị, gán = Bill_ID + A, vì hd sau khi đặt 1 bàn sẽ tăng dần, khi cộng sẽ thành sohd
-                        A++;
+                        table.Bill_ID = 1000; //Lấy số hóa đơn, đang demo
                     }
                     else
                     {
