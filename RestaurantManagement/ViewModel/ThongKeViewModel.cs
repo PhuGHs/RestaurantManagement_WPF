@@ -26,8 +26,27 @@ namespace QuanLyNhaHang.ViewModel
             LoadMonth();
             LoadYear();
         }
-        #region Variables and Properties
+        #region Attributes
+        private SeriesCollection seriesCollection;
         private ObservableCollection<Months> months = new ObservableCollection<Months>();
+        private ObservableCollection<Years> years = new ObservableCollection<Years>();
+        private Months selectedMonth = new Months("-1");
+        private Years selectedYear = new Years("-1");
+
+        private string[] labels;
+        private double dec_sumofprofit = 0;
+        private string sumofprofit = "0 VND";
+        private double dec_sumofpaid = 0;
+        private string sumofpaid = "0 VND";
+        private string visibility = "hidden";
+
+        #endregion
+        #region Properties
+        public SeriesCollection SeriesCollection
+        {
+            get { return seriesCollection; }
+            set { seriesCollection = value; }
+        }
         public ObservableCollection<Months> Months
         {
             get { return months; }
@@ -37,7 +56,6 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
             }
         }
-        private ObservableCollection<Years> years = new ObservableCollection<Years>();
         public ObservableCollection<Years> Years
         {
             get { return years; }
@@ -47,26 +65,36 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
             }
         }
-
-
-        private SeriesCollection seriesCollection;
-        public SeriesCollection SeriesCollection
+        public Months SelectedMonth
         {
-            get { return seriesCollection; }
-            set { seriesCollection = value; }
+            get { return selectedMonth; }
+            set
+            {
+                if (value != selectedMonth)
+                {
+                    selectedMonth = value;
+                    OnPropertyChanged();
+                }
+            }
         }
-        private string[] labels;
+        public Years SelectedYear
+        {
+            get { return selectedYear; }
+            set
+            {
+                if (value != selectedYear)
+                {
+                    selectedYear = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         public string[] Labels
         {
             get { return labels; }
             set { labels = value; OnPropertyChanged(); }
         }
         public Func<double, string> Formatter { get; set; }
-        private double dec_sumofprofit = 0;
-        private string sumofprofit = "0 VND";
-        private double dec_sumofpaid = 0;
-        private string sumofpaid = "0 VND";
-        private string visibility = "hidden";
         public string SumofProfit
         {
             get { return sumofprofit; }
@@ -91,33 +119,6 @@ namespace QuanLyNhaHang.ViewModel
         {
             get { return visibility; }
             set { visibility = value; OnPropertyChanged(); }
-        }
-
-        private Months selectedMonth = new Months("-1");
-        public Months SelectedMonth
-        {
-            get { return selectedMonth; }
-            set
-            {
-                if (value != selectedMonth)
-                {
-                    selectedMonth = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        private Years selectedYear = new Years("-1");
-        public Years SelectedYear
-        {
-            get { return selectedYear; }
-            set
-            {
-                if (value != selectedYear)
-                {
-                    selectedYear = value;
-                    OnPropertyChanged();
-                }
-            }
         }
         #endregion
         #region Commands
