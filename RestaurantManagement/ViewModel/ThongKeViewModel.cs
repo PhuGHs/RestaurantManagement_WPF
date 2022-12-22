@@ -21,18 +21,18 @@ namespace QuanLyNhaHang.ViewModel
         {
             SeriesCollection = new SeriesCollection();
             Formatter = value => value.ToString("G");
-            DayMonthCheckingCommand = new RelayCommand<Months>((p) => true, (p) => DayMonthCheck());
-            MonthYearCheckingCommand = new RelayCommand<Years>((p) => true, (p) => MonthYearCheck());
+            DayMonthCheckingCommand = new RelayCommand<string>((p) => true, (p) => DayMonthCheck());
+            MonthYearCheckingCommand = new RelayCommand<string>((p) => true, (p) => MonthYearCheck());
             LoadMonth();
             LoadYear();
         }
         #region Attributes
         private SeriesCollection seriesCollection;
-        private ObservableCollection<Months> months = new ObservableCollection<Months>();
-        private ObservableCollection<Years> years = new ObservableCollection<Years>();
-        private Months selectedMonth = new Months("-1");
-        private Years selectedYear = new Years("-1");
+        private ObservableCollection<string> months = new ObservableCollection<string>();
+        private ObservableCollection<string> years = new ObservableCollection<string>();
 
+        private string selectedMonth = "12";
+        private string selectedYear = "2022";
         private string[] labels;
         private double dec_sumofprofit = 0;
         private string sumofprofit = "0 VND";
@@ -47,7 +47,7 @@ namespace QuanLyNhaHang.ViewModel
             get { return seriesCollection; }
             set { seriesCollection = value; }
         }
-        public ObservableCollection<Months> Months
+        public ObservableCollection<string> Months
         {
             get { return months; }
             set
@@ -56,7 +56,7 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<Years> Years
+        public ObservableCollection<string> Years
         {
             get { return years; }
             set
@@ -65,7 +65,7 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
             }
         }
-        public Months SelectedMonth
+        public string SelectedMonth
         {
             get { return selectedMonth; }
             set
@@ -77,7 +77,7 @@ namespace QuanLyNhaHang.ViewModel
                 }
             }
         }
-        public Years SelectedYear
+        public string SelectedYear
         {
             get { return selectedYear; }
             set
@@ -129,31 +129,31 @@ namespace QuanLyNhaHang.ViewModel
         #region Methods
         public void LoadMonth()
         {
-            months.Add(new Months("1"));
-            months.Add(new Months("2"));
-            months.Add(new Months("3"));
-            months.Add(new Months("4"));
-            months.Add(new Months("5"));
-            months.Add(new Months("6"));
-            months.Add(new Months("7"));
-            months.Add(new Months("8"));
-            months.Add(new Months("9"));
-            months.Add(new Months("10"));
-            months.Add(new Months("11"));
-            months.Add(new Months("12"));
+            months.Add("1");
+            months.Add("2");
+            months.Add("3");
+            months.Add("4");
+            months.Add("5");
+            months.Add("6");
+            months.Add("7");
+            months.Add("8");
+            months.Add("9");
+            months.Add("10");
+            months.Add("11");
+            months.Add("12");
 
             Months = months;
         }
         public void LoadYear()
         {
-            years.Add(new Years("2017"));
-            years.Add(new Years("2018"));
-            years.Add(new Years("2019"));
-            years.Add(new Years("2020"));
-            years.Add(new Years("2021"));
-            years.Add(new Years("2022"));
-            years.Add(new Years("2023"));
-            years.Add(new Years("2024"));
+            years.Add("2017");
+            years.Add("2018");
+            years.Add("2019");
+            years.Add("2020");
+            years.Add("2021");
+            years.Add("2022");
+            years.Add("2023");
+            years.Add("2024");
 
             Years = years;
         }
@@ -284,9 +284,9 @@ namespace QuanLyNhaHang.ViewModel
         {
             SeriesCollection.Clear();
             ResetSum();
-            if (int.Parse(SelectedYear.Year) == -1 || int.Parse(selectedMonth.Month) == -1) return;
+            if (int.Parse(SelectedYear) == -1 || int.Parse(SelectedMonth) == -1) return;
             
-            int NumofDay = DateTime.DaysInMonth(int.Parse(SelectedYear.Year), int.Parse(SelectedMonth.Month));
+            int NumofDay = DateTime.DaysInMonth(int.Parse(SelectedYear), int.Parse(SelectedMonth));
             Visibility = "Visibility";
 
             double[] month = new double[NumofDay];
@@ -303,7 +303,7 @@ namespace QuanLyNhaHang.ViewModel
             for (int i = 0; i < NumofDay; i++)
             {
                 //Lay ngay dang xet
-                DateTime day = new DateTime(int.Parse(SelectedYear.Year), int.Parse(SelectedMonth.Month), i + 1);
+                DateTime day = new DateTime(int.Parse(SelectedYear), int.Parse(SelectedMonth), i + 1);
 
                 //Tinh so tien thu duoc theo ngay cua thang
                 ProfitbyMonth[i] = GetBillofDay(day.ToShortDateString()) / 1000000; 
@@ -321,7 +321,7 @@ namespace QuanLyNhaHang.ViewModel
             for (int i = 0; i < NumofDay; i++)
             {
                 //Lay ngay dang xet
-                DateTime day = new DateTime(int.Parse(SelectedYear.Year), int.Parse(SelectedMonth.Month), i + 1);
+                DateTime day = new DateTime(int.Parse(SelectedYear), int.Parse(SelectedMonth), i + 1);
 
                 //Tinh so tien chi ra theo ngay cua thang
                 PaidbyMonth[i] = GetPaidofDay(day.ToShortDateString()) / 1000000;
@@ -338,7 +338,7 @@ namespace QuanLyNhaHang.ViewModel
         {
             SeriesCollection.Clear();
             ResetSum();
-            if (int.Parse(SelectedYear.Year) == -1 || int.Parse(selectedMonth.Month) == -1) return;
+            if (int.Parse(SelectedYear) == -1 || int.Parse(SelectedMonth) == -1) return;
 
             Visibility = "Visibility";
             Labels = new[] { "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12" };
@@ -349,8 +349,8 @@ namespace QuanLyNhaHang.ViewModel
             {
                 //Tinh so tien thu duoc theo thang cua nam 
 
-                ProfitbyYear[i] = GetBillofMonth(i.ToString(), SelectedYear.Year) / 1000000;  
-                DecSumofProfit += GetBillofMonth(i.ToString(), SelectedYear.Year);
+                ProfitbyYear[i] = GetBillofMonth(i.ToString(), SelectedYear) / 1000000;  
+                DecSumofProfit += GetBillofMonth(i.ToString(), SelectedYear);
                 SumofProfit = String.Format("{0:0,0 VND}", DecSumofProfit);
             }
             SeriesCollection.Add(new LineSeries
@@ -365,8 +365,8 @@ namespace QuanLyNhaHang.ViewModel
             {
                 //Tinh so tien chi ra theo thang cua nam
 
-                PaidbyYear[i] = GetPaidofMonth(i.ToString(), SelectedYear.Year) / 1000000; 
-                DecSumofPaid += GetPaidofMonth(i.ToString(), SelectedYear.Year);
+                PaidbyYear[i] = GetPaidofMonth(i.ToString(), SelectedYear) / 1000000; 
+                DecSumofPaid += GetPaidofMonth(i.ToString(), SelectedYear);
                 SumofPaid = String.Format("{0:0,0 VND}", DecSumofPaid);
             }
             SeriesCollection.Add(new LineSeries

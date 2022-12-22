@@ -68,26 +68,44 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Top">
-                <ComboBox Margin="60,0"
-                          Width="120"                      
+                <StackPanel Margin="60,0">
+                    <ComboBox 
+                          Width="120"
+                          HorizontalAlignment="Center" 
+                          HorizontalContentAlignment="Center"
+                          FontSize="14"
                           MaxDropDownHeight="120"
                           ItemsSource="{Binding Months}"
                           SelectedItem="{Binding SelectedMonth, Mode=TwoWay}"
-                          DisplayMemberPath="Month">
-                </ComboBox>
+                          >
+                        
+                    </ComboBox>
+                    <Label Content="Tháng"
+                           Margin="30,5,0,0">
+                       
+                    </Label>
 
-                <ComboBox  Margin="10"
+                </StackPanel>
+                <StackPanel Margin="10,0">
+                    <ComboBox  
                            Width="120"
+                           HorizontalAlignment="Center" 
+                           HorizontalContentAlignment="Center"
                            MaxDropDownHeight="120"
                            ItemsSource="{Binding Years}"
                            SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
-                           DisplayMemberPath="Year">
-                </ComboBox>
+                           >
+                    </ComboBox>
+                    <Label Content="Năm"
+                           Margin="40,5,0,0">
+                        
+                    </Label>
+                </StackPanel>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <Button Margin="30,0"
                         Width="269"
-                        Background="#367E16"
+                        Background="#1C3879"
                         Command="{Binding DayMonthCheckingCommand}">
                     <TextBlock Foreground="White" Text="Thống kê theo ngày trong tháng"/>
                 </Button>
