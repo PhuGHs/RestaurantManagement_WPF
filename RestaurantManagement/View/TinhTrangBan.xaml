@@ -8,7 +8,7 @@
              TextElement.FontFamily="Comfortaa"
              TextElement.FontSize="16"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="660" d:DesignWidth="1060">
     <UserControl.DataContext>
         <ViewModel:TinhTrangBanViewModel x:Name="vm"/>
     </UserControl.DataContext>
@@ -135,14 +135,15 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0"
-                                           Text="Tổng"
+                                <Label     Grid.Column="0"
+                                           Content="Tổng"
                                            FontSize="17" 
                                            FontWeight="SemiBold" 
-                                           Width="300"/>
+                                           Width="300" 
+                                           Margin="15,0,0,0"/>
 
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding SumofBill}" 
+                                <Label Grid.Column="1"
+                                           Content="{Binding SumofBill}" 
                                            FontSize="15" 
                                            FontWeight="SemiBold" 
                                            Foreground="#1C3879"/>

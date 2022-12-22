@@ -138,7 +138,7 @@ namespace QuanLyNhaHang.ViewModel
                     {
                         table.Coloroftable = "Red";
                         table.Status = 1;
-                        table.Bill_ID = 1000; //Lấy số hóa đơn, đang demo
+                        table.Bill_ID = 1000; //Lấy số hóa đơn, trong database
                     }
                     else
                     {
