@@ -13,7 +13,7 @@ namespace QuanLyNhaHang.Models
         private string _MaNV;
         public string MaNV { get => _MaNV; set => _MaNV = value; }
         private string _HoTen;
-        public string HoTen { get => _HoTen; set => _HoTen = value; }
+        public string HoTen { get => _HoTen; set { _HoTen = value; OnPropertyChanged(); } }
         private string _ChucVu;
         public string ChucVu { get => _ChucVu; set => _ChucVu = value; }
         private string _DiaChi;

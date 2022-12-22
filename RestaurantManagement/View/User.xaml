@@ -8,10 +8,8 @@
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" 
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
+        DataContext="{StaticResource MainVM}"
         Title="Thông tin cá nhân tài khoản" Height="740" Width="800" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
-    <Window.DataContext>
-        <vm:CaiDatViewModel />
-    </Window.DataContext>
     <Grid Margin="5" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="160"/>
@@ -39,7 +37,7 @@
                 BorderBrush="#1C3879">
                     <Ellipse Height="120" Width="120">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="{Binding NhanVien.AnhDaiDien, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                            <ImageBrush ImageSource="{Binding NhanVien.AnhDaiDien}" Stretch="UniformToFill"/>
                         </Ellipse.Fill>
                     </Ellipse>
                 </Border>
