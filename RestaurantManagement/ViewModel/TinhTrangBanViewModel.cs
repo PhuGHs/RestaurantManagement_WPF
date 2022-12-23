@@ -17,6 +17,8 @@ using System.Configuration;
 using System.Data;
 using System.Windows.Forms;
 using OfficeOpenXml.ConditionalFormatting;
+using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -28,6 +30,7 @@ namespace QuanLyNhaHang.ViewModel
             StatusOfTableCommand = new RelayCommand<Table>((p) => true, (p) => GetStatusOfTable(p.ID));
             GetPaymentCommand = new RelayCommand<Table>((p) => true, (p) => Payment()); 
             LoadTables();
+            LoadTableStatus();
         }
         #region attributes
         private ObservableCollection<Table> _tables = new ObservableCollection<Table>();
@@ -66,23 +69,87 @@ namespace QuanLyNhaHang.ViewModel
         #region methods
         public void LoadTables()
         {
-            _tables.Add(new Table { NumOfTable = "Bàn 1", ID = 1, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 2", ID = 2, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 3", ID = 3, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 4", ID = 4, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 5", ID = 5, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 6", ID = 6, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 7", ID = 7, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 8", ID = 8, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 9", ID = 9, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 10", ID = 10, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 11", ID = 11, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 12", ID = 12, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 13", ID = 13, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 14", ID = 14, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 15", ID = 15, Status = 0, Coloroftable = "Green", Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 1", ID = 1, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 2", ID = 2, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 3", ID = 3, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 4", ID = 4, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 5", ID = 5, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 6", ID = 6, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 7", ID = 7, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 8", ID = 8, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 9", ID = 9, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 10", ID = 10, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 11", ID = 11, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 12", ID = 12, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 13", ID = 13, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 14", ID = 14, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 15", ID = 15, Bill_ID = 1000 });
 
             Tables = _tables;
+        }
+        public void LoadTableStatus()
+        {
+            string tablestatus;
+            foreach (Table table in _tables)
+            {
+                tablestatus = LoadEachTableStatus(table.ID);
+                if (tablestatus == "Trống")
+                {
+                    table.Status = 0;
+                    table.Coloroftable = "Green";
+                }
+                else
+                {
+                    table.Status = 1;
+                    table.Coloroftable = "Red";
+                }
+            }
+        }
+        public string LoadEachTableStatus(int ID)
+        {
+            string TableStatus = "";
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {                
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "Select TrangThai from BAN where SoBan = @SoBan";
+                cmd.Parameters.AddWithValue("@SoBan", ID);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    TableStatus = reader.GetString(0);
+                }
+                con.Close();
+                return TableStatus;              
+            }
+        }
+        public void UpdateTable(int ID, bool isEmpty)
+        {
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+                if (isEmpty)
+                {
+                    cmd.CommandText = "Update BAN set TrangThai = N'Trống' where SoBan = @SoBan";
+                    cmd.Parameters.AddWithValue("@SoBan", ID);
+
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    cmd.CommandText = "Update BAN set TrangThai = N'Đã đặt' where SoBan = @SoBan";
+                    cmd.Parameters.AddWithValue("@SoBan", ID);
+
+                    cmd.ExecuteNonQuery();
+                }              
+                con.Close();              
+            }
         }
         public void DisplayBill(int BillID)
         {
@@ -124,10 +191,10 @@ namespace QuanLyNhaHang.ViewModel
                         Price = 0;
                     }
                 }
-                con.Close();
+                con.Close();                
             }
             
-        }
+        }      
         public void GetStatusOfTable(int ID)
         {
             foreach (Table table in _tables)
@@ -138,6 +205,7 @@ namespace QuanLyNhaHang.ViewModel
                     {
                         table.Coloroftable = "Red";
                         table.Status = 1;
+                        UpdateTable(table.ID, false);
                         table.Bill_ID = 1000; //Lấy số hóa đơn, trong database
                     }
                     else
@@ -158,6 +226,8 @@ namespace QuanLyNhaHang.ViewModel
                 {
                     table.Coloroftable = "Green";
                     table.Status = 0;
+                    UpdateTable(table.ID, true);
+
                     Dec_sumofbill = 0;
                     SumofBill = String.Format("{0:0,0 VND}", Dec_sumofbill);
                     SelectedItems.Clear();
