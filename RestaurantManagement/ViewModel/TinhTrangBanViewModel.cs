@@ -69,21 +69,21 @@ namespace QuanLyNhaHang.ViewModel
         #region methods
         public void LoadTables()
         {
-            _tables.Add(new Table { NumOfTable = "Bàn 1", ID = 1, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 2", ID = 2, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 3", ID = 3, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 4", ID = 4, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 5", ID = 5, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 6", ID = 6, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 7", ID = 7, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 8", ID = 8, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 9", ID = 9, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 10", ID = 10, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 11", ID = 11, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 12", ID = 12, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 13", ID = 13, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 14", ID = 14, Bill_ID = 1000 });
-            _tables.Add(new Table { NumOfTable = "Bàn 15", ID = 15, Bill_ID = 1000 });
+            _tables.Add(new Table { NumOfTable = "Bàn 1", ID = 1 });
+            _tables.Add(new Table { NumOfTable = "Bàn 2", ID = 2 });
+            _tables.Add(new Table { NumOfTable = "Bàn 3", ID = 3 });
+            _tables.Add(new Table { NumOfTable = "Bàn 4", ID = 4 });
+            _tables.Add(new Table { NumOfTable = "Bàn 5", ID = 5 });
+            _tables.Add(new Table { NumOfTable = "Bàn 6", ID = 6 });
+            _tables.Add(new Table { NumOfTable = "Bàn 7", ID = 7 });
+            _tables.Add(new Table { NumOfTable = "Bàn 8", ID = 8 });
+            _tables.Add(new Table { NumOfTable = "Bàn 9", ID = 9 });
+            _tables.Add(new Table { NumOfTable = "Bàn 10", ID = 10 });
+            _tables.Add(new Table { NumOfTable = "Bàn 11", ID = 11 });
+            _tables.Add(new Table { NumOfTable = "Bàn 12", ID = 12 });
+            _tables.Add(new Table { NumOfTable = "Bàn 13", ID = 13 });
+            _tables.Add(new Table { NumOfTable = "Bàn 14", ID = 14 });
+            _tables.Add(new Table { NumOfTable = "Bàn 15", ID = 15 });
 
             Tables = _tables;
         }
@@ -126,6 +126,27 @@ namespace QuanLyNhaHang.ViewModel
                 return TableStatus;              
             }
         }
+        public int LoadBill(int ID)
+        {
+            int bill = 0;
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "Select SoHD from HOADON where SoBan = @SoBan and TrangThai = N'Chưa'";
+                cmd.Parameters.AddWithValue("@SoBan", ID);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    bill = reader.GetInt16(0);
+                }
+                con.Close();
+                return bill;
+            }
+        }
         public void UpdateTable(int ID, bool isEmpty)
         {
             using (SqlConnection con = new SqlConnection(connectstring))
@@ -149,6 +170,19 @@ namespace QuanLyNhaHang.ViewModel
                     cmd.ExecuteNonQuery();
                 }              
                 con.Close();              
+            }
+        }
+        public void UpdateBillStatus(int BillID)
+        {
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "Update HOADON set TrangThai = N'Đã xong' where SoHD = @SoHD";
+                cmd.Parameters.AddWithValue("@SoBan", BillID);
+                con.Close();
             }
         }
         public void DisplayBill(int BillID)
@@ -206,7 +240,7 @@ namespace QuanLyNhaHang.ViewModel
                         table.Coloroftable = "Red";
                         table.Status = 1;
                         UpdateTable(table.ID, false);
-                        table.Bill_ID = 1000; //Lấy số hóa đơn, trong database
+                        table.Bill_ID = LoadBill(table.ID);
                     }
                     else
                     {
@@ -227,6 +261,7 @@ namespace QuanLyNhaHang.ViewModel
                     table.Coloroftable = "Green";
                     table.Status = 0;
                     UpdateTable(table.ID, true);
+                    UpdateBillStatus(table.Bill_ID);
 
                     Dec_sumofbill = 0;
                     SumofBill = String.Format("{0:0,0 VND}", Dec_sumofbill);
