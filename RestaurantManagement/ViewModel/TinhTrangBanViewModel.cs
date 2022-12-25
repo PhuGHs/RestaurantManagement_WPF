@@ -135,7 +135,7 @@ namespace QuanLyNhaHang.ViewModel
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "Select SoHD from HOADON where SoBan = @SoBan and TrangThai = N'Chưa'";
+                cmd.CommandText = "Select SoHD from HOADON where SoBan = @SoBan and TrangThai = N'Chưa thanh toán'";
                 cmd.Parameters.AddWithValue("@SoBan", ID);
 
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -157,14 +157,14 @@ namespace QuanLyNhaHang.ViewModel
                 cmd.CommandType = CommandType.Text;
                 if (isEmpty)
                 {
-                    cmd.CommandText = "Update BAN set TrangThai = N'Trống' where SoBan = @SoBan";
+                    cmd.CommandText = "Update BAN set TrangThai = N'Có thể sử dụng' where SoBan = @SoBan";
                     cmd.Parameters.AddWithValue("@SoBan", ID);
 
                     cmd.ExecuteNonQuery();
                 }
                 else
                 {
-                    cmd.CommandText = "Update BAN set TrangThai = N'Đã đặt' where SoBan = @SoBan";
+                    cmd.CommandText = "Update BAN set TrangThai = N'Đang được sử dụng' where SoBan = @SoBan";
                     cmd.Parameters.AddWithValue("@SoBan", ID);
 
                     cmd.ExecuteNonQuery();
@@ -180,7 +180,7 @@ namespace QuanLyNhaHang.ViewModel
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "Update HOADON set TrangThai = N'Đã xong' where SoHD = @SoHD";
+                cmd.CommandText = "Update HOADON set TrangThai = N'Đã thanh toán' where SoHD = @SoHD";
                 cmd.Parameters.AddWithValue("@SoBan", BillID);
                 con.Close();
             }
