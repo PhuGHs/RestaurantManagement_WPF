@@ -106,15 +106,32 @@ namespace QuanLyNhaHang.ViewModel
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
                 {
-                    MyMessageBox msb = new MyMessageBox("Da che bien xong!");
+                    MyMessageBox msb = new MyMessageBox("Đã chễ biến xong!");
                     msb.ShowDialog();
                 }
                 else
                 {
-                    MyMessageBox msb = new MyMessageBox("Da co loi xay ra!");
+                    MyMessageBox msb = new MyMessageBox("Đã xảy ra lỗi!");
                     msb.ShowDialog();
                 }
+                List<string> listTenSP = new List<string>();
+                List<int> listSoLuong = new List<int>();
+                cmd.CommandText = "SELECT TenNL, SoLuong FROM CHITIETMON WHERE MaMon = " + DoneSelected.MaMon;
 
+                listTenSP.Clear();
+                listSoLuong.Clear();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    listTenSP.Add(reader.GetString(0));
+                    listSoLuong.Add(reader.GetInt16(1));
+                }
+                reader.Close();
+                for (int i = 0; i < listTenSP.Count(); i++)
+                {
+                    cmd.CommandText = "UPDATE KHO SET TonDu = TonDu - " + listSoLuong[i] + " WHERE TenSanPham = N'" + listTenSP[i] + "'";
+                    cmd.ExecuteNonQuery();
+                }
                 GetListDone();
                 GetListOrder();
 
@@ -140,12 +157,12 @@ namespace QuanLyNhaHang.ViewModel
 
                 if (result > 0)
                 {
-                    MyMessageBox ms = new MyMessageBox("Da phuc vu khach hang!");
+                    MyMessageBox ms = new MyMessageBox("Đã phục vụ khách hàng!");
                     ms.ShowDialog();
                 }
                 else
                 {
-                    MyMessageBox ms = new MyMessageBox("Da co loi xay ra!");
+                    MyMessageBox ms = new MyMessageBox("Đã có lỗi xảy ra!");
                     ms.ShowDialog();
                 }
 
@@ -192,7 +209,7 @@ namespace QuanLyNhaHang.ViewModel
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = "SELECT c.*, m.TENMON FROM CHEBIEN1 AS c JOIN MENU1 AS m ON c.MAMON = m.MAMON WHERE TINHTRANG = N'XONG'";
-            //cho nay luc truoc ong de tinhtrang = 'chua' thi sao ma lay dung duoc
+           
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
             ListOrder.Clear();

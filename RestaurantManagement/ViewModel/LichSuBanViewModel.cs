@@ -15,10 +15,12 @@ using OfficeOpenXml.Style;
 using OfficeOpenXml.Table;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 using System.IO;
+using System.Windows;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
-using DataTable = System.Data.DataTable;
 using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
+using DataTable = System.Data.DataTable;
 using System.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -77,39 +79,35 @@ namespace QuanLyNhaHang.ViewModel
         }
 
 
-        private ObservableCollection<LichSuBanModel> _ListProduct;
-        public ObservableCollection<LichSuBanModel> ListProduct
-        {
-            get { return _ListProduct; }
-            set { _ListProduct = value; OnPropertyChanged(); }
-        }
 
-        //private ObservableCollection<HoaDon> _ListBill;
-        //public ObservableCollection<HoaDon> ListBill
-        //{
-        //    get { return _ListBill; }
-        //    set { _ListBill = value; OnPropertyChanged(); }
-        //}
+
+        private ObservableCollection<LichSuBanModel> _ListProduct;
+
+        public ObservableCollection<LichSuBanModel> ListProduct { get => _ListProduct; set { _ListProduct = value; OnPropertyChanged(); } }
+
         private string timkiem;
+        
+        private string _Search;
         public string Search
         {
-            get { return timkiem; }
+            get => _Search;
             set
             {
-                timkiem = value;
-                string str;
+                _Search = value;
+                string strQuery;
                 OnPropertyChanged();
                 if (!String.IsNullOrEmpty(Search))
                 {
-                    str = "SELECT * FROM HOADON WHERE SoHD LIKE '%" + Search + "%'";
+                    strQuery = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON WHERE TENMON LIKE N'%" + Search + "%'";
                 }
                 else
-                    str = "SELECT * FROM HOADON";
-                ListViewDisplay(str);
+                    strQuery = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON";
+                ListViewDisplay(strQuery);
             }
         }
-        private string strCon = @"Data Source=.\DESKTOP-ADQ1342;Initial Catalog=QuanLyNhaHang;Integrated Security=True";
+        private string strCon = @"Data Source=DESKTOP-ADQ1342;Initial Catalog=QuanlyDoAn;Integrated Security=True";
         private SqlConnection sqlCon = null;
+
 
         public ICommand LoadImportPageCM { get; set; }
         public ICommand LoadExportPageCM { get; set; }
@@ -120,17 +118,15 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand CheckCM { get; set; }
 
         public ICommand CheckItemFilterCM { get; set; }
-        public int SelectedView = 0;
-
-
+      
         public LichSuBanViewModel()
         {
-            /* OpenConnect();*/
-            /*  ListProduct = new ObservableCollection<LichSuBanModel>();
+
+            ListProduct = new ObservableCollection<LichSuBanModel>();
 
 
-              ListViewDisplay("SELECT * FROM HOADON");
-  */
+            ListViewDisplay("select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON");
+            OpenConnect();
 
             GetCurrentDate = DateTime.Today;
             SelectedDate = GetCurrentDate;
@@ -146,155 +142,62 @@ namespace QuanLyNhaHang.ViewModel
                 mess.ShowDialog();
 
             });
-            ExportFileCM = new RelayCommand<ListProduct>((p) => true, (p) => ExportToFileFunc());
-            /* CloseConnect();*/
+            CheckItemFilterCM = new RelayCommand<System.Windows.Controls.ComboBox>((p) => { return true; }, async (p) =>
+            {
+                await CheckItemFilter();
+            });
+            ExportFileCM = new RelayCommand<object>((p) => { return true; }, (p) =>
+            {
+                ExportToFileFunc();
+            });
+            CloseConnect();
         }
+
 
         public void ExportToFileFunc()
         {
-            string filepath = "";
-            SaveFileDialog dialog = new SaveFileDialog();
-            /* OpenFileDialog dialog = new OpenFileDialog();*/
-            dialog.Filter = "Excel | *.xlsx | Excel 2016 | *.xls";
-            if (dialog.ShowDialog() == DialogResult.OK)
+            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel Workbook|*.xlsx", ValidateNames = true })
             {
-                filepath = dialog.FileName;
-            }
-            if (string.IsNullOrEmpty(filepath))
-            {
-                MyMessageBox mb = new MyMessageBox("Đường dẫn không hợp lệ");
-                mb.ShowDialog();
-                return;
-            }
-            /* List<ListProduct> sanpham = new List<ListProduct>();
-             DataTable dt = new DataTable();
-             dt.Columns.Add("ID");
-             dt.Columns.Add("TEN SP");
-
-             try
-             {
-                 var package = new ExcelPackage(new FileInfo(filepath));
-                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                 ExcelWorksheet ws = package.Workbook.Worksheets[0];
-                 for (int i = ws.Dimension.Start.Row + 2; i <= ws.Dimension.End.Row; i++)
-                 {
-                     try
-                     {
-                         int j = 1;
-                         string id = ws.Cells[i, j++].Value.ToString();
-                         string name = ws.Cells[i, j++].Value.ToString();
-                         dt.Rows.Add(id, name);
-                     }
-                     catch
-                     {
-                         MyMessageBox mb = new MyMessageBox("Lỗi");
-                         mb.ShowDialog();
-                     }
-
-
-                 }*/
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            try
-            {
-                using (ExcelPackage p = new ExcelPackage())
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-
-                    string[] arrColumHeader =
-                {
-                 "Mã đơn",
-                 "Tên sản phẩm",
-                 "Số lượng",
-                 "Tổng giá",
-                 "Ngày nhập" };
-
-                    var countHeader = arrColumHeader.Count();
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                    Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
+                    app.Visible = false;
+                    Workbook wb = app.Workbooks.Add(XlSheetType.xlWorksheet);
+                    Worksheet ws = (Worksheet)app.ActiveSheet;
 
 
+                    ws.Cells[1, 1] = "Mã đơn";
+                    ws.Cells[1, 2] = "Tên sản phẩm";
+                    ws.Cells[1, 3] = "Số lượng";
+                    ws.Cells[1, 4] = "Tổng giá";
+                    ws.Cells[1, 5] = "Ngày nhập";
 
-
-                    p.Workbook.Properties.Title = "Lịch sử bàn";
-                    p.Workbook.Worksheets.Add("Test");
-
-                    ExcelWorksheet ws = p.Workbook.Worksheets[0];
-                    ws.Name = "Test";
-
-                    ws.Cells[1, 1].Value = "Lịch sử bàn";
-                    int colIndex = 0;
-                    int rowIndex = 0;
-                    foreach (var item in arrColumHeader)
+                    int i2 = 2;
+                    foreach (var item in ListProduct)
                     {
-                        var cell = ws.Cells[rowIndex, colIndex];
-                        cell.Value = item;
-                        colIndex++;
+                        
+                        ws.Cells[i2, 1] = item.MaMon;
+                        ws.Cells[i2, 2] = item.TenMon;
+                        ws.Cells[i2, 3] = item.SoLuong;
+                        ws.Cells[i2, 4] = item.TriGia;
+                        ws.Cells[i2, 5] = item.ngayHD;
 
+
+                        i2++;
                     }
-                    Byte[] bin = p.GetAsByteArray();
-                    File.WriteAllBytes(filepath, bin);
+                    ws.SaveAs(sfd.FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges,Type.Missing, Type.Missing) ;
+                   
+                    app.Quit();
 
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
 
+                    MyMessageBox mb = new MyMessageBox("Xuất file thành công");
+                    mb.ShowDialog();
                 }
             }
-            catch
-            {
-                MyMessageBox mb = new MyMessageBox("Lỗi");
-                mb.ShowDialog();
-            }
+
         }
-
-
-        /*
-
-                    using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel Workbook|*.xlsx", ValidateNames = true })
-                    {
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                            Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
-                            app.Visible = false;
-                            Microsoft.Office.Interop.Excel.Workbook wb = app.Workbooks.Add(1);
-                            Microsoft.Office.Interop.Excel.Worksheet ws = (Microsoft.Office.Interop.Excel.Worksheet)wb.Worksheets[1];
-
-
-                            ws.Cells[1, 1] = "Mã đơn";
-                            ws.Cells[1, 2] = "Tên sản phẩm";
-                            ws.Cells[1, 3] = "Số lượng";
-                            ws.Cells[1, 4] = "Tổng giá";
-                            ws.Cells[1, 5] = "Ngày nhập";
-
-                            int i2 = 2;
-                            foreach (var item in ListProduct)
-                            {
-
-                                ws.Cells[i2, 1] = item.Id;
-                                ws.Cells[i2, 2] = item.ProductName;
-                                ws.Cells[i2, 3] = item.Quantity;
-                                ws.Cells[i2, 4] = item.ImportPrice;
-                                ws.Cells[i2, 5] = item.CreatedAt;
-
-                                i2++;
-                            }
-                            ws.SaveAs(sfd.FileName);
-                            wb.Close();
-                            app.Quit();
-
-                            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
-
-                            MyMessageBox mb = new MyMessageBox("Xuất file thành công");
-                            mb.ShowDialog();
-
-
-                        }
-                    }
-                }
-
-        */
-
-
-
-
-
-
-
         private void OpenConnect()
         {
             if (sqlCon == null)
@@ -327,13 +230,14 @@ namespace QuanLyNhaHang.ViewModel
             ListProduct.Clear();
             while (reader.Read())
             {
-                string madon = reader.GetString(0);
-                string ten = reader.GetString(1);
-                int soluong = reader.GetInt16(2);
-                string gia = reader.GetSqlMoney(3).ToString();
-                Nullable<System.DateTime> thoigian = reader.GetDateTime(4);
+                int madon = reader.GetInt32(0);
+                string mamon = reader.GetString(1);
+                string ten = reader.GetString(2);
+                int soluong = reader.GetInt32(3);
+                string gia = reader.GetSqlMoney(4).ToString();
+                string thoigian = reader.GetDateTime(5).ToShortDateString();
 
-                ListProduct.Add(new LichSuBanModel(madon, ten, soluong, gia, thoigian));
+                ListProduct.Add(new LichSuBanModel(madon,mamon, ten, soluong, gia, thoigian));
             }
 
             CloseConnect();
@@ -351,6 +255,83 @@ namespace QuanLyNhaHang.ViewModel
                  mb.ShowDialog();
              }*/
 
+
+        }
+        public async Task GetExportListSource(string s = "")
+        {
+            /*ListBill = new ObservableCollection<BillDTO>();
+            switch (s)
+            {
+                case "date":
+                    {
+                        try
+                        {
+                            IsGettingSource = true;
+                            ListBill = new ObservableCollection<BillDTO>(await BillService.Ins.GetBillByDate(SelectedDate));
+                            ResultName.Content = ListBill.Count;
+                            IsGettingSource = false;
+                            return;
+                        }
+                        catch (System.Data.Entity.Core.EntityException e)
+                        {
+                            Console.WriteLine(e);
+                            MessageBoxCustom mb = new MessageBoxCustom("Lỗi", "Mất kết nối cơ sở dữ liệu", MessageType.Error, MessageButtons.OK);
+                            mb.ShowDialog();
+                            throw;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            MessageBoxCustom mb = new MessageBoxCustom("Lỗi", "Lỗi hệ thống", MessageType.Error, MessageButtons.OK);
+                            mb.ShowDialog();
+                            throw;
+                        }
+
+                    }
+                case "":
+                    {
+                     
+                        
+                            IsGettingSource = true;
+                            ListProduct = new ObservableCollection<LichSuBanModel>(await BillService.Ins.GetAllBill());
+                            ResultName.Content = ListBill.Count;
+                            IsGettingSource = false;
+                            return;
+                        
+                       
+                        
+
+                    }
+                case "month":
+                    {
+                        IsGettingSource = true;
+                        await CheckMonthFilter();
+                        ResultName.Content = ListBill.Count;
+                        IsGettingSource = false;
+                        return;
+                    }
+            }*/
+        }
+        public async Task CheckItemFilter()
+        {
+            switch (SelectedItemFilter.Content.ToString())
+            {
+                case "Toàn bộ":
+                    {
+                        await GetExportListSource("");
+                        return;
+                    }
+                case "Theo ngày":
+                    {
+                        await GetExportListSource("date");
+                        return;
+                    }
+                case "Theo tháng":
+                    {
+                        await GetExportListSource("month");
+                        return;
+                    }
+            }
         }
 
 

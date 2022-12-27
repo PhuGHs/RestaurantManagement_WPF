@@ -24,5 +24,7 @@ namespace QuanLyNhaHang.View
         {
             InitializeComponent();
         }
+
+        
     }
 }

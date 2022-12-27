@@ -35,13 +35,14 @@
                     Orientation="Horizontal" Grid.ColumnSpan="3">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1000" />
+                    <ColumnDefinition Width="338" />
+                    <ColumnDefinition Width="662"/>
                     <ColumnDefinition Width="400" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0"
                        
-                            Orientation="Horizontal" Background="#1C3879" Grid.ColumnSpan="2" Margin="0,0,200,0">
+                            Orientation="Horizontal" Background="#1C3879" Grid.ColumnSpan="3" Margin="0,0,200,0">
 
                     <TextBox materialDesign:HintAssist.Hint="Tìm kiếm"
                              x:Name="FilterBox"
@@ -65,7 +66,7 @@
                               Foreground="White"
                               x:Name="filtercbb"
                               SelectedIndex="0"
-                              SelectedItem="{Binding SelectedImportItemFilter}" Background="{x:Null}" BorderBrush="#89090000" OpacityMask="#FFF71717">
+                              SelectedItem="{Binding SelectedImportItemFilter}" Background="{x:Null}" BorderBrush="#89090000" OpacityMask="#FFF71717" >
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding CheckImportItemFilterCM}"
@@ -132,7 +133,7 @@
                     </Button>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1"
+                <StackPanel Grid.Column="2"
                             Orientation="Horizontal">
                     <Button Height="40"
                             Width="130"
@@ -168,7 +169,7 @@
                                         Width="130">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock  Text="{Binding Id}"
+                                    <TextBlock  Text="{Binding SoHD}"
                                                 FontSize="18"
                                                
                                                 Margin="10,0,0,0" />
@@ -180,7 +181,7 @@
                                         Width="300">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock  Text="{Binding ProductName}"
+                                    <TextBlock  Text="{Binding TenMon}"
                                                 FontSize="18"
                                                 Margin="10,0,0,0" />
                                 </DataTemplate>
@@ -190,7 +191,7 @@
                                         Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock  Text="{Binding Quantity}"
+                                    <TextBlock  Text="{Binding SoLuong}"
                                                 FontSize="18"
                                                 Margin="20,0,0,0" />
                                 </DataTemplate>
@@ -200,7 +201,7 @@
                                         Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock  Text="{Binding ImportPriceStr}"
+                                    <TextBlock  Text="{Binding TriGia}"
                                                 FontSize="18"
                                                 Margin="10,0,0,0" />
                                 </DataTemplate>
@@ -211,7 +212,7 @@
                                         Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock  Text="{Binding CreatedAt, StringFormat=dd/MM/yyyy HH:mm:ss}"
+                                    <TextBlock  Text="{Binding ngayHD, StringFormat=dd/MM/yyyy HH:mm:ss}"
                                                 FontSize="18"
                                                 Margin="10,0,0,0" />
                                 </DataTemplate>
