@@ -98,6 +98,27 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
+        public void AddDish(MenuItem x)
+        {
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "INSERT INTO MENU VALUES (@MaMon, @TenMon, @AnhMonAn, @Gia, @ThoiGianLam)";
+                cmd.Parameters.AddWithValue("@MaMon", x.ID);
+                cmd.Parameters.AddWithValue("@TenMon", x.FoodName);
+                cmd.Parameters.AddWithValue("@AnhMonAn", x.FoodImage);
+                cmd.Parameters.AddWithValue("@Gia", x.Price);
+                cmd.Parameters.AddWithValue("@ThoiGianLam", x.CookingTime);
+
+                cmd.Connection = SqlCon;
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                DBClose();
+            }
+        }
 
         #region complementary functions
         public Decimal Calculate_Sum(Int16 Soban)
