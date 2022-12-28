@@ -15,6 +15,7 @@
     <None Remove="images\menuitem_4.jpg" />
     <None Remove="images\menuitem_5.jpg" />
     <None Remove="images\menuitem_6.jpg" />
+    <None Remove="images\menu_default_image.jpg" />
     <None Remove="images\poweroff.png" />
     <None Remove="images\power_off_button_64px.png" />
   </ItemGroup>
@@ -43,6 +44,7 @@
     <Resource Include="images\menuitem_4.jpg" />
     <Resource Include="images\menuitem_5.jpg" />
     <Resource Include="images\menuitem_6.jpg" />
+    <Resource Include="images\menu_default_image.jpg" />
   </ItemGroup>
 
 </Project>
