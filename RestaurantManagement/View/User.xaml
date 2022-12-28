@@ -9,8 +9,40 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         DataContext="{StaticResource MainVM}"
-        Title="Thông tin cá nhân tài khoản" Height="740" Width="800" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Thông tin cá nhân tài khoản" Height="800" Width="800" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     <Grid Margin="5" Background="White">
+        <Grid.Resources>
+            <Style x:Key="SearchBar" TargetType="Border">
+                <Setter Property="Width" Value="330"/>
+                <Setter Property="Background" Value="#EAEAEA" />
+                <Setter Property="CornerRadius" Value="14"/>
+                <Setter Property="Padding" Value="2"/>
+                <Setter Property="Height" Value="45"/>
+            </Style>
+            <Style x:Key="Txtbox" TargetType="TextBox">
+                <Setter Property="Foreground" Value="#413F42"/>
+                <Setter Property="Margin" Value="10 0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="Padding" Value="4"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+            <Style x:Key="label" TargetType="Label">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="Foreground" Value="#73777B"/>
+                <Setter Property="Margin" Value="5 0 0 0"/>
+            </Style>
+            <Style x:Key="combobox" TargetType="ComboBox">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="Foreground" Value="#413F42"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="10 0"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Padding" Value="4"/>
+            </Style>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="160"/>
             <RowDefinition Height="20" />
@@ -97,7 +129,7 @@
                 IsSelected="True">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="330"/>
+                        <RowDefinition Height="400"/>
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid>
@@ -107,98 +139,71 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Vertical">
-                            <DockPanel  Margin="0 30 0 20">
-                                <Label Content="Họ tên" FontWeight="SemiBold" FontSize="20" />
-                                <TextBox HorizontalAlignment="Right" 
-                                         Text="{Binding NhanVien.HoTen}"
-                                         Width="200"  
-                                         FontSize="20" 
-                                         TextAlignment="Center"/>
-                            </DockPanel>
-                            <DockPanel  Margin="0 30 0 20">
-                                <Label Content="Ngày sinh" FontWeight="SemiBold" FontSize="20" />
-                                <DatePicker HorizontalAlignment="Right" 
-                                            Width="200" 
-                                            FontSize="20" 
-                                            Text="{Binding NhanVien.NgaySinh}"
-                                            SelectedDateFormat="Short"
-                                            DisplayDate="{Binding NhanVien.NgaySinh}"/>
-                            </DockPanel>
-                            <DockPanel  Margin="0 30 0 20">
-                                <Label Content="Ngày vào làm" FontWeight="SemiBold" FontSize="20" />
-                                <TextBox HorizontalAlignment="Right" 
-                                         Text="{Binding NhanVien.NgayVaoLam, StringFormat={}{0:dd/MM/yyyy}}"
-                                         Width="200"  
-                                         FontSize="20" 
-                                         TextAlignment="Center" 
-                                         IsReadOnly="True"/>
-                            </DockPanel>
-
-                            <DockPanel  Margin="0 30 0 20">
-                                <Label Content="Giới tính" FontWeight="SemiBold" FontSize="20" />
-                                <ComboBox HorizontalAlignment="Right" Width="200"  FontSize="20" HorizontalContentAlignment="Center">
-                                    <ComboBoxItem IsSelected="True">Nam</ComboBoxItem>
-                                    <ComboBoxItem>Nữ</ComboBoxItem>
-                                    <ComboBoxItem>Khác</ComboBoxItem>
-                                </ComboBox>
-                            </DockPanel>
-
+                            <StackPanel Margin="0 5 0 20">
+                                <Label Content="Họ tên" Style="{StaticResource label}"/>
+                                <Border Style="{StaticResource SearchBar}">
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding NhanVien.HoTen}"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 20">
+                                <Label Content="Ngày sinh" Style="{StaticResource label}"/>
+                                <Border Style="{StaticResource SearchBar}">
+                                    <DatePicker Height="45" FontSize="20" DisplayDate="{Binding NhanVien.NgaySinh}"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 20">
+                                <Label Content="Ngày vào làm" Style="{StaticResource label}"/>
+                                <Border Style="{StaticResource SearchBar}">
+                                    <TextBox FontSize="20" Foreground="#413F42" Margin="10 0" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Style="{x:Null}" Text="{Binding NhanVien.NgayVaoLam}"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Margin="0 0 0 20">
+                                <Label Content="Giới tính" Style="{StaticResource label}"/>
+                                <Border Style="{StaticResource SearchBar}">
+                                    <ComboBox Style="{StaticResource combobox}">
+                                        <ComboBoxItem IsSelected="True">Nam</ComboBoxItem>
+                                        <ComboBoxItem>Nữ</ComboBoxItem>
+                                        <ComboBoxItem>Khác</ComboBoxItem>
+                                    </ComboBox>
+                                </Border>
+                            </StackPanel>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Column="2">
-                            <DockPanel  Margin="0 30 0 20">
-                                <Label Content="Mã nhân viên" FontWeight="SemiBold" FontSize="20" />
-                                <TextBox  Width="200" 
-                                          Text="{Binding NhanVien.MaNV}"
-                                          FontSize="20" 
-                                          TextAlignment="Center" 
-                                          HorizontalAlignment="Right" 
-                                          FlowDirection="LeftToRight" 
-                                          IsReadOnly="True"/>
-                            </DockPanel>
-                            <DockPanel  Margin="0 30 0 20">
-                                <Label Content="Chức vụ" FontWeight="SemiBold" FontSize="20" />
-                                <TextBox  Width="200" 
-                                          Text="{Binding NhanVien.ChucVu}"
-                                          FontSize="20" 
-                                          TextAlignment="Center" 
-                                          HorizontalAlignment="Right" 
-                                          FlowDirection="LeftToRight" 
-                                          IsReadOnly="True"/>
-                            </DockPanel>
-                            <DockPanel  Margin="0 30 0 20">
-                                <Label Content="Số điện thoại" FontWeight="SemiBold" FontSize="20" />
-                                <TextBox  Width="200" 
-                                          Text="{Binding NhanVien.SDT}"
-                                          Margin="20 0 0 0" 
-                                          FontSize="20" 
-                                          TextAlignment="Center" 
-                                          HorizontalAlignment="Right" 
-                                          FlowDirection="LeftToRight"/>
-                            </DockPanel>
-                            <DockPanel  Margin="0 30 0 20">
-                                <Label Content="Loại nhân viên" FontWeight="SemiBold" FontSize="20" />
-                                <TextBox  Width="200" 
-                                          Text="{Binding LoaiNhanVien_Str}"
-                                          Margin="20 0 0 0" 
-                                          FontSize="20" 
-                                          TextAlignment="Center" 
-                                          HorizontalAlignment="Right" 
-                                          FlowDirection="LeftToRight"
-                                          IsReadOnly="True"/>
-                            </DockPanel>
+                            <StackPanel Margin="0 5 0 20">
+                                <Label Content="Mã nhân viên" Style="{StaticResource label}"/>
+                                <Border Style="{StaticResource SearchBar}">
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding NhanVien.MaNV}"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 20">
+                                <Label Content="Chức vụ" Style="{StaticResource label}"/>
+                                <Border Style="{StaticResource SearchBar}">
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding NhanVien.ChucVu}"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 20">
+                                <Label Content="Số điện thoại" Style="{StaticResource label}"/>
+                                <Border Style="{StaticResource SearchBar}">
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding NhanVien.SDT}"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 20">
+                                <Label Content="Loại nhân viên" Style="{StaticResource label}"/>
+                                <Border Style="{StaticResource SearchBar}">
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding LoaiNhanVien_Str}"/>
+                                </Border>
+                            </StackPanel>
                         </StackPanel>
                     </Grid>
-                    <DockPanel Grid.Row="1" Margin="0 30 0 20" Height="60" VerticalAlignment="Top">
-                        <Label Content="Địa chỉ" FontWeight="SemiBold" FontSize="20" />
-                        <TextBox VerticalAlignment="Center" 
-                                 Text="{Binding NhanVien.DiaChi}"
-                                 HorizontalAlignment="Right" 
-                                 Width="600"  FontSize="20" TextAlignment="Center"/>
-                    </DockPanel>
+                    <StackPanel Grid.Row="1" Margin="0 0 0 20">
+                        <Label Content="Địa chỉ" Style="{StaticResource label}"/>
+                        <Border Width="730" Style="{StaticResource SearchBar}">
+                            <TextBox Style="{StaticResource Txtbox}"  Text="{Binding NhanVien.DiaChi}"/>
+                        </Border>
+                    </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem 
-                
+            <TabItem      
                 Header="Đổi mật khẩu" 
                 Cursor="Hand"
                 Foreground="#1C3879">
