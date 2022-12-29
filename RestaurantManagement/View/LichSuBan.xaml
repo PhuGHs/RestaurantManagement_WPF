@@ -42,38 +42,35 @@
 
                 <StackPanel Grid.Column="0"
                        
-                            Orientation="Horizontal" Background="#1C3879" Grid.ColumnSpan="3" Margin="0,0,200,0">
+                            Orientation="Horizontal" Background="#FFFDFDFD" Grid.ColumnSpan="3" Margin="0,0,200,0">
 
-                    <TextBox materialDesign:HintAssist.Hint="Tìm kiếm"
+                    <TextBox materialDesign:HintAssist.Hint="Tìm kiếm tên món"
                              x:Name="FilterBox"
                               Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"
                              FontSize="24"
-                             Foreground="#DDFFFFFF"
+                             Foreground="#DD000000"
                              FontFamily="Comfortaa"
                              AllowDrop="True"
                              Width="300"
-                             Height="30"
+                             Height="31"
                              Padding="0"
-                             Margin="20,0,0,0"
-                             
-                             HorizontalAlignment="Left"  />
+                             Margin="20,0,0,0"  Background="White" SelectionTextBrush="White"  />
 
                     <ComboBox Height="30"
-                              Width="100"
+                              Width="110"
                               Margin="10 0 0 0"
                               Padding="0,10,10,0"
-                              FontSize="13"
-                              Foreground="White"
-                              x:Name="filtercbb"
-                              SelectedIndex="0"
-                              SelectedItem="{Binding SelectedImportItemFilter}" Background="{x:Null}" BorderBrush="#89090000" OpacityMask="#FFF71717" >
+                              FontSize="14"
+                              SelectedIndex="1"
+                              x:Name="Filterbox"
+                              SelectedItem="{Binding SelectedItemFilter}" SelectionChanged="Filterbox_SelectionChanged"
+                           >
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding CheckImportItemFilterCM}"
-                                                       CommandParameter="{Binding ElementName=filtercbb}" />
+                                <i:InvokeCommandAction Command="{Binding CheckItemFilterCM}"
+                                                       CommandParameter="{Binding ElementName=Filterbox}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-
                         <ComboBoxItem Content="Toàn bộ" />
                         <ComboBoxItem Content="Theo ngày" />
                         <ComboBoxItem Content="Theo tháng" />
@@ -84,7 +81,7 @@
                               Padding="0,10,10,0"
                               Visibility="Collapsed"
                               x:Name="cbbmonth"
-                              SelectedIndex="{Binding SelectedMonthCM, Mode=TwoWay}">
+                              SelectedIndex="{Binding SelectedMonth, Mode=TwoWay}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding SelectedMonthCM}"
@@ -107,7 +104,7 @@
                     <DatePicker Height="30"
                                 Width="130"
                                 FontSize="15"
-                                Foreground="White"
+                             
                                 Margin="10 0 0 0"
                                 Padding="0,10,10,0"
                                 Visibility="Visible"
@@ -120,17 +117,6 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </DatePicker>
-                    <Button Name="btnCheckWareHouse"
-                        Grid.Column="1"
-                        Command="{Binding CheckCM}"
-                        Background="#1C3879"
-                       Margin="20,0,0,0"
-                        Foreground="White"
-                        FontSize="16"
-                        BorderThickness="0"
-                        Cursor="Hand"
-                        Content="Kiểm tra">
-                    </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2"
@@ -158,10 +144,16 @@
         </StackPanel>
 
         <StackPanel  Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Left" Width="1060" Background="#FFF7F7F7">
-            <ListView  x:Name="_ListView"
+            <Border Background="#EEEE"
+                    CornerRadius="20"
+                    Grid.Column="1"
+                    Margin="10" Width="1051">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Grid.Column="1">
+                    <ListView  x:Name="_ListView"
                  
                        Height="551"
-                       ItemsSource="{Binding ListProduct}"
+                       ItemsSource="{Binding ListProduct, UpdateSourceTrigger=PropertyChanged}"
                        HorizontalContentAlignment="Stretch" Foreground="#DD080303" BorderBrush="{x:Null}" Background="#FFF1F0F0" Width="1060" d:ItemsSource="{d:SampleData ItemCount=5}" IsSynchronizedWithCurrentItem="False">
                 <ListView.View>
                     <GridView>
@@ -221,6 +213,8 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+                </ScrollViewer>
+            </Border>
             <Grid>
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"

@@ -109,7 +109,7 @@
         <Label Content="Danh sách món cần thực hiện :"
                Margin="20 20 750 535"/>
         <Label Content="Danh sách món cần phục vụ :"
-               Margin="525 20 0 535"/>
+               Margin="552,20,-27,535"/>
     </Grid>
 </UserControl>
 

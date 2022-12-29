@@ -21,6 +21,9 @@ using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 using DataTable = System.Data.DataTable;
 using System.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Security.Cryptography;
+using MaterialDesignThemes.Wpf;
+using System.Windows.Documents;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -77,7 +80,12 @@ namespace QuanLyNhaHang.ViewModel
             get { return _SelectedImportMonth; }
             set { _SelectedImportMonth = value; OnPropertyChanged(); }
         }
-
+        private System.Windows.Controls.Label _ResultName;
+        public System.Windows.Controls.Label ResultName
+        {
+            get { return _ResultName; }
+            set { _ResultName = value; OnPropertyChanged(); }
+        }
 
 
 
@@ -85,8 +93,8 @@ namespace QuanLyNhaHang.ViewModel
 
         public ObservableCollection<LichSuBanModel> ListProduct { get => _ListProduct; set { _ListProduct = value; OnPropertyChanged(); } }
 
-        private string timkiem;
-        
+       
+
         private string _Search;
         public string Search
         {
@@ -99,6 +107,7 @@ namespace QuanLyNhaHang.ViewModel
                 if (!String.IsNullOrEmpty(Search))
                 {
                     strQuery = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON WHERE TENMON LIKE N'%" + Search + "%'";
+                  
                 }
                 else
                     strQuery = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON";
@@ -109,16 +118,15 @@ namespace QuanLyNhaHang.ViewModel
         private SqlConnection sqlCon = null;
 
 
-        public ICommand LoadImportPageCM { get; set; }
-        public ICommand LoadExportPageCM { get; set; }
+        
         public ICommand ExportFileCM { get; set; }
         public ICommand CheckImportItemFilterCM { get; set; }
         public ICommand SelectedImportMonthCM { get; set; }
         public ICommand SelectedMonthCM { get; set; }
         public ICommand CheckCM { get; set; }
-
+        public ICommand SelectedDateExportListCM { get; set; }
         public ICommand CheckItemFilterCM { get; set; }
-      
+
         public LichSuBanViewModel()
         {
 
@@ -132,9 +140,14 @@ namespace QuanLyNhaHang.ViewModel
             SelectedDate = GetCurrentDate;
             SelectedMonth = DateTime.Now.Month - 1;
             SelectedImportMonth = DateTime.Now.Month - 1;
-            SelectedMonthCM = new RelayCommand<System.Windows.Controls.ComboBox>((p) => { return true; }, async (p) =>
+            SelectedDateExportListCM = new RelayCommand<System.Windows.Controls.DatePicker>((p) => { return true; }, (p) =>
             {
-                await CheckMonthFilter();
+                CheckDateFilter();
+            });
+            
+            SelectedMonthCM = new RelayCommand<System.Windows.Controls.ComboBox>((p) => { return true; }, (p) =>
+            {
+                  CheckMonthFilter();
             });
             CheckCM = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
@@ -142,9 +155,9 @@ namespace QuanLyNhaHang.ViewModel
                 mess.ShowDialog();
 
             });
-            CheckItemFilterCM = new RelayCommand<System.Windows.Controls.ComboBox>((p) => { return true; }, async (p) =>
+            CheckItemFilterCM = new RelayCommand<System.Windows.Controls.ComboBox>((p) => { return true; }, (p) =>
             {
-                await CheckItemFilter();
+                 CheckItemFilter();
             });
             ExportFileCM = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
@@ -176,7 +189,7 @@ namespace QuanLyNhaHang.ViewModel
                     int i2 = 2;
                     foreach (var item in ListProduct)
                     {
-                        
+
                         ws.Cells[i2, 1] = item.MaMon;
                         ws.Cells[i2, 2] = item.TenMon;
                         ws.Cells[i2, 3] = item.SoLuong;
@@ -186,8 +199,8 @@ namespace QuanLyNhaHang.ViewModel
 
                         i2++;
                     }
-                    ws.SaveAs(sfd.FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges,Type.Missing, Type.Missing) ;
-                   
+                    ws.SaveAs(sfd.FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
+
                     app.Quit();
 
                     Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
@@ -237,98 +250,141 @@ namespace QuanLyNhaHang.ViewModel
                 string gia = reader.GetSqlMoney(4).ToString();
                 string thoigian = reader.GetDateTime(5).ToShortDateString();
 
-                ListProduct.Add(new LichSuBanModel(madon,mamon, ten, soluong, gia, thoigian));
+                ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));
             }
 
             CloseConnect();
         }
-        public async Task CheckMonthFilter()
+        
+        public void  CheckMonthFilter()
         {
-            /* try
-             {
-                 ListBill = new ObservableCollection<HoaDon>(await BillService.Ins.GetBillByMonth(SelectedMonth + 1));
-             }
-             catch (Exception e)
-             {
-                 Console.WriteLine(e);
-                 MyMessageBox mb = new MyMessageBox("Lỗi");
-                 mb.ShowDialog();
-             }*/
+            ListProduct = new ObservableCollection<LichSuBanModel>();
+           
+            OpenConnect();
+       
 
 
-        }
-        public async Task GetExportListSource(string s = "")
-        {
-            /*ListBill = new ObservableCollection<BillDTO>();
-            switch (s)
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON where MONTH(NGAYHD) = '" + (SelectedMonth + 1 ) + "'";
+
+            cmd.Connection = sqlCon;
+            SqlDataReader reader = cmd.ExecuteReader();
+            ListProduct.Clear();
+            while (reader.Read())
             {
-                case "date":
-                    {
-                        try
-                        {
-                            IsGettingSource = true;
-                            ListBill = new ObservableCollection<BillDTO>(await BillService.Ins.GetBillByDate(SelectedDate));
-                            ResultName.Content = ListBill.Count;
-                            IsGettingSource = false;
-                            return;
-                        }
-                        catch (System.Data.Entity.Core.EntityException e)
-                        {
-                            Console.WriteLine(e);
-                            MessageBoxCustom mb = new MessageBoxCustom("Lỗi", "Mất kết nối cơ sở dữ liệu", MessageType.Error, MessageButtons.OK);
-                            mb.ShowDialog();
-                            throw;
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                            MessageBoxCustom mb = new MessageBoxCustom("Lỗi", "Lỗi hệ thống", MessageType.Error, MessageButtons.OK);
-                            mb.ShowDialog();
-                            throw;
-                        }
+                int madon = reader.GetInt32(0);
+                string mamon = reader.GetString(1);
+                string ten = reader.GetString(2);
+                int soluong = reader.GetInt32(3);
+                string gia = reader.GetSqlMoney(4).ToString();
+                string thoigian = reader.GetDateTime(5).ToShortDateString();
 
-                    }
-                case "":
-                    {
-                     
-                        
-                            IsGettingSource = true;
-                            ListProduct = new ObservableCollection<LichSuBanModel>(await BillService.Ins.GetAllBill());
-                            ResultName.Content = ListBill.Count;
-                            IsGettingSource = false;
-                            return;
-                        
-                       
-                        
+                ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));
+            }
 
-                    }
-                case "month":
-                    {
-                        IsGettingSource = true;
-                        await CheckMonthFilter();
-                        ResultName.Content = ListBill.Count;
-                        IsGettingSource = false;
-                        return;
-                    }
-            }*/
+            CloseConnect();
+            return;
         }
-        public async Task CheckItemFilter()
+        public void CheckDateFilter()
         {
+            ListProduct = new ObservableCollection<LichSuBanModel>();
+            OpenConnect();
+            DateTime dateToday = SelectedDate;
+
+            string strDate = dateToday.ToString("yyyy-MM-dd");
+
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON where NGAYHD = '" + strDate + "'";
+
+            cmd.Connection = sqlCon;
+            SqlDataReader reader = cmd.ExecuteReader();
+            ListProduct.Clear();
+            while (reader.Read())
+            {
+                int madon = reader.GetInt32(0);
+                string mamon = reader.GetString(1);
+                string ten = reader.GetString(2);
+                int soluong = reader.GetInt32(3);
+                string gia = reader.GetSqlMoney(4).ToString();
+                string thoigian = reader.GetDateTime(5).ToShortDateString();
+
+                ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));
+            }
+
+            CloseConnect();
+
+        }
+        public void CheckItemFilter()
+        {
+            
+            ListProduct = new ObservableCollection<LichSuBanModel>();
             switch (SelectedItemFilter.Content.ToString())
             {
                 case "Toàn bộ":
                     {
-                        await GetExportListSource("");
+                        ListViewDisplay("select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON");
+                        OpenConnect();
+                        CloseConnect();
+
                         return;
                     }
                 case "Theo ngày":
                     {
-                        await GetExportListSource("date");
+                        OpenConnect();
+                        DateTime dateToday = SelectedDate;
+
+                        string strDate = dateToday.ToString("yyyy-MM-dd");
+
+                     
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON where NGAYHD = '" + strDate + "'";
+                      
+                        cmd.Connection = sqlCon;
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        ListProduct.Clear();
+                        while (reader.Read())
+                        {
+                            int madon = reader.GetInt32(0);
+                            string mamon = reader.GetString(1);
+                            string ten = reader.GetString(2);
+                            int soluong = reader.GetInt32(3);
+                            string gia = reader.GetSqlMoney(4).ToString();
+                            string thoigian = reader.GetDateTime(5).ToShortDateString();
+
+                            ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));
+                        }
+
+                        CloseConnect();
                         return;
                     }
                 case "Theo tháng":
                     {
-                        await GetExportListSource("month");
+
+                        OpenConnect();
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON where MONTH(NGAYHD) = '" + (SelectedMonth + 1) + "'";
+
+                        cmd.Connection = sqlCon;
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        ListProduct.Clear();
+                        while (reader.Read())
+                        {
+                            int madon = reader.GetInt32(0);
+                            string mamon = reader.GetString(1);
+                            string ten = reader.GetString(2);
+                            int soluong = reader.GetInt32(3);
+                            string gia = reader.GetSqlMoney(4).ToString();
+                            string thoigian = reader.GetDateTime(5).ToShortDateString();
+
+                            ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));
+                        }
+
+                        CloseConnect();
                         return;
                     }
             }

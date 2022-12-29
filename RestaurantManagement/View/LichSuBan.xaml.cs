@@ -1,5 +1,8 @@
-﻿using System;
+﻿using LichSuBan.Models;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Globalization;
 
 namespace QuanLyNhaHang.View
 {
@@ -23,8 +27,43 @@ namespace QuanLyNhaHang.View
         public LichSuBan()
         {
             InitializeComponent();
+           
         }
-
+    
         
+ 
+           
+       
+      
+
+        private void Filterbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cbb = sender as ComboBox;
+          
+            if (cbbmonth != null && timepicker != null)
+            {
+                switch (cbb.SelectedIndex)
+                {
+                    case 0:
+                        {
+                            cbbmonth.Visibility = System.Windows.Visibility.Collapsed;
+                            timepicker.Visibility = System.Windows.Visibility.Collapsed;
+                            break;
+                        }
+                    case 1:
+                        {
+                            cbbmonth.Visibility = System.Windows.Visibility.Collapsed;
+                            timepicker.Visibility = System.Windows.Visibility.Visible;
+                            break;
+                        }
+                    case 2:
+                        {
+                            cbbmonth.Visibility = System.Windows.Visibility.Visible;
+                            timepicker.Visibility = System.Windows.Visibility.Collapsed;
+                            break;
+                        }
+                }
+            }
+        }
     }
 }
