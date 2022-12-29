@@ -20,9 +20,12 @@ namespace QuanLyNhaHang.View
     /// </summary>
     public partial class Bep : UserControl
     {
+       
         public Bep()
         {
             InitializeComponent();
         }
+
+        
     }
 }
