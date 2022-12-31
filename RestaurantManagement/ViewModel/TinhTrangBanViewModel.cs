@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Menu.Models;
 using QuanLyNhaHang.View;
 using RestaurantManagement.Models;
 using TinhTrangBan.Models;
@@ -16,6 +17,8 @@ using System.Configuration;
 using System.Data;
 using System.Windows.Forms;
 using OfficeOpenXml.ConditionalFormatting;
+using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -268,6 +271,8 @@ namespace QuanLyNhaHang.ViewModel
                 }
             }
         }
+
         #endregion
+
     }
 }
