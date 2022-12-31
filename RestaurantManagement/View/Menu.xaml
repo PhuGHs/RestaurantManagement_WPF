@@ -7,6 +7,7 @@
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
+             xmlns:nav="clr-namespace:QuanLyNhaHang.State.Navigator"
              xmlns:vm="clr-namespace:QuanLyNhaHang.ViewModel"
              d:DesignHeight="660" d:DesignWidth="1060"
              Background="Transparent"
@@ -123,7 +124,13 @@
                                     FontSize="16" 
                                     Foreground="#73777B"
                                     Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    />
+                                    >
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="TextChanged">
+                                            <i:InvokeCommandAction Command="{Binding FindDishes}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
                                 <StackPanel.InputBindings>
                                     <KeyBinding Key="Enter" Command="{Binding FindDishes}"/>
                                 </StackPanel.InputBindings>
@@ -131,8 +138,7 @@
                         </Border>
                     </StackPanel>
                     <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
-                        <ItemsControl x:Name="item" 
-                                      ItemsSource="{Binding MenuItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ItemsControl x:Name="itemControl" ItemsSource="{Binding MenuItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
@@ -168,7 +174,6 @@
                                                 Style="{StaticResource MaterialDesignRaisedButton}"
                                                 Width="100"
                                                 Background="#1C3879"
-                                                ToolTip="Resource name: MaterialDesignRaisedButton"
                                                 Command="{Binding ElementName=vm, Path=OrderFeature_Command}"
                                                 CommandParameter="{Binding}">
                                                 _ĐẶT
@@ -217,26 +222,20 @@
                                             FontSize="16" 
                                             Text="{Binding Day}"/>
                                     </StackPanel>
-                                    <ComboBox
-                                        Grid.Column="1" 
-                                        Foreground="#fff"
-                                        FontSize="20"
-                                        VerticalAlignment="Top"
-                                        HorizontalAlignment="Center"
-                                        Style="{StaticResource MaterialDesignFloatingHintComboBox}">
-                                        <ComboBoxItem IsSelected="True" FontSize="18" Foreground="Black">
-                                            Bàn 9
-                                        </ComboBoxItem>
-                                        <ComboBoxItem FontSize="18" Foreground="Black">
-                                            Bàn 1
-                                        </ComboBoxItem>
-                                        <ComboBoxItem FontSize="18" Foreground="Black">
-                                            Bàn 2
-                                        </ComboBoxItem>
-                                        <ComboBoxItem FontSize="18" Foreground="Black">
-                                            Bàn 3
-                                        </ComboBoxItem>
-                                    </ComboBox>
+                                    <TextBlock Grid.Column="1"
+                                               Text="Bàn"
+                                               Foreground="White"
+                                               FontSize="20"
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Margin="60 0 0 0"
+                                               Grid.Column="1"
+                                               Text="9"
+                                               Foreground="White"
+                                               FontSize="20"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
                                 </Grid>
                             </Border>
                             <ScrollViewer Grid.Row="1">
@@ -297,33 +296,63 @@
                                     <TextBlock Text="Tổng" 
                                                FontSize="17" 
                                                FontWeight="SemiBold" 
-                                               Width="260"/>
+                                               Width="250"/>
                                     <TextBlock Text="{Binding Path=StrSubtotal}" 
                                                FontSize="15" 
                                                FontWeight="SemiBold" 
-                                               Foreground="#1C3879"/>
+                                               Foreground="#1C3879"
+                                               TextAlignment="Right"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" Margin="10 10 0 0" >
-                                    <Button Background="Transparent" 
+                                    <Button Background="Red" 
                                             BorderBrush="Red" 
+                                            BorderThickness="1"
                                             Width="150"
                                             Command="{Binding ClearAllSelectedDishes}">
                                         <TextBlock 
-                                            Foreground="Red" 
+                                            Foreground="White" 
                                             Text="HUỶ"
+                                            FontSize="15"
                                             />
                                     </Button>
-                                    <Button Command="{Binding ShowDetailOrder_Command}"
-                                            Background="Green" 
+                                    <Button Command="{Binding Inform_Chef_Of_OrderedDishes}"
+                                            Background="#1C3879" 
                                             BorderThickness="0" 
                                             Width="150" 
                                             Margin="50 0 0 0">
                                         <TextBlock Foreground="White" 
-                                                   Text="HIỂN THỊ CHI TIẾT" 
-                                                   FontSize="14" 
+                                                   Text="BÁO CHẾ BIẾN" 
+                                                   FontSize="15" 
                                                    FontWeight="SemiBold"/>
                                     </Button>
                                 </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" Margin="10 10 0 0" >
+                                    <Button Background="#1C3879" 
+                                            BorderBrush="#1C3879" 
+                                            BorderThickness="1"
+                                            Width="150"
+                                            Command="{Binding DataContext.Navigator.SelectViewModelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                            CommandParameter="{x:Static nav:TypeOfView.TinhTrangBan}"
+                                           >
+                                        <TextBlock 
+                                            Foreground="White" 
+                                            Text="CHUYỂN BÀN"
+                                            FontSize="15"
+                                            />
+                                    </Button>
+                                    <Button Background="LightGreen" 
+                                            BorderThickness="0" 
+                                            Width="150" 
+                                            Margin="50 0 0 0"
+                                            Command="{Binding PayBillCommand}">
+                                        <TextBlock Foreground="Black" 
+                                                   Text="THANH TOÁN" 
+                                                   FontSize="15" 
+                                                   FontWeight="SemiBold"/>
+                                    </Button>
+                                </StackPanel>
+
                             </StackPanel>
                         </Grid>
                     </Border>

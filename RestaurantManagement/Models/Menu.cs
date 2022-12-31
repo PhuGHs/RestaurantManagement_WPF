@@ -2,21 +2,32 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
-namespace Menu.Models
+namespace QuanLyNhaHang.Models
 {
     public class MenuModel { }
 
     public class MenuItem : BaseViewModel
     {
-        private int id;
+        public MenuItem(string id = "", string foodName = "", decimal price = 0, BitmapImage foodImage = null, int cookingTime = 0)
+        {
+            this.id = id;
+            this.foodName = foodName;
+            this.price = price;
+            this.foodImage = foodImage;
+            this.cookingTime = cookingTime;
+        }
+        private string id;
         private string foodName;
-        private Decimal price;
-        private string foodImage;
-        public int ID { get { return id; } set { id = value; } }
+        private decimal price;
+        private BitmapImage foodImage;
+        private int cookingTime;
+        public string ID { get { return id; } set { id = value; } }
 
         public string FoodName
         {
@@ -31,7 +42,7 @@ namespace Menu.Models
             }
         }
 
-        public Decimal Price
+        public decimal Price
         {
             get { return price; }
             set
@@ -44,7 +55,7 @@ namespace Menu.Models
             }
         }
 
-        public string FoodImage
+        public BitmapImage FoodImage
         {
             get { return foodImage; }
             set
@@ -61,12 +72,40 @@ namespace Menu.Models
         {
             get { return String.Format("{0:0,0 VND}", Price); }
         }
+        public int CookingTime
+        {
+            get
+            {
+                return cookingTime;
+            }
+            set
+            {
+                cookingTime = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool IsNullOrEmpty()
+        {
+            if (foodImage == null || id == "" || foodName == "" || cookingTime == 0 || price == 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void Clear()
+        {
+            this.FoodName = "";
+            this.Price = 0;
+            this.CookingTime = 0;
+            this.ID = "";
+        }
 
 
     }
     public class SelectedMenuItem : BaseViewModel
     {
-        public SelectedMenuItem(int ID, string foodName, Decimal price, int quantity)
+        public SelectedMenuItem(string ID, string foodName, Decimal price, int quantity)
         {
             _id = ID;
             _foodName = foodName;
@@ -74,13 +113,13 @@ namespace Menu.Models
             _quantity = quantity;
         }
         #region attributes
-        private int _id;
+        private string _id;
         private string _foodName;
         private Decimal _price;
         private int _quantity;
         #endregion
         #region properties
-        public int ID { get { return _id; } set { _id = value; } }
+        public string ID { get { return _id; } set { _id = value; } }
 
         public string FoodName
         {

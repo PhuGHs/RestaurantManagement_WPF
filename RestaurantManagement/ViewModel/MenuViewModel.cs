@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QuanLyNhaHang.Command;
 using System.Windows.Input;
 using Diacritics.Extensions;
-using Menu.Models;
+using QuanLyNhaHang.Models;
 using QuanLyNhaHang.View;
+using QuanLyNhaHang.DataProvider;
+using QuanLyNhaHang.ViewModel;
+using QuanLyNhaHang.State.Navigator;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -15,16 +24,26 @@ namespace QuanLyNhaHang.ViewModel
     {
         public MenuViewModel()
         {
+            //LoadMenu
+            _menuItems = MenuDP.Flag.ConvertToCollection();
+            //Command actions
             OrderFeature_Command = new RelayCommand<MenuItem>((p) => true, (p) => OrderAnItem(p.ID));
             RemoveItemFeature_Command = new RelayCommand<SelectedMenuItem>((p) => true, (p) => RemoveAnItem(p));
             ClearAllSelectedDishes = new RelayCommand<object>((p) => true, (p) => {
-                MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả \n   những món đã chọn?", true);
-                msb.ShowDialog();
-                if (msb.ACCEPT() == false)
+                if (SelectedItems.Count > 0)
+                {
+                    MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả \n   những món đã chọn?", true);
+                    msb.ShowDialog();
+                    if (msb.ACCEPT() == false)
+                    {
+                        return;
+                    }
+                    SelectedItems.Clear();
+                }
+                else
                 {
                     return;
                 }
-                SelectedItems.Clear();
             });
             SortingFeature_Command = new RelayCommand<object>((p) => true, (p) => {
                 if (MyComboboxSelection == "Giá cao -> thấp")
@@ -49,17 +68,31 @@ namespace QuanLyNhaHang.ViewModel
                 OrderWindow OrderWin = new OrderWindow();
                 OrderWin.ShowDialog();
             });
-            FindDishes = new RelayCommand<object>((p) => true, (p) =>
+            FindDishes = new RelayCommand<object>((p) => true, (p) => searchMealItems(SearchText));
+            Inform_Chef_Of_OrderedDishes = new RelayCommand<object>((p) => true, (p) =>
             {
-                MenuItems = searchMealItem(SearchText);
-            }); 
-            _menuItems = new ObservableCollection<MenuItem>();
+                foreach (SelectedMenuItem orderDish in SelectedItems)
+                {
+                    MenuDP.Flag.InformChef(orderDish.ID, 2, orderDish.Quantity);
+                }
+                MyMessageBox msb = new MyMessageBox("Đã báo chế biến thành công!");
+                msb.Show();
+                SelectedItems.Clear();
+                DecSubtotal = 0;
+            });
+            //SwitchCustomerTable = new RelayCommand<object>((p) => true, (p) =>
+            //{
+            //    NAV.SelectViewModelCommand.Execute(p);
+            //});
+            PayBillCommand = new RelayCommand<object>((p) => true, (p) =>
+            {
+                MenuDP.Flag.PayABill(2);
+            });
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
             _comboBox_2Items = new ObservableCollection<string>();
-            LoadMenuItems();
             LoadCombobox_2Items();
         }
-
+          
         #region attributes
         private ObservableCollection<MenuItem> _menuItems;
         private ObservableCollection<SelectedMenuItem> _selectedItems;
@@ -84,7 +117,7 @@ namespace QuanLyNhaHang.ViewModel
         }
         public Decimal DecSubtotal
         {
-            set 
+            set
             {
                 if (value != dec_subtotal)
                 {
@@ -99,7 +132,7 @@ namespace QuanLyNhaHang.ViewModel
         {
             set
             {
-                if(value != str_subtotal)
+                if (value != str_subtotal)
                 {
                     str_subtotal = value;
                     OnPropertyChanged();
@@ -111,33 +144,18 @@ namespace QuanLyNhaHang.ViewModel
         #endregion
 
         #region commands
-        public ICommand OrderFeature_Command { get; set; }  
+        public ICommand OrderFeature_Command { get; set; }
         public ICommand RemoveItemFeature_Command { get; set; }
         public ICommand SortingFeature_Command { get; set; }
         public ICommand ShowDetailOrder_Command { get; set; }
         public ICommand FindDishes { get; set; }
         public ICommand ClearAllSelectedDishes { get; set; }
+        public ICommand Inform_Chef_Of_OrderedDishes { get; set; }
+        public ICommand SwitchCustomerTable { get; set; }
+        public ICommand PayBillCommand { get; set; }
         #endregion
 
         #region methods
-        private void LoadMenuItems()
-        {
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_1.png", ID = 1, FoodName = "Phở Bò", Price = 45000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_2.png", ID = 2, FoodName = "Canh Chua", Price = 20000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_3.png", ID = 3, FoodName = "Lẩu Hải Sản", Price = 140000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_4.jpg", ID = 4, FoodName = "Mì tôm", Price = 10000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_5.jpg", ID = 5, FoodName = "Hàu nướng", Price = 200000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_6.jpg", ID = 6, FoodName = "Cá Ngừ", Price = 1000000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_6.jpg", ID = 7, FoodName = "Cá Ngừ Đại Dương", Price = 1000000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_6.jpg", ID = 8, FoodName = "Cá Ngừ Đại Dương", Price = 1000000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_6.jpg", ID = 9, FoodName = "Cá Ngừ Đại Dương", Price = 1000000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_6.jpg", ID = 10, FoodName = "Cá Ngừ Đại Dương", Price = 1000000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_6.jpg", ID = 11, FoodName = "Cá Ngừ Đại Dương", Price = 1000000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_6.jpg", ID = 12, FoodName = "Cá Ngừ Đại Dương", Price = 1000000 });
-            _menuItems.Add(new MenuItem { FoodImage = "pack://application:,,,/images/menuitem_6.jpg", ID = 13, FoodName = "Cá Ngừ Đại Dương", Price = 1000000 });
-
-            MenuItems = _menuItems;
-        }
         private void LoadCombobox_2Items()
         {
             _comboBox_2Items.Add("Giá cao -> thấp");
@@ -148,9 +166,9 @@ namespace QuanLyNhaHang.ViewModel
             ComboBox_2Items = _comboBox_2Items;
         }
 
-        private void OrderAnItem(int ID)
+        private void OrderAnItem(string ID)
         {
-            foreach(MenuItem item in _menuItems)
+            foreach (MenuItem item in _menuItems)
             {
                 if (item.ID == ID)
                 {
@@ -163,7 +181,7 @@ namespace QuanLyNhaHang.ViewModel
                         return;
                     }
                     SelectedMenuItem s_item = new SelectedMenuItem(item.ID, item.FoodName, item.Price, 1);
-                    SelectedItems.Add(s_item);  
+                    SelectedItems.Add(s_item);
                     break;
                 }
             }
@@ -181,24 +199,41 @@ namespace QuanLyNhaHang.ViewModel
                 SelectedItems.Remove(x);
             }
         }
-        public ObservableCollection<MenuItem> searchMealItem(string keyword)
+        public void searchMealItems(string keyword)
         {
-            ObservableCollection<MenuItem> relatingItems = new ObservableCollection<MenuItem>();
-            foreach (MenuItem x in MenuItems)
+            if (String.IsNullOrEmpty(keyword))
             {
-                if (x.FoodName.RemoveDiacritics().ToLower().Contains(keyword.RemoveDiacritics().ToLower()))
-                {
-                    relatingItems.Add(x);
-                }
+                MenuItems = MenuDP.Flag.ConvertToCollection();
             }
-            return relatingItems;
+            else
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    ObservableCollection<MenuItem> relatingItems = new ObservableCollection<MenuItem>();
+                    foreach (MenuItem x in MenuItems)
+                    {
+                        if (x.FoodName.RemoveDiacritics().ToLower().Contains(keyword.RemoveDiacritics().ToLower()))
+                        {
+                            relatingItems.Add(x);
+                        }
+                    }
+                    return relatingItems;
+                }).ContinueWith(task =>
+                {
+                    MenuItems.Clear();
+                    foreach (MenuItem result in task.Result)
+                    {
+                        MenuItems.Add(result);
+                    }
+                }, System.Threading.CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+            }
         }
         #endregion
 
         #region complementary methods
-        private SelectedMenuItem checkIfAnItemIsInOrderItems(int ID)
+        private SelectedMenuItem checkIfAnItemIsInOrderItems(string ID)
         {
-            foreach(SelectedMenuItem item in _selectedItems)
+            foreach (SelectedMenuItem item in _selectedItems)
             {
                 if (item.ID == ID)
                 {
@@ -207,6 +242,7 @@ namespace QuanLyNhaHang.ViewModel
             }
             return null;
         }
+        
         #endregion
     }
 }

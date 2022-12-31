@@ -86,8 +86,8 @@
                                                 Width="130"
                                                 Header="Đơn vị" />
                                 <GridViewColumn DisplayMemberBinding="{Binding DonGia}"
-                                                Width="130"
-                                                Header="Đơn giá" />
+                                                Width="180"
+                                                Header="Đơn giá (VNĐ)" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -113,10 +113,11 @@
                 <Grid>
 
                     <ComboBox materialDesign:HintAssist.Hint="Thời gian"
-                              Margin="15,59,5,0"
+                              Margin="15,59,15,0"
                               ItemsSource="{Binding ListTime}"
                               Text="{Binding TimeSelected}"
-                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" VerticalAlignment="Top"/>
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
+                              VerticalAlignment="Top"/>
 
                 </Grid>
             </Grid>
@@ -141,7 +142,7 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBox materialDesign:HintAssist.Hint="ID"
+                        <TextBox materialDesign:HintAssist.Hint="Mã nhập"
                                  Grid.Column="0"
                                  Margin="15 22 5 22.5"
                                  Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}"
@@ -180,7 +181,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Column="0">
-                            <TextBox materialDesign:HintAssist.Hint="Giá nhập"
+                            <TextBox materialDesign:HintAssist.Hint="Giá nhập (VNĐ)"
                                      Margin="15 22 5 22.5"
                                      Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -199,6 +200,9 @@
                                 </ComboBoxItem>
                                 <ComboBoxItem>
                                     Quả
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Túi
                                 </ComboBoxItem>
                             </ComboBox>
                         </Grid>

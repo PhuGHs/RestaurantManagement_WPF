@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing.Text;
@@ -28,7 +28,7 @@ namespace QuanLyNhaHang.ViewModel
         public TinhTrangBanViewModel()
         {
             StatusOfTableCommand = new RelayCommand<Table>((p) => true, (p) => GetStatusOfTable(p.ID));
-            GetPaymentCommand = new RelayCommand<Table>((p) => true, (p) => Payment()); 
+            GetPaymentCommand = new RelayCommand<Table>((p) => true, (p) => Payment());
             LoadTables();
             LoadTableStatus();
         }
@@ -59,7 +59,7 @@ namespace QuanLyNhaHang.ViewModel
             get { return sumofbill; }
             set { sumofbill = value; OnPropertyChanged(); }
         }
-       
+
         #endregion
         #region commands
         public ICommand StatusOfTableCommand { get; set; }
@@ -109,7 +109,7 @@ namespace QuanLyNhaHang.ViewModel
         {
             string TableStatus = "";
             using (SqlConnection con = new SqlConnection(connectstring))
-            {                
+            {
                 con.Open();
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = con;
@@ -123,7 +123,7 @@ namespace QuanLyNhaHang.ViewModel
                     TableStatus = reader.GetString(0);
                 }
                 con.Close();
-                return TableStatus;              
+                return TableStatus;
             }
         }
         public int LoadBill(int ID)
@@ -168,8 +168,8 @@ namespace QuanLyNhaHang.ViewModel
                     cmd.Parameters.AddWithValue("@SoBan", ID);
 
                     cmd.ExecuteNonQuery();
-                }              
-                con.Close();              
+                }
+                con.Close();
             }
         }
         public void UpdateBillStatus(int BillID)
@@ -225,10 +225,10 @@ namespace QuanLyNhaHang.ViewModel
                         Price = 0;
                     }
                 }
-                con.Close();                
+                con.Close();
             }
-            
-        }      
+
+        }
         public void GetStatusOfTable(int ID)
         {
             foreach (Table table in _tables)
@@ -271,7 +271,7 @@ namespace QuanLyNhaHang.ViewModel
                 }
             }
         }
-        
+
         #endregion
 
     }

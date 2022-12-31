@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using QuanLyNhaHang.ViewModel;
 
 namespace QuanLyNhaHang.Models
 {
-    public class NhanVien
+    public class NhanVien : BaseViewModel
     {
         private string _MaNV;
         public string MaNV { get => _MaNV; set => _MaNV = value; }
         private string _HoTen;
-        public string HoTen { get => _HoTen; set => _HoTen = value; }
+        public string HoTen { get => _HoTen; set { _HoTen = value; OnPropertyChanged(); } }
         private string _ChucVu;
         public string ChucVu { get => _ChucVu; set => _ChucVu = value; }
         private string _DiaChi;
@@ -28,7 +30,9 @@ namespace QuanLyNhaHang.Models
         public string TaiKhoan { get => _TaiKhoan; set => _TaiKhoan = value; }
         private string _MatKhau;
         public string MatKhau { get => _MatKhau; set => _MatKhau = value; }
-        public NhanVien(string id, string ten, string chucvu, string diachi, bool fulltime, string sdt, string ngayvl, string ngsinh, string tk, string mk)
+        private BitmapImage _anhdaidien;
+        public BitmapImage AnhDaiDien { get => _anhdaidien; set { _anhdaidien = value; OnPropertyChanged(); }  }
+        public NhanVien(string id, string ten, string chucvu, string diachi, bool fulltime, string sdt, string ngayvl, string ngsinh)
         {
             MaNV = id;
             HoTen = ten;
@@ -38,8 +42,20 @@ namespace QuanLyNhaHang.Models
             SDT = sdt;
             NgayVaoLam = ngayvl;
             NgaySinh = ngsinh;
-            TaiKhoan = tk;
-            MatKhau = mk;
+        }
+
+        public NhanVien(string id, string ten, string chucvu, string diachi, bool fulltime, string sdt, string ngayvl, string ngsinh, string taikhoan, string matkhau)
+        {
+            MaNV = id;
+            HoTen = ten;
+            ChucVu = chucvu;
+            DiaChi = diachi;
+            Fulltime = fulltime;
+            SDT = sdt;
+            NgayVaoLam = ngayvl;
+            NgaySinh = ngsinh;
+            TaiKhoan = taikhoan;
+            MatKhau = matkhau;
         }
     }
 }

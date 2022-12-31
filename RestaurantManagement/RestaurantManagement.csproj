@@ -15,6 +15,7 @@
     <None Remove="images\menuitem_4.jpg" />
     <None Remove="images\menuitem_5.jpg" />
     <None Remove="images\menuitem_6.jpg" />
+    <None Remove="images\menu_default_image.jpg" />
     <None Remove="images\poweroff.png" />
     <None Remove="images\power_off_button_64px.png" />
   </ItemGroup>
@@ -24,6 +25,7 @@
     <PackageReference Include="EPPlus" Version="6.1.1" />
     <PackageReference Include="EPPlus.Interfaces" Version="6.1.1" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.1.1" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="MaterialDesignColors" Version="2.0.6" />
     <PackageReference Include="MaterialDesignExtensions" Version="4.0.0-a02" />
@@ -36,6 +38,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel">
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Excel\15.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="office">
+      <HintPath>C:\Windows\assembly\GAC_MSIL\office\15.0.0.0__71e9bce111e9429c\office.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="images\logo.png" />
     <Resource Include="images\menuitem_1.png" />
     <Resource Include="images\menuitem_2.png" />
@@ -43,6 +54,7 @@
     <Resource Include="images\menuitem_4.jpg" />
     <Resource Include="images\menuitem_5.jpg" />
     <Resource Include="images\menuitem_6.jpg" />
+    <Resource Include="images\menu_default_image.jpg" />
   </ItemGroup>
 
 </Project>

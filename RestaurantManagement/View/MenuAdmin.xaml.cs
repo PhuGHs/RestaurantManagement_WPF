@@ -16,16 +16,13 @@ using System.Windows.Shapes;
 namespace QuanLyNhaHang.View
 {
     /// <summary>
-    /// Interaction logic for Bep.xaml
+    /// Interaction logic for MenuAdmin.xaml
     /// </summary>
-    public partial class Bep : UserControl
+    public partial class MenuAdmin : UserControl
     {
-       
-        public Bep()
+        public MenuAdmin()
         {
             InitializeComponent();
         }
-
-        
     }
 }
