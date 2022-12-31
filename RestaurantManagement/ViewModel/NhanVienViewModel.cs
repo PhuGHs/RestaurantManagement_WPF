@@ -114,6 +114,7 @@ namespace QuanLyNhaHang.ViewModel
             ListStaff = new ObservableCollection<NhanVien>();
             ListViewDisplay("SELECT n.*, t.ID, t.MatKhau FROM NHANVIEN AS n LEFT JOIN TAIKHOAN AS t ON n.MaNV = t.MaNV");
 
+
             #region //add command
             AddCM = new RelayCommand<object>((p) =>
             {
@@ -129,6 +130,7 @@ namespace QuanLyNhaHang.ViewModel
                     if (nv.TaiKhoan == Account && !string.IsNullOrEmpty(Account)) return false;
                 }    
                 if ((!String.IsNullOrEmpty(Account) && String.IsNullOrEmpty(Password)) || (String.IsNullOrEmpty(Account) && !String.IsNullOrEmpty(Password))) return false;
+
                 return true;
             }, (p) =>
             {

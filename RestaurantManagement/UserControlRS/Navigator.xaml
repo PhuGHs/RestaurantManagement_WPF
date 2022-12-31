@@ -121,6 +121,13 @@
                         <TextBlock Text="Lịch Sử Bàn" Style="{StaticResource sideBarRadioButtonText}" />
                     </StackPanel>
                 </RadioButton>
+                <!--Bếp-->
+                <RadioButton Style="{StaticResource sidebarRadioButton}" Command="{Binding SelectViewModelCommand}" CommandParameter="{x:Static nav:TypeOfView.Bep}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="KitchenSet" Style="{StaticResource sidebarRadioButtonIcon}" />
+                        <TextBlock Text="Bếp" Style="{StaticResource sideBarRadioButtonText}" />
+                    </StackPanel>
+                </RadioButton>
                 <!--storage-->
                 <RadioButton Style="{StaticResource sidebarRadioButton}" Command="{Binding SelectViewModelCommand}" CommandParameter="{x:Static nav:TypeOfView.Kho}">
                     <StackPanel Orientation="Horizontal">
@@ -140,13 +147,6 @@
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="ChartLine" Style="{StaticResource sidebarRadioButtonIcon}" />
                         <TextBlock Text="Thống Kê" Style="{StaticResource sideBarRadioButtonText}" />
-                    </StackPanel>
-                </RadioButton>
-                <!--Bếp-->
-                <RadioButton Style="{StaticResource sidebarRadioButton}" Command="{Binding SelectViewModelCommand}" CommandParameter="{x:Static nav:TypeOfView.Bep}">
-                    <StackPanel Orientation="Horizontal">
-                        <fa:IconImage Icon="KitchenSet" Style="{StaticResource sidebarRadioButtonIcon}" />
-                        <TextBlock Text="Bếp" Style="{StaticResource sideBarRadioButtonText}" />
                     </StackPanel>
                 </RadioButton>
             </StackPanel>
