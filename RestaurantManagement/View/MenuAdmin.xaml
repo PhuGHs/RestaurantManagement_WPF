@@ -27,7 +27,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Margin="20 0 20 0">
-                <TextBox FontSize="15" materialDesign:HintAssist.Hint="Tìm kiếm món ăn" Width="180" Height="35"/>
+                <TextBox FontSize="15" 
+                         Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         materialDesign:HintAssist.Hint="Tìm kiếm món ăn" 
+                         Width="180" 
+                         Height="35"/>
                 <Button Background="#1C3879" 
                         Margin="40 0 0 0" 
                         Content="Tìm kiếm" 
@@ -45,7 +49,10 @@
                         Width="100"/>
             </StackPanel>
 
-            <ListView x:Name="Dishes_ListView" SelectedIndex="0" SelectedItem="{Binding MenuItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="20" Grid.Row="1" ItemsSource="{Binding MenuItems}">
+            <ListView x:Name="Dishes_ListView" 
+                      SelectedIndex="0" 
+                      ItemsSource="{Binding MenuItemCollection, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding MenuItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="20" Grid.Row="1">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Mã món" Width="140" DisplayMemberBinding="{Binding ID}"/>
@@ -130,13 +137,13 @@
                           Text="{Binding MenuItem.Price}"
                           Grid.Column="0"
                           FontSize="16"
-                          materialDesign:HintAssist.Hint="Giá"
+                          materialDesign:HintAssist.Hint="Giá (VNĐ)"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox
                           Text="{Binding MenuItem.CookingTime}"
                           Grid.Column="2"
                           FontSize="16"
-                          materialDesign:HintAssist.Hint="Thời gian nấu"
+                          materialDesign:HintAssist.Hint="Thời gian nấu (Phút)"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
                     <Grid Margin="0 60 0 0">
@@ -166,7 +173,7 @@
 
             <Rectangle MaxWidth="400" MaxHeight="200">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding AddItem.FoodImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="{Binding AddItem.FoodImage}" Stretch="Uniform"/>
                 </Rectangle.Fill>
             </Rectangle>
 
@@ -228,13 +235,13 @@
                           Text="{Binding AddItem.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Grid.Column="0"
                           FontSize="16"
-                          materialDesign:HintAssist.Hint="Giá"
+                          materialDesign:HintAssist.Hint="Giá (VNĐ)"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox
                           Text="{Binding AddItem.CookingTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Grid.Column="2"
                           FontSize="16"
-                          materialDesign:HintAssist.Hint="Thời gian nấu"
+                          materialDesign:HintAssist.Hint="Thời gian nấu (Phút)"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
                     <Grid Margin="0 60 0 0">

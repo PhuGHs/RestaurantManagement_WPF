@@ -14,7 +14,7 @@ namespace QuanLyNhaHang.Models
 
     public class MenuItem : BaseViewModel
     {
-        public MenuItem(string id, string foodName, decimal price, BitmapImage foodImage, int cookingTime)
+        public MenuItem(string id = "", string foodName = "", decimal price = 0, BitmapImage foodImage = null, int cookingTime = 0)
         {
             this.id = id;
             this.foodName = foodName;
@@ -84,6 +84,24 @@ namespace QuanLyNhaHang.Models
                 OnPropertyChanged();
             }
         }
+        public bool IsNullOrEmpty()
+        {
+            if (foodImage == null || id == "" || foodName == "" || cookingTime == 0 || price == 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void Clear()
+        {
+            this.FoodName = "";
+            this.Price = 0;
+            this.CookingTime = 0;
+            this.ID = "";
+        }
+
+
     }
     public class SelectedMenuItem : BaseViewModel
     {

@@ -32,7 +32,7 @@ namespace QuanLyNhaHang.DataProvider
             try
             {
                 DataTable dt = LoadInitialData("Select * from MENU");
-                foreach(DataRow row in dt.Rows)
+                foreach (DataRow row in dt.Rows)
                 {
                     string maMon = row["MaMon"].ToString();
                     string tenMon = row["TenMon"].ToString();
@@ -40,15 +40,15 @@ namespace QuanLyNhaHang.DataProvider
                     Decimal gia = (Decimal)row["Gia"];
                     int thoiGianLam = (Int16)row["ThoiGianLam"];
 
-                    
-                    menuItems.Add(new MenuItem(maMon, tenMon, gia, anhMon, thoiGianLam));    
+
+                    menuItems.Add(new MenuItem(maMon, tenMon, gia, anhMon, thoiGianLam));
                 }
             }
             finally
             {
                 DBClose();
             }
-            return menuItems;   
+            return menuItems;
         }
         public void InformChef(string maMon, int soban, int soluong)
         {
@@ -104,14 +104,52 @@ namespace QuanLyNhaHang.DataProvider
             {
                 DBOpen();
                 SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = "INSERT INTO MENU VALUES (@MaMon, @TenMon, @AnhMonAn, @Gia, @ThoiGianLam)";
+                cmd.CommandText = "INSERT INTO MENU VALUES (@MaMon, @TenMon, @Gia, @AnhMonAn, @ThoiGianLam)";
                 cmd.Parameters.AddWithValue("@MaMon", x.ID);
                 cmd.Parameters.AddWithValue("@TenMon", x.FoodName);
-                cmd.Parameters.AddWithValue("@AnhMonAn", x.FoodImage);
+                cmd.Parameters.AddWithValue("@AnhMonAn", Converter.ImageConverter.ConvertImageToBytes(x.FoodImage));
                 cmd.Parameters.AddWithValue("@Gia", x.Price);
                 cmd.Parameters.AddWithValue("@ThoiGianLam", x.CookingTime);
 
                 cmd.Connection = SqlCon;
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                DBClose();
+            }
+        }
+        public void RemoveDish(string MaMon)
+        {
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Delete from MENU where MaMon = @mamon";
+                cmd.Parameters.AddWithValue("@mamon", MaMon);
+
+                cmd.Connection = SqlCon;
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                DBClose();
+            }
+        }
+        public void EditDishInfo(MenuItem item)
+        {
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Update MENU set TenMon = @tenmon, AnhMonAn = @anh, Gia = @gia, ThoiGianLam = @thoigian where MaMon = @mamon ";
+                cmd.Parameters.AddWithValue("@mamon", item.ID);
+                cmd.Parameters.AddWithValue("@anh", Converter.ImageConverter.ConvertImageToBytes(item.FoodImage));
+                cmd.Parameters.AddWithValue("@thoigian", item.CookingTime);
+                cmd.Parameters.AddWithValue("@tenmon", item.FoodName);
+                cmd.Parameters.AddWithValue("@gia", item.Price);
+                cmd.Connection = SqlCon;
+
                 cmd.ExecuteNonQuery();
             }
             finally
@@ -133,7 +171,7 @@ namespace QuanLyNhaHang.DataProvider
                 cmd.Connection = SqlCon;
 
                 SqlDataReader reader = cmd.ExecuteReader();
-                if(reader.Read())
+                if (reader.Read())
                 {
                     sum = reader.GetDecimal(0);
                 }
@@ -147,7 +185,7 @@ namespace QuanLyNhaHang.DataProvider
         }
         public DataTable getDishQuantity(Int16 soban)
         {
-            DataTable dt = new DataTable(); 
+            DataTable dt = new DataTable();
             try
             {
                 DBOpen();
@@ -157,7 +195,7 @@ namespace QuanLyNhaHang.DataProvider
                 cmd_GetQuantity.Parameters.AddWithValue("@soban", soban);
                 cmd_GetQuantity.Connection = SqlCon;
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd_GetQuantity);
-                adapter.Fill(dt);;
+                adapter.Fill(dt); ;
             }
             finally
             {
@@ -175,7 +213,7 @@ namespace QuanLyNhaHang.DataProvider
                 cmd.Parameters.AddWithValue("@soban", Soban);
                 cmd.Connection = SqlCon;
                 SqlDataReader reader = cmd.ExecuteReader();
-                if(reader.Read())
+                if (reader.Read())
                 {
                     quantity = reader.GetInt16(0);
                 }
@@ -193,7 +231,7 @@ namespace QuanLyNhaHang.DataProvider
             cmd_InsertDetail.CommandText = "Exec INSERT_DETAIL_PD @mamon1, @soluong";
             DBOpen();
             cmd_InsertDetail.Connection = SqlCon;
-            foreach(DataRow row in dt.Rows)
+            foreach (DataRow row in dt.Rows)
             {
                 cmd_InsertDetail.Parameters.AddWithValue("@mamon1", row["MaMon"]);
                 cmd_InsertDetail.Parameters.AddWithValue("@soluong", row["SoLuong"]);
