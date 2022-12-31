@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers;
+using System.Windows.Forms;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -41,6 +43,7 @@ namespace QuanLyNhaHang.ViewModel
                     Password = Selected.MatKhau;
 
                     IDBeforeEdit = ID;
+                    AccBeforeEdit = Account;
                 }
                 OnPropertyChanged();
             }
@@ -82,16 +85,17 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
                 if (!String.IsNullOrEmpty(Search))
                 {
-                    strQuery = "SELECT * FROM NHANVIEN WHERE HoTen LIKE '%" + Search + "%'";
+                    strQuery = "SELECT n.*, t.ID, t.MatKhau FROM NHANVIEN AS n LEFT JOIN TAIKHOAN AS t ON n.MaNV = t.MaNV WHERE TenNV LIKE N'%" + Search + "%'";
                 }
                 else
-                    strQuery = "SELECT * FROM NHANVIEN";
+                    strQuery = "SELECT n.*, t.ID, t.MatKhau FROM NHANVIEN AS n LEFT JOIN TAIKHOAN AS t ON n.MaNV = t.MaNV";
                 ListViewDisplay(strQuery);
             }
         }
         #endregion
 
         string IDBeforeEdit;
+        string AccBeforeEdit;
         public ICommand AddCM { get; set; }
         public ICommand EditCM { get; set; }
         public ICommand DeleteCM { get; set; }
@@ -104,8 +108,12 @@ namespace QuanLyNhaHang.ViewModel
         {
             OpenConnect();
 
+            DateBorn = DateTime.Now.ToShortDateString();
+            DateStartWork = DateTime.Now.ToShortDateString();
+
             ListStaff = new ObservableCollection<NhanVien>();
-            ListViewDisplay("SELECT * FROM NHANVIEN");
+            ListViewDisplay("SELECT n.*, t.ID, t.MatKhau FROM NHANVIEN AS n LEFT JOIN TAIKHOAN AS t ON n.MaNV = t.MaNV");
+
 
             #region //add command
             AddCM = new RelayCommand<object>((p) =>
@@ -116,6 +124,13 @@ namespace QuanLyNhaHang.ViewModel
                 }
                 if (string.IsNullOrEmpty(ID) || string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Position) || string.IsNullOrEmpty(Fulltime) || string.IsNullOrEmpty(DateStartWork))
                     return false;
+                if (!isNumber(Phone)) return false;
+                foreach(NhanVien nv in ListStaff)
+                {
+                    if (nv.TaiKhoan == Account && !string.IsNullOrEmpty(Account)) return false;
+                }    
+                if ((!String.IsNullOrEmpty(Account) && String.IsNullOrEmpty(Password)) || (String.IsNullOrEmpty(Account) && !String.IsNullOrEmpty(Password))) return false;
+
                 return true;
             }, (p) =>
             {
@@ -127,21 +142,27 @@ namespace QuanLyNhaHang.ViewModel
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "INSERT INTO NHANVIEN VALUES ('" + ID + "',N'" + Name + "',N'" + Position + "',N'" + Address + "'," + ft + ",'" + Account + "','" + Password + "','" + Phone + "','" + DateStartWork + "','" + DateBorn + "')";
+                cmd.CommandText = "INSERT INTO NHANVIEN VALUES ('" + ID + "',N'" + Name + "',N'" + Position + "'," + ft + ",N'" + Address + "','" + Phone + "','" + DateBorn + "','" + DateStartWork + "')";
                 cmd.Connection = sqlCon;
 
                 int result = cmd.ExecuteNonQuery();
+
+                if (!String.IsNullOrEmpty(Account))
+                {
+                    cmd.CommandText = "INSERT INTO TAIKHOAN VALUES('" + Account + "', '" + Password + "', 'Staff', '" + ID + "')";
+                    cmd.ExecuteNonQuery();
+                }    
                 if (result > 0)
                 {
-                    MyMessageBox mess = new MyMessageBox("Nhập thành công!");
+                    MyMessageBox mess = new MyMessageBox("Thêm thành công!");
                     mess.ShowDialog();
                 }
                 else
                 {
-                    MyMessageBox mess = new MyMessageBox("Nhập không thành công!");
+                    MyMessageBox mess = new MyMessageBox("Thêm không thành công!");
                     mess.ShowDialog();
                 }
-                ListViewDisplay("SELECT * FROM NHANVIEN");
+                ListViewDisplay("SELECT n.*, t.ID, t.MatKhau FROM NHANVIEN AS n LEFT JOIN TAIKHOAN AS t ON n.MaNV = t.MaNV");
 
                 CloseConnect();
             });
@@ -161,7 +182,14 @@ namespace QuanLyNhaHang.ViewModel
                 }
                 if (String.IsNullOrEmpty(ID) || String.IsNullOrEmpty(Name) || String.IsNullOrEmpty(Position) || String.IsNullOrEmpty(Fulltime) || String.IsNullOrEmpty(DateStartWork))
                     return false;
-                return true;
+                if (!isNumber(Phone)) return false;
+                if ((!String.IsNullOrEmpty(Account) && String.IsNullOrEmpty(Password)) || (String.IsNullOrEmpty(Account) && !String.IsNullOrEmpty(Password))) return false;
+                
+                foreach(NhanVien item in ListStaff)
+                {
+                    if (ID == item.MaNV) return true;
+                }
+                return false;   
             }, (p) =>
             {
                 OpenConnect();
@@ -169,8 +197,41 @@ namespace QuanLyNhaHang.ViewModel
                 if (ID != IDBeforeEdit)
                 {
                     MyMessageBox mess = new MyMessageBox("Không được sửa ID!");
+                    ID = IDBeforeEdit;
                     mess.ShowDialog();
                 }
+                else
+                if (Account != AccBeforeEdit)
+                {
+                    if (string.IsNullOrEmpty(AccBeforeEdit))
+                    {
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Connection = sqlCon;
+                        cmd.CommandText = "INSERT INTO TAIKHOAN VALUES('" + Account + "', '" + Password + "', 'Staff', '" + ID + "')";
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MyMessageBox mess = new MyMessageBox("Sửa thành công!");
+                            mess.ShowDialog();
+                            Refresh();
+                        }
+                        else
+                        {
+                            MyMessageBox mess = new MyMessageBox("Sửa không thành công!");
+                            mess.ShowDialog();
+                        }
+                        ListViewDisplay("SELECT n.*, t.ID, t.MatKhau FROM NHANVIEN AS n LEFT JOIN TAIKHOAN AS t ON n.MaNV = t.MaNV");
+                    }    
+                    else
+                    {
+                        MyMessageBox mess = new MyMessageBox("Không được sửa Tài khoản!");
+                        Account = AccBeforeEdit;
+                        mess.ShowDialog();
+                    }    
+                }    
                 else
                 {
                     int ft;
@@ -179,7 +240,7 @@ namespace QuanLyNhaHang.ViewModel
 
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "UPDATE NHANVIEN SET HoTen = N'" + Name + "', ChucVu = N'" + Position + "', DiaChi = N'" + Address + "', Fulltime = " + ft + ", TaiKhoan = '" + Account + "', MatKhau = '" + Password + "', SDT = '" + Phone + "', NgayVaoLam = '" + DateStartWork + "', NgaySinh = '" + DateBorn + "' WHERE MaNV = '" + ID + "'";
+                    cmd.CommandText = "UPDATE NHANVIEN SET TenNV = N'" + Name + "', ChucVu = N'" + Position + "', DiaChi = N'" + Address + "', Fulltime = " + ft + ", SDT = '" + Phone + "', NgayVaoLam = '" + DateStartWork + "', NgaySinh = '" + DateBorn + "' WHERE MaNV = '" + ID + "'";
                     cmd.Connection = sqlCon;
 
                     int result = cmd.ExecuteNonQuery();
@@ -195,7 +256,7 @@ namespace QuanLyNhaHang.ViewModel
                         MyMessageBox mess = new MyMessageBox("Sửa không thành công!");
                         mess.ShowDialog();
                     }
-                    ListViewDisplay("SELECT * FROM NHANVIEN");
+                    ListViewDisplay("SELECT n.*, t.ID, t.MatKhau FROM NHANVIEN AS n LEFT JOIN TAIKHOAN AS t ON n.MaNV = t.MaNV");
                 }
 
                 CloseConnect();
@@ -212,16 +273,21 @@ namespace QuanLyNhaHang.ViewModel
             {
                 OpenConnect();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "DELETE FROM NHANVIEN WHERE MaNV = '" + Selected.MaNV + "'";
-                cmd.Connection = sqlCon;
-
                 MyMessageBox yesno = new MyMessageBox("Bạn có chắc chắn xóa?", true);
                 yesno.ShowDialog();
 
                 if (yesno.ACCEPT())
                 {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = sqlCon;
+                    cmd.CommandType = CommandType.Text;
+                    if (!string.IsNullOrEmpty(Account))
+                    {
+                        cmd.CommandText = "DELETE FROM TAIKHOAN WHERE ID = '" + Account + "'";
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    cmd.CommandText = "DELETE FROM NHANVIEN WHERE MaNV = '" + ID +"'";
                     int result = cmd.ExecuteNonQuery();
                     if (result > 0)
                     {
@@ -235,7 +301,7 @@ namespace QuanLyNhaHang.ViewModel
                         mess.ShowDialog();
                     }
                 }
-                ListViewDisplay("SELECT * FROM NHANVIEN");
+                ListViewDisplay("SELECT n.*, t.ID, t.MatKhau FROM NHANVIEN AS n LEFT JOIN TAIKHOAN AS t ON n.MaNV = t.MaNV");
 
                 CloseConnect();
             });
@@ -244,7 +310,7 @@ namespace QuanLyNhaHang.ViewModel
 
             CheckCM = new RelayCommand<object>((p) => { return true; }, (p) =>
             {
-                ChamCong chamCong = new ChamCong();
+                RestaurantManagement.View.ChamCong chamCong = new RestaurantManagement.View.ChamCong();
                 chamCong.Show();
                 return;
             });
@@ -268,13 +334,18 @@ namespace QuanLyNhaHang.ViewModel
                 string id = reader.GetString(0);
                 string ten = reader.GetString(1);
                 string chucvu = reader.GetString(2);
-                string diachi = reader.GetString(3);
-                bool ftime = reader.GetBoolean(4);
-                string tk = reader.GetString(5);
-                string mk = reader.GetString(6);
-                string sdt = reader.GetString(7);
-                string ngvl = reader.GetDateTime(8).ToShortDateString();
-                string ngsinh = reader.GetDateTime(9).ToShortDateString();
+                bool ftime = reader.GetBoolean(3);   
+                string diachi = reader.GetString(4);
+                string sdt = reader.GetString(5);
+                string ngsinh = reader.GetDateTime(6).ToShortDateString();
+                string ngvl = reader.GetDateTime(7).ToShortDateString();
+                string tk = "";
+                if (!reader.IsDBNull(8))
+                    tk = reader.GetString(8);
+                string mk = "";
+                if (!reader.IsDBNull(9))
+                    mk = reader.GetString(9);
+                
                 ListStaff.Add(new NhanVien(id, ten, chucvu, diachi, ftime, sdt, ngvl, ngsinh, tk, mk));
             }
 
@@ -295,7 +366,6 @@ namespace QuanLyNhaHang.ViewModel
                 sqlCon.Close();
             }
         }
-
         private void Refresh()
         {
             ID = "";
@@ -308,6 +378,14 @@ namespace QuanLyNhaHang.ViewModel
             DateStartWork = "";
             Account = "";
             Password = "";
+        }
+        private bool isNumber(string s)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] < 48 || s[i] > 57) return false;
+            }
+            return true;
         }
     }
 }
