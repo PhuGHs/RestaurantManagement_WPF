@@ -32,33 +32,31 @@
                          materialDesign:HintAssist.Hint="Tìm kiếm món ăn" 
                          Width="180" 
                          Height="35"/>
-                <Button Background="#1C3879" 
-                        Margin="40 0 0 0" 
-                        Content="Tìm kiếm" 
-                        Width="110"/>
                 <Button Background="#1c3879" 
                         Command="{Binding AddDishes_Command}"
-                        Margin="20 0 0 0" 
+                        Margin="60 0 0 0" 
                         Content="Thêm món" 
-                        Width="110"/>
+                        Width="150"/>
                 <Button Background="#1C3879" 
                         Command="{Binding RemoveDish_Command}"
                         CommandParameter="{Binding ElementName=Dishes_ListView}"
                         Margin="20 0 0 0" 
                         Content="Xoá món" 
-                        Width="100"/>
+                        Width="150"/>
             </StackPanel>
 
             <ListView x:Name="Dishes_ListView" 
                       SelectedIndex="0" 
+                      FontSize="15"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       ItemsSource="{Binding MenuItemCollection, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedItem="{Binding MenuItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="20" Grid.Row="1">
+                      SelectedItem="{Binding MenuItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="20" Grid.Row="1" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Mã món" Width="140" DisplayMemberBinding="{Binding ID}"/>
-                        <GridViewColumn Header="Tên món" Width="140" DisplayMemberBinding="{Binding FoodName}"/>
-                        <GridViewColumn Header="Giá" Width="140"  DisplayMemberBinding="{Binding Price}"/>
-                        <GridViewColumn Header="Số lượng" Width="140"/>
+                        <GridViewColumn Header="Mã món" Width="90" DisplayMemberBinding="{Binding ID}"/>
+                        <GridViewColumn Header="Tên món" Width="150" DisplayMemberBinding="{Binding FoodName}"/>
+                        <GridViewColumn Header="Giá (VNĐ)" Width="140"  DisplayMemberBinding="{Binding PriceVNDCurrency}"/>
+                        <GridViewColumn Header="Thời gian nấu (Phút)" Width="210" DisplayMemberBinding="{Binding CookingTime}" />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -71,23 +69,26 @@
               Margin="0 20 20 20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="200"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="60"/>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
 
             <Rectangle MaxWidth="400" MaxHeight="200">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding MenuItem.FoodImage}" Stretch="Uniform"/>
+                    <ImageBrush ImageSource="{Binding MenuItem.FoodImage, UpdateSourceTrigger=PropertyChanged}" Stretch="Uniform"/>
                 </Rectangle.Fill>
             </Rectangle>
 
-            <Button Grid.Row="1" Background="Transparent" Width="50" BorderThickness="0">
+            <Button Grid.Row="1" 
+                    Command="{Binding EditFoodImage_Command}"
+                    Background="Transparent" 
+                    Width="50" 
+                    BorderThickness="0">
                 <fa:IconImage Icon="Edit" Foreground="#1C3879"/>
             </Button>
             
-            <Border Padding="20" Grid.Row="3" Background="#EAEAEA" CornerRadius="8">
+            <Border Padding="20" Grid.Row="2" Background="#EAEAEA" CornerRadius="8">
                 <StackPanel Orientation="Vertical">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -96,35 +97,18 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBox
-                          Text="{Binding MenuItem.ID}"
+                          Text="{Binding MenuItem.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Grid.Column="0"
+                          IsReadOnly="True"
                           FontSize="16"
                           materialDesign:HintAssist.Hint="Mã món"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox
+                          Text="{Binding MenuItem.FoodName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          FontSize="16"
                           Grid.Column="2"
-                          FontSize="16"
-                          materialDesign:HintAssist.Hint="Tên nguyên liệu"
-                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    </Grid>
-
-                    <Grid Margin="0 50 0 0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox
-                          Text="{Binding MenuItem.FoodName}"
-                          Grid.Column="0"
-                          FontSize="16"
                           materialDesign:HintAssist.Hint="Tên món"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBox
-                          Grid.Column="2"
-                          FontSize="16"
-                          materialDesign:HintAssist.Hint="Số lượng món ước tính"
-                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
 
                     <Grid Margin="0 50 0 0">
@@ -134,26 +118,35 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBox
-                          Text="{Binding MenuItem.Price}"
+                          Text="{Binding MenuItem.Str_Price, Mode=TwoWay}"
                           Grid.Column="0"
                           FontSize="16"
                           materialDesign:HintAssist.Hint="Giá (VNĐ)"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox
-                          Text="{Binding MenuItem.CookingTime}"
+                          Text="{Binding MenuItem.Str_CookingTime, Mode=TwoWay}"
                           Grid.Column="2"
                           FontSize="16"
                           materialDesign:HintAssist.Hint="Thời gian nấu (Phút)"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
-                    <Grid Margin="0 60 0 0">
+                    <Button Margin="20 60 20 0"
+                            Content="Sửa, xem nguyên liệu"
+                            Command="{Binding EditIngredient_Command}"
+                            Background="#1C3879"/>
+                    <Grid Margin="0 30 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Background="#1C3879" Content="Huỷ bỏ thay đổi"/>
-                        <Button Background="#1C3879" Grid.Column="2" Content="Lưu thay đổi" />
+                        <Button Background="#1C3879" 
+                                Content="Huỷ bỏ thay đổi"
+                                Command="{Binding DiscardChanges_Command}"/>
+                        <Button Background="#1C3879" 
+                                Grid.Column="2" 
+                                Content="Lưu thay đổi" 
+                                Command="{Binding SaveChanges_Command}"/>
                     </Grid>
                 </StackPanel>
             </Border>
@@ -165,8 +158,7 @@
               Margin="0 20 20 20" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="200"/>
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="60" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -187,6 +179,10 @@
 
             <Border Padding="20" Grid.Row="3" Background="#EAEAEA" CornerRadius="8">
                 <StackPanel Orientation="Vertical">
+                    <TextBlock Text="*Thực hiện theo thứ tự (thêm món -> thêm nguyên liệu)" 
+                               TextAlignment="Center"
+                               FontSize="13"
+                               Foreground="OrangeRed"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -194,35 +190,17 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBox
-                          Text="{Binding AddItem.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Text="{Binding AddItem.ID, Mode=TwoWay}"
                           Grid.Column="0"
                           FontSize="16"
                           materialDesign:HintAssist.Hint="Mã món"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox
+                          Text="{Binding AddItem.FoodName, Mode=TwoWay}"
+                          FontSize="16"
                           Grid.Column="2"
-                          FontSize="16"
-                          materialDesign:HintAssist.Hint="Tên nguyên liệu"
-                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    </Grid>
-
-                    <Grid Margin="0 50 0 0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox
-                          Text="{Binding AddItem.FoodName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          Grid.Column="0"
-                          FontSize="16"
                           materialDesign:HintAssist.Hint="Tên món"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBox
-                          Grid.Column="2"
-                          FontSize="16"
-                          materialDesign:HintAssist.Hint="Số lượng món ước tính"
-                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
 
                     <Grid Margin="0 50 0 0">
@@ -232,33 +210,39 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBox
-                          Text="{Binding AddItem.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Text="{Binding AddItem.Str_Price, Mode=TwoWay}"
                           Grid.Column="0"
                           FontSize="16"
                           materialDesign:HintAssist.Hint="Giá (VNĐ)"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox
-                          Text="{Binding AddItem.CookingTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Text="{Binding AddItem.Str_CookingTime, Mode=TwoWay}"
                           Grid.Column="2"
                           FontSize="16"
                           materialDesign:HintAssist.Hint="Thời gian nấu (Phút)"
                           Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
-                    <Grid Margin="0 60 0 0">
+                    <Grid Margin="0 50 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Background="#1C3879" 
+                                x:Name="Add_button"
                                 Content="Thêm"
                                 Command="{Binding AddDish_Command}"
+                                CommandParameter="{Binding ElementName=Add_button}"
                                 />
                         <Button Background="#1C3879" 
                                 Command="{Binding SwitchToEditView_Command}"
                                 Grid.Column="2" 
                                 Content="Chỉnh sửa" />
                     </Grid>
+                    <Button Margin="20 30 20 0"
+                            Content="Thêm, xem nguyên liệu"
+                            Command="{Binding AddIngredient_Command}"
+                            Background="#1C3879"/>
                 </StackPanel>
             </Border>
         </Grid>
