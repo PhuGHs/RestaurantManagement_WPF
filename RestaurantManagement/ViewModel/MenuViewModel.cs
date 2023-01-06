@@ -17,6 +17,8 @@ using QuanLyNhaHang.View;
 using QuanLyNhaHang.DataProvider;
 using QuanLyNhaHang.ViewModel;
 using QuanLyNhaHang.State.Navigator;
+using System.Windows.Data;
+using System.ComponentModel;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -26,13 +28,16 @@ namespace QuanLyNhaHang.ViewModel
         {
             //LoadMenu
             _menuItems = MenuDP.Flag.ConvertToCollection();
+            _menuItemsView = new CollectionViewSource();
+            _menuItemsView.Source = MenuItems;
+            _menuItemsView.Filter += MenuItems_Filter;
             //Command actions
             OrderFeature_Command = new RelayCommand<MenuItem>((p) => true, (p) => OrderAnItem(p.ID));
             RemoveItemFeature_Command = new RelayCommand<SelectedMenuItem>((p) => true, (p) => RemoveAnItem(p));
             ClearAllSelectedDishes = new RelayCommand<object>((p) => true, (p) => {
                 if (SelectedItems.Count > 0)
                 {
-                    MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả \n   những món đã chọn?", true);
+                    MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả những món đã chọn?", true);
                     msb.ShowDialog();
                     if (msb.ACCEPT() == false)
                     {
@@ -46,47 +51,29 @@ namespace QuanLyNhaHang.ViewModel
                 }
             });
             SortingFeature_Command = new RelayCommand<object>((p) => true, (p) => {
-                if (MyComboboxSelection == "Giá cao -> thấp")
-                {
-                    MenuItems = new ObservableCollection<MenuItem>(MenuItems.OrderByDescending(i => i.Price));
-                }
-                else if (MyComboboxSelection == "Giá thấp -> cao")
-                {
-                    MenuItems = new ObservableCollection<MenuItem>(MenuItems.OrderBy(i => i.Price));
-                }
-                else if (MyComboboxSelection == "A -> Z")
-                {
-                    MenuItems = new ObservableCollection<MenuItem>(MenuItems.OrderBy((i) => i.FoodName));
-                }
-                else if (MyComboboxSelection == "Z -> A")
-                {
-                    MenuItems = new ObservableCollection<MenuItem>(MenuItems.OrderByDescending(i => i.FoodName));
-                }
+                SortMenuItems();
             });
             ShowDetailOrder_Command = new RelayCommand<object>((p) => true, (p) =>
             {
                 OrderWindow OrderWin = new OrderWindow();
                 OrderWin.ShowDialog();
             });
-            FindDishes = new RelayCommand<object>((p) => true, (p) => searchMealItems(SearchText));
+            //FindDishes = new RelayCommand<object>((p) => true, (p) => searchMealItems(SearchText));
             Inform_Chef_Of_OrderedDishes = new RelayCommand<object>((p) => true, (p) =>
             {
                 foreach (SelectedMenuItem orderDish in SelectedItems)
                 {
                     MenuDP.Flag.InformChef(orderDish.ID, 2, orderDish.Quantity);
                 }
+                MenuDP.Flag.PayABill(2);
                 MyMessageBox msb = new MyMessageBox("Đã báo chế biến thành công!");
                 msb.Show();
                 SelectedItems.Clear();
                 DecSubtotal = 0;
             });
-            //SwitchCustomerTable = new RelayCommand<object>((p) => true, (p) =>
-            //{
-            //    NAV.SelectViewModelCommand.Execute(p);
-            //});
             PayBillCommand = new RelayCommand<object>((p) => true, (p) =>
             {
-                MenuDP.Flag.PayABill(2);
+                
             });
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
             _comboBox_2Items = new ObservableCollection<string>();
@@ -97,6 +84,7 @@ namespace QuanLyNhaHang.ViewModel
         private ObservableCollection<MenuItem> _menuItems;
         private ObservableCollection<SelectedMenuItem> _selectedItems;
         private ObservableCollection<string> _comboBox_2Items;
+        private CollectionViewSource _menuItemsView;
         private string myComboboxSelection = "A -> Z";
         private decimal dec_subtotal = 0;
         private string str_subtotal = "0 VND";
@@ -105,9 +93,16 @@ namespace QuanLyNhaHang.ViewModel
 
         #region properties
         public ObservableCollection<MenuItem> MenuItems { get { return _menuItems; } set { _menuItems = value; OnPropertyChanged(); } }
-        public ObservableCollection<SelectedMenuItem> SelectedItems { get { return _selectedItems; } set { _selectedItems = value; } }
+        public ObservableCollection<SelectedMenuItem> SelectedItems { get { return _selectedItems; } set { _selectedItems = value; OnPropertyChanged(); } }
         public ObservableCollection<string> ComboBox_2Items { get { return _comboBox_2Items; } set { _comboBox_2Items = value; } }
-        public string MyComboboxSelection { get { return myComboboxSelection; } set { myComboboxSelection = value; } }
+        public string MyComboboxSelection { get { return myComboboxSelection; } set { myComboboxSelection = value; OnPropertyChanged(); }}
+        public ICollectionView MenuItemCollection
+        {
+            get
+            {
+                return this._menuItemsView.View;
+            }
+        }
         public string Day
         {
             get
@@ -119,11 +114,8 @@ namespace QuanLyNhaHang.ViewModel
         {
             set
             {
-                if (value != dec_subtotal)
-                {
-                    dec_subtotal = value;
-                    OnPropertyChanged();
-                }
+                dec_subtotal = value;
+                OnPropertyChanged();
             }
             get { return dec_subtotal; }
         }
@@ -132,15 +124,12 @@ namespace QuanLyNhaHang.ViewModel
         {
             set
             {
-                if (value != str_subtotal)
-                {
-                    str_subtotal = value;
-                    OnPropertyChanged();
-                }
+                str_subtotal = value;
+                OnPropertyChanged();
             }
             get { return str_subtotal; }
         }
-        public string SearchText { get { return _searchText; } set { _searchText = value; OnPropertyChanged(); } }
+        public string SearchText { get { return _searchText; } set { _searchText = value; this._menuItemsView.View.Refresh(); OnPropertyChanged(); } }
         #endregion
 
         #region commands
@@ -199,33 +188,26 @@ namespace QuanLyNhaHang.ViewModel
                 SelectedItems.Remove(x);
             }
         }
-        public void searchMealItems(string keyword)
+
+        public void SortMenuItems()
         {
-            if (String.IsNullOrEmpty(keyword))
+            _menuItemsView.SortDescriptions.Clear();
+
+            if (MyComboboxSelection == "Giá cao -> thấp")
             {
-                MenuItems = MenuDP.Flag.ConvertToCollection();
+                _menuItemsView.SortDescriptions.Add(new SortDescription("Price", ListSortDirection.Descending));
             }
-            else
+            else if (MyComboboxSelection == "Giá thấp -> cao")
             {
-                Task.Factory.StartNew(() =>
-                {
-                    ObservableCollection<MenuItem> relatingItems = new ObservableCollection<MenuItem>();
-                    foreach (MenuItem x in MenuItems)
-                    {
-                        if (x.FoodName.RemoveDiacritics().ToLower().Contains(keyword.RemoveDiacritics().ToLower()))
-                        {
-                            relatingItems.Add(x);
-                        }
-                    }
-                    return relatingItems;
-                }).ContinueWith(task =>
-                {
-                    MenuItems.Clear();
-                    foreach (MenuItem result in task.Result)
-                    {
-                        MenuItems.Add(result);
-                    }
-                }, System.Threading.CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+                _menuItemsView.SortDescriptions.Add(new SortDescription("Price", ListSortDirection.Ascending));
+            }
+            else if (MyComboboxSelection == "A -> Z")
+            {
+                _menuItemsView.SortDescriptions.Add(new SortDescription("FoodName", ListSortDirection.Ascending));
+            }
+            else if (MyComboboxSelection == "Z -> A")
+            {
+                _menuItemsView.SortDescriptions.Add(new SortDescription("FoodName", ListSortDirection.Descending));
             }
         }
         #endregion
@@ -242,7 +224,25 @@ namespace QuanLyNhaHang.ViewModel
             }
             return null;
         }
-        
+        public void MenuItems_Filter(object sender, FilterEventArgs e)
+        {
+            if (string.IsNullOrEmpty(SearchText))
+            {
+                e.Accepted = true;
+                return;
+            }
+
+            Models.MenuItem item = e.Item as Models.MenuItem;
+            if (item.FoodName.RemoveDiacritics().ToLower().Contains(SearchText.RemoveDiacritics().ToLower()))
+            {
+                e.Accepted = true;
+            }
+            else
+            {
+                e.Accepted = false;
+            }
+        }
+
         #endregion
     }
 }
