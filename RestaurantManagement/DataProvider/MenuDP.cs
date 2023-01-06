@@ -82,7 +82,7 @@ namespace QuanLyNhaHang.DataProvider
                 cmd.Parameters.AddWithValue("@manv", "NV01");
                 cmd.Parameters.AddWithValue("@soban", soban);
                 cmd.Parameters.AddWithValue("@ngayHD", DateTime.Now);
-                cmd.Parameters.AddWithValue("@trangthai", "Paid");
+                cmd.Parameters.AddWithValue("@trangthai", "Chưa trả");
                 cmd.Connection = SqlCon;
                 DBOpen();
                 cmd.ExecuteNonQuery();
@@ -136,6 +136,29 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
+        public MenuItem GetDishInfo(string MaMon)
+        {
+            MenuItem X = null;
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Select * from MENU where MaMon = @mamon";
+                cmd.Parameters.AddWithValue("@mamon", MaMon);
+                cmd.Connection = SqlCon;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                if(reader.Read())
+                {
+                   X = new MenuItem(reader.GetString(0), reader.GetString(1), reader.GetDecimal(2), Converter.ImageConverter.ConvertByteToBitmapImage((byte[])reader[3]), reader.GetInt16(4));
+                }
+            }
+            finally
+            {
+                DBClose();
+            }
+            return X;
+        }
         public void EditDishInfo(MenuItem item)
         {
             try
@@ -158,6 +181,116 @@ namespace QuanLyNhaHang.DataProvider
             }
         }
 
+        public ObservableCollection<Kho> GetIngredients()
+        {
+            ObservableCollection<Kho> NLs = new ObservableCollection<Kho>();
+            try
+            {
+                DataTable dt = LoadInitialData("Select * from KHO");
+                foreach(DataRow dr in dt.Rows)
+                {
+                    string tensp = dr["TenSanPham"].ToString();
+                    int tondu = Convert.ToInt32(dr["TonDu"]);
+                    string donvi = dr["DonVi"].ToString();
+                    string dongia = dr["DonGia"].ToString();
+                    NLs.Add(new Kho(tensp, tondu, donvi, dongia));
+                }
+            }
+            finally 
+            {
+                DBClose();
+            }
+            return NLs;
+        }
+        public ObservableCollection<ChiTietMon> GetIngredientsForDish(string MaMon)
+        {
+            ObservableCollection<ChiTietMon> Ingredients = new ObservableCollection<ChiTietMon>();
+            try
+            {
+                DataTable dt = LoadInitialData($"Select * from CHITIETMON where MaMon = '{MaMon}'");
+                foreach(DataRow dr in dt.Rows)
+                {
+                    Ingredients.Add(new ChiTietMon(dr["TenNL"].ToString(), dr["MaMon"].ToString(), Convert.ToInt32(dr["SoLuong"])));
+                }
+            }
+            finally
+            {
+                DBClose();
+            }
+            return Ingredients;
+        }
+        public void SaveIngredients(ChiTietMon ctm)
+        {
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Insert into CHITIETMON values (@mamon, @tennl, @soluong)";
+                cmd.Parameters.AddWithValue("@mamon", ctm.MaMon);
+                cmd.Parameters.AddWithValue("@tennl", ctm.TenNL);
+                cmd.Parameters.AddWithValue("@soluong", ctm.SoLuong);
+                cmd.Connection = SqlCon;
+
+                cmd.ExecuteNonQuery();
+            }finally
+            {
+                DBClose();
+            }
+        }
+        public void UpdateIngredients_Kho(Kho item)
+        {
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Update KHO set TonDu = @tondu where TenSanPham = @tensanpham";
+                cmd.Parameters.AddWithValue("@tondu", item.TonDu);
+                cmd.Parameters.AddWithValue("@tensanpham", item.TenSanPham);
+
+                cmd.Connection = SqlCon;
+                cmd.ExecuteNonQuery();
+            } finally
+            {
+                DBClose();
+            }
+        }
+        public void UpdateIngredients(ChiTietMon ctm)
+        {
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Update CHITIETMON SET SoLuong = @soluong where TenNL = @tennl and MaMon = @mamon";
+                cmd.Parameters.AddWithValue("@soluong", ctm.SoLuong);
+                cmd.Parameters.AddWithValue("@tennl", ctm.TenNL);
+                cmd.Parameters.AddWithValue("@mamon", ctm.MaMon);
+                cmd.Connection = SqlCon;
+
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                DBClose();
+            }
+        }
+        public void RemoveIngredients(ChiTietMon ctm)
+        {
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "Delete from CHITIETMON where MaMon = @mamon and TenNL = @tennl";
+                cmd.Parameters.AddWithValue("@mamon", ctm.MaMon);
+                cmd.Parameters.AddWithValue("@tennl", ctm.TenNL);
+                cmd.Connection = SqlCon;
+
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                DBClose();
+            }
+        }
         #region complementary functions
         public Decimal Calculate_Sum(Int16 Soban)
         {

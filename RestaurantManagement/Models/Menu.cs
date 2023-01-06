@@ -27,18 +27,15 @@ namespace QuanLyNhaHang.Models
         private decimal price;
         private BitmapImage foodImage;
         private int cookingTime;
-        public string ID { get { return id; } set { id = value; } }
+        public string ID { get { return id; } set { id = value; OnPropertyChanged(); } }
 
         public string FoodName
         {
             get { return foodName; }
             set
             {
-                if (foodName != value)
-                {
-                    foodName = value;
-                    OnPropertyChanged("food name");
-                }
+                foodName = value;
+                OnPropertyChanged();
             }
         }
 
@@ -47,11 +44,8 @@ namespace QuanLyNhaHang.Models
             get { return price; }
             set
             {
-                if (price != value)
-                {
-                    price = value;
-                    OnPropertyChanged("price");
-                }
+                price = value;
+                OnPropertyChanged();
             }
         }
 
@@ -60,17 +54,52 @@ namespace QuanLyNhaHang.Models
             get { return foodImage; }
             set
             {
-                if (foodImage != value)
-                {
-                    foodImage = value;
-                    OnPropertyChanged("food image");
-                }
+                foodImage = value;
+                OnPropertyChanged();
             }
         }
 
         public string PriceVNDCurrency
         {
             get { return String.Format("{0:0,0 VND}", Price); }
+        }
+        public string Str_Price
+        {
+            get
+            {
+                return Price.ToString();
+            }
+            set
+            {
+                if (!IsNumber(value))
+                {
+                    Price = 0;
+                }
+                else
+                {
+                    Price = Convert.ToDecimal(value);
+                }
+                OnPropertyChanged();
+            }
+        }
+        public string Str_CookingTime
+        {
+            get
+            {
+                return CookingTime.ToString();
+            }
+            set
+            {
+                if (!IsNumber(value))
+                {
+                    CookingTime = 0;
+                }
+                else
+                {
+                    CookingTime = Convert.ToInt32(value);
+                }
+                OnPropertyChanged();
+            }
         }
         public int CookingTime
         {
@@ -101,6 +130,29 @@ namespace QuanLyNhaHang.Models
             this.ID = "";
         }
 
+        private static bool IsNumber(string s)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] < 48 || s[i] > 57) return false;
+            }
+            return true;
+        }
+        private static bool IsMoney(string s)
+        {
+            int count = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if ((s[i] < 48 || s[i] > 57) && s[i] != '.')
+                    return false;
+                if (s[i] == '.') count++;
+            }
+            if (s[0] == '.') return false;
+            if (s[s.Length - 1] == '.') return false;
+            if (s[0] == '0') return false;
+            if (count > 1) return false;
+            return true;
+        }
 
     }
     public class SelectedMenuItem : BaseViewModel

@@ -33,7 +33,7 @@ namespace QuanLyNhaHang.DataProvider
             dt = LoadInitialData("Select * from NhanVien where MaNV = '" + MaNV + "'");
             foreach(DataRow dr in dt.Rows)
             {
-                nv = new NhanVien(dr["MaNV"].ToString(), dr["TenNV"].ToString(), dr["ChucVu"].ToString(), dr["DiaChi"].ToString(), (bool)dr["FullTime"], dr["SDT"].ToString(), dr["NgayVaoLam"].ToString(), dr["NgaySinh"].ToString());
+                nv = new NhanVien(dr["MaNV"].ToString(), dr["TenNV"].ToString(), dr["ChucVu"].ToString(), dr["DiaChi"].ToString(), (bool)dr["FullTime"], dr["SDT"].ToString(), Convert.ToDateTime(dr["NgayVaoLam"]).ToShortDateString(), Convert.ToDateTime(dr["NgaySinh"]).ToShortDateString());
             }
             nv.MatKhau = pw;
             return nv;
