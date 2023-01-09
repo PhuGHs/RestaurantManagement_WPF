@@ -24,6 +24,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Security.Cryptography;
 using MaterialDesignThemes.Wpf;
 using System.Windows.Documents;
+using System.Security.Permissions;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -106,11 +107,11 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
                 if (!String.IsNullOrEmpty(Search))
                 {
-                    strQuery = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON WHERE TENMON LIKE N'%" + Search + "%'";
+                    strQuery = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon WHERE TenMon LIKE N'%" + Search + "%'";
                   
                 }
                 else
-                    strQuery = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON";
+                    strQuery = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon";
                 ListViewDisplay(strQuery);
             }
         }
@@ -133,7 +134,7 @@ namespace QuanLyNhaHang.ViewModel
             ListProduct = new ObservableCollection<LichSuBanModel>();
 
 
-            ListViewDisplay("select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON");
+            ListViewDisplay("select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon");
             OpenConnect();
 
             GetCurrentDate = DateTime.Today;
@@ -165,7 +166,8 @@ namespace QuanLyNhaHang.ViewModel
             });
             CloseConnect();
         }
-
+        
+        
 
         public void ExportToFileFunc()
         {
@@ -266,7 +268,7 @@ namespace QuanLyNhaHang.ViewModel
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON where MONTH(NGAYHD) = '" + (SelectedMonth + 1 ) + "'";
+            cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where MONTH(NgayHD) = '" + (SelectedMonth + 1 ) + "'";
 
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
@@ -297,7 +299,7 @@ namespace QuanLyNhaHang.ViewModel
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON where NGAYHD = '" + strDate + "'";
+            cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where NgayHD = '" + strDate + "'";
 
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
@@ -325,7 +327,7 @@ namespace QuanLyNhaHang.ViewModel
             {
                 case "Toàn bộ":
                     {
-                        ListViewDisplay("select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON");
+                        ListViewDisplay("select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon");
                         OpenConnect();
                         CloseConnect();
 
@@ -341,7 +343,7 @@ namespace QuanLyNhaHang.ViewModel
                      
                         SqlCommand cmd = new SqlCommand();
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON where NGAYHD = '" + strDate + "'";
+                        cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where NgayHD = '" + strDate + "'";
                       
                         cmd.Connection = sqlCon;
                         SqlDataReader reader = cmd.ExecuteReader();
@@ -367,7 +369,7 @@ namespace QuanLyNhaHang.ViewModel
                         OpenConnect();
                         SqlCommand cmd = new SqlCommand();
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "select ct.SOHD, mn.MAMON, TENMON, SOLUONG, TRIGIA, NGAYHD from hoadon1 hd join CTHD1 ct on hd.SOHD = ct.SOHD join MENU1 mn on ct.MAMON = mn.MAMON where MONTH(NGAYHD) = '" + (SelectedMonth + 1) + "'";
+                        cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where MONTH(NgayHD) = '" + (SelectedMonth + 1) + "'";
 
                         cmd.Connection = sqlCon;
                         SqlDataReader reader = cmd.ExecuteReader();
