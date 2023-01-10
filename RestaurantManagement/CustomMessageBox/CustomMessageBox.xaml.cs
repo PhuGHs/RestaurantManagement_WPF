@@ -33,7 +33,7 @@ namespace QuanLyNhaHang
         }
         private void Run(string Message, bool yesno = false)
         {
-            lbMessage.Content = Message;
+            lbMessage.Text = Message;
             if (!yesno)
             {
                 btnYES.Visibility = Visibility.Hidden;
