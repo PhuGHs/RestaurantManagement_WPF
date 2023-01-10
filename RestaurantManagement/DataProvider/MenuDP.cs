@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using QuanLyNhaHang.Models;
+using TinhTrangBan.Models;
 
 namespace QuanLyNhaHang.DataProvider
 {
@@ -26,7 +27,7 @@ namespace QuanLyNhaHang.DataProvider
                 flag = value;
             }
         }
-        public ObservableCollection<MenuItem> ConvertToCollection()
+        public async Task<ObservableCollection<MenuItem>> ConvertToCollection()
         {
             ObservableCollection<MenuItem> menuItems = new ObservableCollection<MenuItem>();
             try
@@ -72,32 +73,49 @@ namespace QuanLyNhaHang.DataProvider
             }
         }
 
-        public void PayABill(Int16 soban)
+        public void PayABill(Int16 soban, Decimal sum)
         {
             try
             {
+                DBOpen();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandText = "Exec PAY_A_BILL_PD @trigia, @manv, @soban, @ngayHD, @trangthai";
-                cmd.Parameters.AddWithValue("@trigia", Calculate_Sum(soban));
+                cmd.Parameters.AddWithValue("@trigia", sum);
                 cmd.Parameters.AddWithValue("@manv", "NV01");
                 cmd.Parameters.AddWithValue("@soban", soban);
                 cmd.Parameters.AddWithValue("@ngayHD", DateTime.Now);
                 cmd.Parameters.AddWithValue("@trangthai", "Chưa trả");
-                cmd.Connection = SqlCon;
                 DBOpen();
+                cmd.Connection = SqlCon;
+                
                 cmd.ExecuteNonQuery();
-                DBClose();
-
-                Fill_CTHD(getDishQuantity(soban));
-                DBClose();
             }
             finally
             {
-                MyMessageBox msb = new MyMessageBox("Thanh toán thành công!");
-                msb.Show();
                 DBClose();
             }
         }
+        public ObservableCollection<Table> GetTables()
+        {
+            ObservableCollection<Table> tables = new ObservableCollection<Table>();
+            try
+            {
+                DataTable dt = LoadInitialData("Select * from BAN");
+                int tinhtrang;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (String.Compare(dr["TrangThai"].ToString(), "Có thể sử dụng") == 0 ) tinhtrang = 1;
+                    else tinhtrang = 0;
+                    tables.Add(new Table { NumOfTable = dr["SoBan"].ToString(), Status = tinhtrang });
+                }
+            }
+            finally
+            {
+                DBClose();
+            }
+            return tables;
+        }
+        
         public void AddDish(MenuItem x)
         {
             try
@@ -180,7 +198,6 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
-
         public ObservableCollection<Kho> GetIngredients()
         {
             ObservableCollection<Kho> NLs = new ObservableCollection<Kho>();
@@ -316,61 +333,49 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
-        public DataTable getDishQuantity(Int16 soban)
+        public void Fill_CTHD(string MaMon, int SoLuong)
         {
-            DataTable dt = new DataTable();
             try
             {
                 DBOpen();
-                SqlCommand cmd_GetQuantity = new SqlCommand();
-
-                cmd_GetQuantity.CommandText = "Exec GET_QUANTITY_OF_EACH_DISH_PD @soban";
-                cmd_GetQuantity.Parameters.AddWithValue("@soban", soban);
-                cmd_GetQuantity.Connection = SqlCon;
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd_GetQuantity);
-                adapter.Fill(dt); ;
-            }
-            finally
-            {
-                DBClose();
-            }
-            return dt;
-        }
-        public int Get_Quantity(Int16 Soban)
-        {
-            int quantity = 0;
-            try
-            {
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = "Select SUM(Soluong) from CHEBIEN where SoBan = @soban";
-                cmd.Parameters.AddWithValue("@soban", Soban);
-                cmd.Connection = SqlCon;
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    quantity = reader.GetInt16(0);
-                }
-                reader.Close();
-                return quantity;
-            }
-            finally
-            {
-                DBClose();
-            }
-        }
-        public void Fill_CTHD(DataTable dt)
-        {
-            SqlCommand cmd_InsertDetail = new SqlCommand();
-            cmd_InsertDetail.CommandText = "Exec INSERT_DETAIL_PD @mamon1, @soluong";
-            DBOpen();
-            cmd_InsertDetail.Connection = SqlCon;
-            foreach (DataRow row in dt.Rows)
-            {
-                cmd_InsertDetail.Parameters.AddWithValue("@mamon1", row["MaMon"]);
-                cmd_InsertDetail.Parameters.AddWithValue("@soluong", row["SoLuong"]);
+                SqlCommand cmd_InsertDetail = new SqlCommand();
+                cmd_InsertDetail.CommandText = "Exec INSERT_DETAIL_PD @mamon, @soluong";
+                cmd_InsertDetail.Parameters.AddWithValue("@mamon", MaMon);
+                cmd_InsertDetail.Parameters.AddWithValue("@soluong", SoLuong);
+                DBOpen();
+                cmd_InsertDetail.Connection = SqlCon;
 
                 cmd_InsertDetail.ExecuteNonQuery();
-                cmd_InsertDetail.Parameters.Clear();
+            }
+            catch (SqlException ex)
+            {
+                UpdateCTHD(MaMon, SoLuong);
+            }
+            finally
+            {
+                DBClose();
+            }
+            
+        }
+        public void UpdateCTHD(string MaMon, int SoLuong)
+        {
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "UPDATE CTHD " +
+                                  "SET SOLUONG = @soluong " +
+                                  "WHERE SoHD = (SELECT IDENT_CURRENT('HOADON')) AND MaMon = @mamon";
+                cmd.Parameters.AddWithValue("@mamon", MaMon);
+                cmd.Parameters.AddWithValue("@soluong", SoLuong);
+
+                cmd.Connection = SqlCon;
+                cmd.ExecuteNonQuery();
+
+            }
+            finally
+            {
+                DBClose();
             }
         }
         #endregion

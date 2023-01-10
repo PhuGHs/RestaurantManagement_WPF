@@ -19,6 +19,8 @@ using QuanLyNhaHang.ViewModel;
 using QuanLyNhaHang.State.Navigator;
 using System.Windows.Data;
 using System.ComponentModel;
+using TinhTrangBan.Models;
+using System.Windows;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -26,54 +28,92 @@ namespace QuanLyNhaHang.ViewModel
     {
         public MenuViewModel()
         {
+            //                                                                                      CHỈ LOAD NHỮNG BÀN CÒN TRỐNG
             //LoadMenu
-            _menuItems = MenuDP.Flag.ConvertToCollection();
+            LoadMenu();
+            Tables = MenuDP.Flag.GetTables();
             _menuItemsView = new CollectionViewSource();
             _menuItemsView.Source = MenuItems;
             _menuItemsView.Filter += MenuItems_Filter;
+            _menuItemsView.SortDescriptions.Add(new SortDescription("FoodName", ListSortDirection.Ascending));
             //Command actions
             OrderFeature_Command = new RelayCommand<MenuItem>((p) => true, (p) => OrderAnItem(p.ID));
             RemoveItemFeature_Command = new RelayCommand<SelectedMenuItem>((p) => true, (p) => RemoveAnItem(p));
-            ClearAllSelectedDishes = new RelayCommand<object>((p) => true, (p) => {
-                if (SelectedItems.Count > 0)
-                {
-                    MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả những món đã chọn?", true);
-                    msb.ShowDialog();
-                    if (msb.ACCEPT() == false)
-                    {
-                        return;
-                    }
-                    SelectedItems.Clear();
-                }
-                else
+            ClearAllSelectedDishes = new RelayCommand<object>((p) =>
+            {
+                if (SelectedItems.Count == 0) return false;
+                return true;
+            }, (p) => {
+                MyMessageBox msb = new MyMessageBox("Bạn có muốn xoá tất cả những món đã chọn?", true);
+                msb.ShowDialog();
+                if (msb.ACCEPT() == false)
                 {
                     return;
                 }
+                SelectedItems.Clear();
+                DecSubtotal = 0;
+                StrSubtotal = "0 VND";
             });
             SortingFeature_Command = new RelayCommand<object>((p) => true, (p) => {
                 SortMenuItems();
             });
-            ShowDetailOrder_Command = new RelayCommand<object>((p) => true, (p) =>
+            Inform_Chef_Of_OrderedDishes = new RelayCommand<object>((p) =>
             {
-                OrderWindow OrderWin = new OrderWindow();
-                OrderWin.ShowDialog();
-            });
-            //FindDishes = new RelayCommand<object>((p) => true, (p) => searchMealItems(SearchText));
-            Inform_Chef_Of_OrderedDishes = new RelayCommand<object>((p) => true, (p) =>
+                if (SelectedItems.Count == 0) return false;
+                return true;
+            }, (p) =>
             {
-                foreach (SelectedMenuItem orderDish in SelectedItems)
+                string mess = "";
+                try
                 {
-                    MenuDP.Flag.InformChef(orderDish.ID, 2, orderDish.Quantity);
+                    if (SelectedTable != null)
+                    {
+                        if (SelectedTable.Status == 0)
+                        {
+                            MyMessageBox typeOfCustomerAnnouncement = new MyMessageBox("Bạn muốn order cho khách mới?", true);
+                            typeOfCustomerAnnouncement.ShowDialog();
+                            if (typeOfCustomerAnnouncement.ACCEPT() == true)
+                            {
+                                mess = "Bàn hiện đang được sử dụng! Hãy chọn bàn khác";
+                                return;
+                            }
+                        }
+                        foreach (SelectedMenuItem orderDish in SelectedItems)
+                        {
+                            MenuDP.Flag.InformChef(orderDish.ID, Convert.ToInt32(SelectedTable.NumOfTable), orderDish.Quantity);
+                        }
+                        //FILL CTHD AFTER INFORM CHEF ORDERED DISHES
+                        //FIX AFTER 
+                        MenuDP.Flag.PayABill(Convert.ToInt16(SelectedTable.NumOfTable), DecSubtotal);
+                        foreach (SelectedMenuItem orderdish in SelectedItems)
+                        {
+                            MenuDP.Flag.Fill_CTHD(orderdish.ID, orderdish.Quantity);
+                        }
+                        mess = "Đã báo chế biến thành công!";
+                        SelectedItems.Clear();
+                        DecSubtotal = 0;
+                        StrSubtotal = "0 VND";
+                        Tables = MenuDP.Flag.GetTables();
+                    }
+                    else if (SelectedTable == null)
+                    {
+                        mess = "Bạn chưa chọn bàn";
+                    }
+                    else
+                    {
+                        
+                    }
                 }
-                MenuDP.Flag.PayABill(2);
-                MyMessageBox msb = new MyMessageBox("Đã báo chế biến thành công!");
-                msb.Show();
-                SelectedItems.Clear();
-                DecSubtotal = 0;
-            });
-            PayBillCommand = new RelayCommand<object>((p) => true, (p) =>
-            {
-                
+                catch (Exception ex)
+                {
+                    MyMessageBox msb = new MyMessageBox(ex.Message);
+                    msb.Show();
+                }
+                finally
+                {
+                    MyMessageBox ms = new MyMessageBox(mess);
+                    ms.Show();
+                }
             });
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
             _comboBox_2Items = new ObservableCollection<string>();
@@ -83,6 +123,8 @@ namespace QuanLyNhaHang.ViewModel
         #region attributes
         private ObservableCollection<MenuItem> _menuItems;
         private ObservableCollection<SelectedMenuItem> _selectedItems;
+        private ObservableCollection<Table> _tables;
+        private Table _selectedTable;
         private ObservableCollection<string> _comboBox_2Items;
         private CollectionViewSource _menuItemsView;
         private string myComboboxSelection = "A -> Z";
@@ -94,8 +136,10 @@ namespace QuanLyNhaHang.ViewModel
         #region properties
         public ObservableCollection<MenuItem> MenuItems { get { return _menuItems; } set { _menuItems = value; OnPropertyChanged(); } }
         public ObservableCollection<SelectedMenuItem> SelectedItems { get { return _selectedItems; } set { _selectedItems = value; OnPropertyChanged(); } }
+        public ObservableCollection<Table> Tables { get { return _tables; } set { _tables = value;  OnPropertyChanged(); } }
         public ObservableCollection<string> ComboBox_2Items { get { return _comboBox_2Items; } set { _comboBox_2Items = value; } }
         public string MyComboboxSelection { get { return myComboboxSelection; } set { myComboboxSelection = value; OnPropertyChanged(); }}
+        public Table SelectedTable { get { return _selectedTable; } set { _selectedTable = value; OnPropertyChanged(); } }
         public ICollectionView MenuItemCollection
         {
             get
@@ -129,6 +173,7 @@ namespace QuanLyNhaHang.ViewModel
             }
             get { return str_subtotal; }
         }
+
         public string SearchText { get { return _searchText; } set { _searchText = value; this._menuItemsView.View.Refresh(); OnPropertyChanged(); } }
         #endregion
 
@@ -136,12 +181,9 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand OrderFeature_Command { get; set; }
         public ICommand RemoveItemFeature_Command { get; set; }
         public ICommand SortingFeature_Command { get; set; }
-        public ICommand ShowDetailOrder_Command { get; set; }
-        public ICommand FindDishes { get; set; }
         public ICommand ClearAllSelectedDishes { get; set; }
         public ICommand Inform_Chef_Of_OrderedDishes { get; set; }
         public ICommand SwitchCustomerTable { get; set; }
-        public ICommand PayBillCommand { get; set; }
         #endregion
 
         #region methods
@@ -241,6 +283,11 @@ namespace QuanLyNhaHang.ViewModel
             {
                 e.Accepted = false;
             }
+        }
+
+        private async Task LoadMenu()
+        {
+            _menuItems = await MenuDP.Flag.ConvertToCollection();
         }
 
         #endregion

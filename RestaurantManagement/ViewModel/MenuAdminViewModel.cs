@@ -25,7 +25,7 @@ namespace QuanLyNhaHang.ViewModel
     {
         public MenuAdminViewModel()
         {
-                _menuitems = MenuDP.Flag.ConvertToCollection();
+                LoadMenu();
                 Ingredients = MenuDP.Flag.GetIngredients();
                 Ingredients_ForDishes = new ObservableCollection<ChiTietMon>();
                 Deleted_Ingredients = new ObservableCollection<ChiTietMon>();
@@ -418,6 +418,10 @@ namespace QuanLyNhaHang.ViewModel
             {
                 e.Accepted = false;
             }
+        }
+        private async Task LoadMenu()
+        {
+            _menuitems = await MenuDP.Flag.ConvertToCollection();
         }
         #endregion
     }
