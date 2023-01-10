@@ -8,8 +8,9 @@
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" 
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
+        x:Name="Window"
         DataContext="{StaticResource MainVM}"
-        Title="Thông tin cá nhân tài khoản" Height="800" Width="800" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Thông tin cá nhân tài khoản" Height="800" Width="800" WindowStyle="None" WindowStartupLocation="CenterScreen">
     <Grid Margin="5" Background="White">
         <Grid.Resources>
             <Style x:Key="SearchBar" TargetType="Border">
@@ -97,6 +98,14 @@
                     FontStyle="Italic"
                     />
             </StackPanel>
+            <Canvas Grid.Column="3">
+                <Button Background="Transparent" 
+                        Command="{Binding CloseWindowCommand}"
+                        CommandParameter="{Binding ElementName=Window}"
+                        BorderThickness="0" Canvas.Left="165" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <fa:IconImage Icon="PowerOff" />
+                </Button>
+            </Canvas>
             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
                 <Button 
                     Content="Huỷ" 
