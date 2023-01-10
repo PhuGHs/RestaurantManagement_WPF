@@ -11,6 +11,7 @@ using RestaurantManagement.Models;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
+using QuanLyNhaHang.DataProvider;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -161,125 +162,7 @@ namespace QuanLyNhaHang.ViewModel
         {
             DecSumofProfit = 0;
             DecSumofPaid = 0;
-        }
-        public double GetBillofDay(string day)
-        {
-            double d = 0;
-            using (SqlConnection con = new SqlConnection(connectstring))
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-
-                cmd.CommandText = "Select SUM(TRIGIA) from HOADON where NgHD = @nghd";
-                cmd.Parameters.AddWithValue("@nghd", day);
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    try
-                    {
-                        d = reader.GetSqlMoney(0).ToDouble();
-                    }
-                    catch
-                    {
-                        d = 0;
-                    }
-                }
-                con.Close();
-                return d;
-            }
-        }
-        public double GetBillofMonth(string month, string year)
-        {
-            double d = 0;
-            using (SqlConnection con = new SqlConnection(connectstring))
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-
-                cmd.CommandText = "Select SUM(TRIGIA) from HOADON where MONTH(NgHD) = @month and YEAR(NgHD) = @year";
-                cmd.Parameters.AddWithValue("@month", month);
-                cmd.Parameters.AddWithValue("@year", year);
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    try
-                    {
-                        d = reader.GetSqlMoney(0).ToDouble();
-                    }
-                    catch
-                    {
-                        d = 0;
-                    }
-                }
-                con.Close();
-                return d;
-            }
-        }
-        public double GetPaidofDay(string day)
-        {
-            double d = 0;
-            using (SqlConnection con = new SqlConnection(connectstring))
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-
-                cmd.CommandText = "Select SUM(TONG) from (select DonGia * SoLuong as TONG from CHITIETNHAP where NgayNhap = @ngnh) as TONGGIA";
-                cmd.Parameters.AddWithValue("@ngnh", day);
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    try
-                    {
-                        d = reader.GetSqlMoney(0).ToDouble();
-                    }
-                    catch
-                    {
-                        d = 0;
-                    }
-                }
-                con.Close();
-                return d;
-            }
-        }
-        public double GetPaidofMonth(string month, string year)
-        {
-            double d = 0;
-            using (SqlConnection con = new SqlConnection(connectstring))
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-
-                cmd.CommandText = "Select SUM(TONG) from (select DonGia * SoLuong as TONG from CHITIETNHAP where MONTH(NgayNhap) = @month and YEAR(NgayNhap) = @year) as TONGGIA";
-                cmd.Parameters.AddWithValue("@month", month);
-                cmd.Parameters.AddWithValue("@year", year);
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    try
-                    {
-                        d = reader.GetSqlMoney(0).ToDouble();
-                    }
-                    catch
-                    {
-                        d = 0;
-                    }
-                }
-                con.Close();
-                return d;
-            }
-        }
+        }        
         public void DayMonthCheck()
         {
             SeriesCollection.Clear();
@@ -306,8 +189,8 @@ namespace QuanLyNhaHang.ViewModel
                 DateTime day = new DateTime(int.Parse(SelectedYear), int.Parse(SelectedMonth), i + 1);
 
                 //Tinh so tien thu duoc theo ngay cua thang
-                ProfitbyMonth[i] = GetBillofDay(day.ToShortDateString()) / 1000000; 
-                DecSumofProfit += GetBillofDay(day.ToShortDateString());
+                ProfitbyMonth[i] = ThongKeDP.Flag.GetBillofDay(day.ToShortDateString()) / 1000000; 
+                DecSumofProfit += ThongKeDP.Flag.GetBillofDay(day.ToShortDateString());
                 SumofProfit = String.Format("{0:0,0 VND}", DecSumofProfit);
             }
             SeriesCollection.Add(new LineSeries
@@ -324,8 +207,8 @@ namespace QuanLyNhaHang.ViewModel
                 DateTime day = new DateTime(int.Parse(SelectedYear), int.Parse(SelectedMonth), i + 1);
 
                 //Tinh so tien chi ra theo ngay cua thang
-                PaidbyMonth[i] = GetPaidofDay(day.ToShortDateString()) / 1000000;
-                DecSumofPaid += GetPaidofDay(day.ToShortDateString());
+                PaidbyMonth[i] = ThongKeDP.Flag.GetPaidofDay(day.ToShortDateString()) / 1000000;
+                DecSumofPaid += ThongKeDP.Flag.GetPaidofDay(day.ToShortDateString());
                 SumofPaid = String.Format("{0:0,0 VND}", DecSumofPaid);
             }
             SeriesCollection.Add(new LineSeries
@@ -349,8 +232,8 @@ namespace QuanLyNhaHang.ViewModel
             {
                 //Tinh so tien thu duoc theo thang cua nam 
 
-                ProfitbyYear[i] = GetBillofMonth(i.ToString(), SelectedYear) / 1000000;  
-                DecSumofProfit += GetBillofMonth(i.ToString(), SelectedYear);
+                ProfitbyYear[i] = ThongKeDP.Flag.GetBillofMonth((i + 1).ToString(), SelectedYear) / 1000000;  
+                DecSumofProfit += ThongKeDP.Flag.GetBillofMonth((i + 1).ToString(), SelectedYear);
                 SumofProfit = String.Format("{0:0,0 VND}", DecSumofProfit);
             }
             SeriesCollection.Add(new LineSeries
@@ -365,8 +248,8 @@ namespace QuanLyNhaHang.ViewModel
             {
                 //Tinh so tien chi ra theo thang cua nam
 
-                PaidbyYear[i] = GetPaidofMonth(i.ToString(), SelectedYear) / 1000000; 
-                DecSumofPaid += GetPaidofMonth(i.ToString(), SelectedYear);
+                PaidbyYear[i] = ThongKeDP.Flag.GetPaidofMonth((i + 1).ToString(), SelectedYear) / 1000000; 
+                DecSumofPaid += ThongKeDP.Flag.GetPaidofMonth((i + 1).ToString(), SelectedYear);
                 SumofPaid = String.Format("{0:0,0 VND}", DecSumofPaid);
             }
             SeriesCollection.Add(new LineSeries

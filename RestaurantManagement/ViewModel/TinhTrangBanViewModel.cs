@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Menu.Models;
+using QuanLyNhaHang.Models;
 using QuanLyNhaHang.View;
 using RestaurantManagement.Models;
 using TinhTrangBan.Models;
@@ -19,6 +19,7 @@ using System.Windows.Forms;
 using OfficeOpenXml.ConditionalFormatting;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
+using QuanLyNhaHang.DataProvider;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -92,8 +93,8 @@ namespace QuanLyNhaHang.ViewModel
             string tablestatus;
             foreach (Table table in _tables)
             {
-                tablestatus = LoadEachTableStatus(table.ID);
-                if (tablestatus == "Trống")
+                tablestatus = TinhTrangBanDP.Flag.LoadEachTableStatus(table.ID);
+                if (tablestatus == "Có thể sử dụng")
                 {
                     table.Status = 0;
                     table.Coloroftable = "Green";
@@ -104,87 +105,7 @@ namespace QuanLyNhaHang.ViewModel
                     table.Coloroftable = "Red";
                 }
             }
-        }
-        public string LoadEachTableStatus(int ID)
-        {
-            string TableStatus = "";
-            using (SqlConnection con = new SqlConnection(connectstring))
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "Select TrangThai from BAN where SoBan = @SoBan";
-                cmd.Parameters.AddWithValue("@SoBan", ID);
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    TableStatus = reader.GetString(0);
-                }
-                con.Close();
-                return TableStatus;
-            }
-        }
-        public int LoadBill(int ID)
-        {
-            int bill = 0;
-            using (SqlConnection con = new SqlConnection(connectstring))
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "Select SoHD from HOADON where SoBan = @SoBan and TrangThai = N'Chưa thanh toán'";
-                cmd.Parameters.AddWithValue("@SoBan", ID);
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    bill = reader.GetInt16(0);
-                }
-                con.Close();
-                return bill;
-            }
-        }
-        public void UpdateTable(int ID, bool isEmpty)
-        {
-            using (SqlConnection con = new SqlConnection(connectstring))
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-                if (isEmpty)
-                {
-                    cmd.CommandText = "Update BAN set TrangThai = N'Có thể sử dụng' where SoBan = @SoBan";
-                    cmd.Parameters.AddWithValue("@SoBan", ID);
-
-                    cmd.ExecuteNonQuery();
-                }
-                else
-                {
-                    cmd.CommandText = "Update BAN set TrangThai = N'Đang được sử dụng' where SoBan = @SoBan";
-                    cmd.Parameters.AddWithValue("@SoBan", ID);
-
-                    cmd.ExecuteNonQuery();
-                }
-                con.Close();
-            }
-        }
-        public void UpdateBillStatus(int BillID)
-        {
-            using (SqlConnection con = new SqlConnection(connectstring))
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "Update HOADON set TrangThai = N'Đã thanh toán' where SoHD = @SoHD";
-                cmd.Parameters.AddWithValue("@SoBan", BillID);
-                con.Close();
-            }
-        }
+        }                      
         public void DisplayBill(int BillID)
         {
             SelectedItems.Clear();
@@ -210,7 +131,7 @@ namespace QuanLyNhaHang.ViewModel
                     try
                     {
                         FoodName = reader.GetString(0);
-                        Quantity = reader.GetInt32(1);
+                        Quantity = reader.GetInt16(1);
                         Price = reader.GetDecimal(2);
                         SelectedMenuItems selected = new SelectedMenuItems(FoodName, Price, Quantity);
                         SelectedItems.Add(selected);
@@ -239,12 +160,13 @@ namespace QuanLyNhaHang.ViewModel
                     {
                         table.Coloroftable = "Red";
                         table.Status = 1;
-                        UpdateTable(table.ID, false);
-                        table.Bill_ID = LoadBill(table.ID);
+                        TinhTrangBanDP.Flag.UpdateTable(table.ID, false);
+                        //table.Bill_ID = TinhTrangBanDP.Flag.LoadBill(table.ID);
                     }
                     else
                     {
                         TitleOfBill = table.NumOfTable;
+                        table.Bill_ID = TinhTrangBanDP.Flag.LoadBill(table.ID);
                         DisplayBill(table.Bill_ID);
                         IDofPaidTable = table.ID;
                     }
@@ -260,13 +182,15 @@ namespace QuanLyNhaHang.ViewModel
                 {
                     table.Coloroftable = "Green";
                     table.Status = 0;
-                    UpdateTable(table.ID, true);
-                    UpdateBillStatus(table.Bill_ID);
+                    TinhTrangBanDP.Flag.UpdateTable(table.ID, true);
+                    TinhTrangBanDP.Flag.UpdateBillStatus(table.Bill_ID);
 
                     Dec_sumofbill = 0;
                     SumofBill = String.Format("{0:0,0 VND}", Dec_sumofbill);
                     SelectedItems.Clear();
                     TitleOfBill = "";
+                    MyMessageBox msb = new MyMessageBox("Đã thanh toán thành công!");
+                    msb.Show();
                     break;
                 }
             }

@@ -210,7 +210,17 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                    </GridView>
+                                <GridViewColumn Header=""
+                                        Width="200">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+
+                                            <Image Source="/images/info.png"  Stretch="UniformToFill"/>
+
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
                 </ListView.View>
             </ListView>
                 </ScrollViewer>

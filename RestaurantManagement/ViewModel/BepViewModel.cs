@@ -98,7 +98,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "UPDATE CHEBIEN1 SET TINHTRANG = 'XONG' WHERE MaDatMon = " + DoneSelected.MaDM;
+                cmd.CommandText = "UPDATE CHEBIEN SET TrangThai = 'XONG' WHERE MaDatMon = " + DoneSelected.MaDM;
               
 
                 cmd.Connection = sqlCon;
@@ -149,7 +149,7 @@ namespace QuanLyNhaHang.ViewModel
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
 
-                cmd.CommandText = "DELETE FROM CHEBIEN1 WHERE MaDatMon = " + OrderSelected.MaDM;
+                cmd.CommandText = "DELETE FROM CHEBIEN WHERE MaDatMon = " + OrderSelected.MaDM;
               
 
                 cmd.Connection = sqlCon;
@@ -179,7 +179,7 @@ namespace QuanLyNhaHang.ViewModel
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT c.*, m.TENMON FROM CHEBIEN1 AS c JOIN MENU1 AS m ON c.MAMON = m.MAMON WHERE TINHTRANG = N'CHUA'  ORDER BY NGAYCB, THOIGIANLAM ";
+            cmd.CommandText = "SELECT c.*, m.TenMon FROM CHEBIEN AS c JOIN MENU AS m ON c.MaMon = m.MaMon WHERE TrangThai = N'CHUA'  ORDER BY NGAYCB, ThoiGianLam ";
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
             ListDone.Clear();
@@ -195,7 +195,7 @@ namespace QuanLyNhaHang.ViewModel
                 long maDM = reader.GetInt32(0);
                 ListDone.Add(new Bep(maDM, maMon, soBan, soLuong, ngayCB, "CHUA", tenMon));
                 CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
-                view.SortDescriptions.Add(new SortDescription("SELECT * FROM CHEBIEN1 ORDER BY NGAYCB", ListSortDirection.Ascending));
+                view.SortDescriptions.Add(new SortDescription("SELECT * FROM CHEBIEN ORDER BY NgayCB", ListSortDirection.Ascending));
 
 
             }
@@ -208,7 +208,7 @@ namespace QuanLyNhaHang.ViewModel
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT c.*, m.TENMON FROM CHEBIEN1 AS c JOIN MENU1 AS m ON c.MAMON = m.MAMON WHERE TINHTRANG = N'XONG'";
+            cmd.CommandText = "SELECT c.*, m.TenMon FROM CHEBIEN AS c JOIN MENU AS m ON c.MaMon = m.MaMon WHERE TrangThai = N'XONG'";
            
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
