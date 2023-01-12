@@ -19,10 +19,11 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Name="lbMessage"
+            <TextBlock Name="lbMessage"
                Margin="5"
-               VerticalContentAlignment="Center"
-               HorizontalContentAlignment="Center"
+               TextWrapping="WrapWithOverflow"
+               TextAlignment="Center"
+               VerticalAlignment="Center"
                FontFamily="Comfortaa"
                FontSize="16"
                Foreground="#1C3879"/>

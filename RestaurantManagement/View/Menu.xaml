@@ -73,7 +73,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10 10 0 0">
-                        
+
                         <StackPanel Orientation="Vertical" Width="160">
                             <Label 
                                 Content="Sắp xếp" 
@@ -95,7 +95,7 @@
                         </StackPanel>
                         <Border Margin="40 0 0 0" Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource SearchBar}">
                             <StackPanel Orientation="Horizontal">
-                                <Button Style="{StaticResource SearchBarButton}" Command="{Binding FindDishes}">
+                                <Button Style="{StaticResource SearchBarButton}">
                                     <fa:IconImage Icon="MagnifyingGlass" Style="{StaticResource SearchBarIcon}"/>
                                 </Button>
                                 <TextBox 
@@ -108,16 +108,7 @@
                                     FontSize="17" 
                                     Foreground="#73777B"
                                     Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    >
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="TextChanged">
-                                            <i:InvokeCommandAction Command="{Binding FindDishes}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </TextBox>
-                                <StackPanel.InputBindings>
-                                    <KeyBinding Key="Enter" Command="{Binding FindDishes}"/>
-                                </StackPanel.InputBindings>
+                                    />
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -213,13 +204,31 @@
                                                HorizontalAlignment="Center"
                                                TextAlignment="Center"
                                                VerticalAlignment="Center"/>
-                                    <TextBlock Margin="60 0 0 0"
-                                               Grid.Column="1"
-                                               Text="9"
-                                               Foreground="White"
-                                               FontSize="20"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1" 
+                                              Background="Transparent"
+                                              Foreground="White"
+                                              Width="50"
+                                              HorizontalAlignment="Right"
+                                              FontSize="20"
+                                              BorderBrush="White"
+                                              ItemsSource="{Binding Tables}"
+                                              SelectedItem="{Binding SelectedTable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              DisplayMemberPath="NumOfTable"
+                                              HorizontalContentAlignment="Center">
+                                        <ComboBox.ItemContainerStyle>
+                                            <Style TargetType="ComboBoxItem">
+                                                <Setter Property="Foreground" Value="Black"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="0">
+                                                        <Setter Property="Background" Value="OrangeRed"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="1">
+                                                        <Setter Property="Background" Value="Green"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ComboBox.ItemContainerStyle>
+                                    </ComboBox>
                                 </Grid>
                             </Border>
                             <ScrollViewer Grid.Row="1">
@@ -287,33 +296,18 @@
                                                Foreground="#1C3879"
                                                TextAlignment="Right"/>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" Margin="10 10 0 0" >
-                                    <Button Background="#1C3879" 
-                                            Margin="60 0 0 0"
-                                            BorderBrush="#1C3879" 
-                                            BorderThickness="1"
-                                            Width="250"
-                                            Command="{Binding ClearAllSelectedDishes}">
-                                        <TextBlock 
-                                            Foreground="White" 
-                                            Text="Xoá chọn tất cả"
-                                            FontSize="15"
-                                            />
-                                    </Button>
-                                    
-                                </StackPanel>
+                                
 
-                                <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" Margin="10 10 0 0" >
+                                <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" Margin="20 40 0 0" >
                                     <Button Background="#1C3879" 
                                             BorderBrush="#1C3879" 
                                             BorderThickness="1"
                                             Width="150"
-                                            Command="{Binding DataContext.Navigator.SelectViewModelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-                                            CommandParameter="{x:Static nav:TypeOfView.TinhTrangBan}"
+                                            Command="{Binding ClearAllSelectedDishes}"
                                            >
                                         <TextBlock 
                                             Foreground="White" 
-                                            Text="Chuyển bàn"
+                                            Text="Xoá chọn tất cả"
                                             FontSize="15"
                                             />
                                     </Button>

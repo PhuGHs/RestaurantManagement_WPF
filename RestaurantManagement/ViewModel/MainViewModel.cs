@@ -50,6 +50,10 @@ namespace QuanLyNhaHang.ViewModel
                 }
                 CaiDatDP.Flag.ChangeProfileImage_SaveToDB(NhanVien);
             });
+            CloseWindowCommand = new RelayCommand<Window>((p) => true, (p) =>
+            {
+                p.Close();
+            });
             CurrentPasswordChangedCommand = new RelayCommand<PasswordBox>((p) => true, (p) =>
             {
                 CurrentPassword = p.Password;
@@ -136,6 +140,7 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand CurrentPasswordChangedCommand { get; set; }
         public ICommand NewPasswordChangedCommand { get; set; }
         public ICommand ConfirmPasswordChangedCommand { get; set; }
+        public ICommand CloseWindowCommand { get; set; }
         #endregion
         #region complementary functions
         public bool PasswordValidation()
