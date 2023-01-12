@@ -55,7 +55,7 @@ namespace QuanLyNhaHang.ViewModel
             }
         }
 
-        private string strCon = @"Data Source=DESKTOP-ADQ1342;Initial Catalog=QuanlyDoAn;Integrated Security=True";
+        private string strCon = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyNhaHang;Integrated Security=True";
         private SqlConnection sqlCon = null;
 
 
