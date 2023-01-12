@@ -6,6 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:local="clr-namespace:RestaurantManagement.View" xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         xmlns:local1="clr-namespace:RestaurantManagement.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Name="loginWindow"
         Title="LoginWindow" Height="450" Width="800"
@@ -80,11 +81,20 @@
                     <TextBox materialDesign:HintAssist.Hint="Tên đăng nhập"
                              Margin="35"
                              Grid.Row="0"
+                             Text="{Binding UserName}"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     <PasswordBox materialDesign:HintAssist.Hint="Mật khẩu"
+                                 x:Name="pwBox"
                                  Grid.Row="1"
                                  Margin="35"
-                                 Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" />
+                                 Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PasswordChanged">
+                                <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}" 
+                                   CommandParameter="{Binding ElementName=pwBox}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </PasswordBox>
                     <Button Grid.Row="2"
                             Margin="40"
                             Command="{Binding LoginCM}"
