@@ -151,9 +151,9 @@
                             </Grid>
 
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" Margin="120 20 0 0">
+                        <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" Margin="0 5 0 0">
                             <Button     
-                                HorizontalAlignment="Center"
+                                HorizontalAlignment="Center"                               
                                 Background="Red" 
                                 BorderBrush="Yellow" 
                                 Width="150"
@@ -164,6 +164,31 @@
                                 Text="THANH TOÁN"
                                             />
                             </Button>
+                            <ComboBox Margin="60,0,0,0"
+                                      ItemsSource="{Binding EmptyTables}"
+                                      SelectedItem="{Binding SelectedTable, Mode=TwoWay}"                                      
+                                      Width="150">
+                                
+                            </ComboBox>
+                            
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" Margin="0 0 0 0">
+                            <Button 
+                                Margin="0,5,0,0"
+                                HorizontalAlignment="Center"
+                                Width="150"
+                                Command="{Binding GetSwitchTableCommand}">
+
+                                <TextBlock 
+                                Foreground="White" 
+                                Text="CHUYỂN BÀN"
+                                            />
+                            </Button>
+                            <Label 
+                                Margin="23,10"
+                                Foreground="Black" 
+                                Content="DANH SÁCH BÀN TRỐNG"
+                                            />
                         </StackPanel>
 
                     </StackPanel>

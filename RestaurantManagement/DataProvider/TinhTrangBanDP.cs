@@ -120,5 +120,25 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
+        public void SwitchTable(int ID, int BillID)
+        {
+            try
+            {
+                DBOpen();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = SqlCon;
+
+                cmd.CommandText = "Update HOADON set SoBan = @SoBan where SoHD = @SoHD";            
+                cmd.Parameters.AddWithValue("@SoBan", ID);
+                cmd.Parameters.AddWithValue("@SoHD", BillID);
+
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                DBClose();
+            }
+        }
     }
 }
