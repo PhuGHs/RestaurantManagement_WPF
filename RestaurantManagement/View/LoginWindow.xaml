@@ -61,7 +61,7 @@
                     QUẢN LÝ NHÀ HÀNG
                 </TextBlock>
                 <Image Grid.Row="1"
-                       Source="/images/restaurant_truecolor.png"
+                       Source="/images/logo.png"
                        Margin="60 0 60 60"/>
             </Grid>
 
