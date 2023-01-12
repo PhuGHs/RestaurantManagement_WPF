@@ -6,7 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:QuanLyNhaHang.View"
              mc:Ignorable="d" 
-             TextElement.FontFamily="Comfortaa Light"
+             TextElement.FontFamily="Comfortaa"
              TextElement.FontSize="15"
              d:DesignHeight="670" d:DesignWidth="1070">
     <Grid Background="White">
@@ -35,7 +35,7 @@
                          Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"
                          Grid.Column="0"
                          Foreground="#1C3879"
-                         Margin="10 40 50 32"
+                         Margin="10 40 50 40"
                          materialDesign:HintAssist.Hint="Tìm kiếm">
                 </TextBox>
 
@@ -144,12 +144,12 @@
 
                         <TextBox materialDesign:HintAssist.Hint="Mã nhập"
                                  Grid.Column="0"
-                                 Margin="15 22 5 22.5"
+                                 Margin="15 28 5 28"
                                  Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox materialDesign:HintAssist.Hint="Tên sản phẩm"
                                  Grid.Column="1"
-                                 Margin="5 22 15 22.5"
+                                 Margin="5 28 15 28"
                                  Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
@@ -162,7 +162,7 @@
 
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Số lượng"
-                                     Margin="15 22 5 22.5"
+                                     Margin="15 28 5 28.5"
                                      Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
@@ -182,7 +182,7 @@
 
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Giá nhập (VNĐ)"
-                                     Margin="15 22 5 22.5"
+                                     Margin="15 28 5 28.5"
                                      Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
@@ -216,13 +216,13 @@
 
                         <Grid Grid.Column="0">
                             <TextBox materialDesign:HintAssist.Hint="Nguồn nhập"
-                                     Margin="15 22 5 22"
+                                     Margin="15 28 5 28"
                                      Text="{Binding Suplier, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                         <Grid Grid.Column="1">
                             <TextBox materialDesign:HintAssist.Hint="Liên lạc"
-                                     Margin="5 22 15 22"
+                                     Margin="5 28 15 28"
                                      Text="{Binding SuplierInfo, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>

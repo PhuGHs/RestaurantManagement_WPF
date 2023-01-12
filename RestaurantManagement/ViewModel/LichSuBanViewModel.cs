@@ -115,7 +115,7 @@ namespace QuanLyNhaHang.ViewModel
                 ListViewDisplay(strQuery);
             }
         }
-        private string strCon = @"Data Source=DESKTOP-ADQ1342;Initial Catalog=QuanlyDoAn;Integrated Security=True";
+        private string strCon = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyNhaHang;Integrated Security=True";
         private SqlConnection sqlCon = null;
 
 
@@ -245,10 +245,10 @@ namespace QuanLyNhaHang.ViewModel
             ListProduct.Clear();
             while (reader.Read())
             {
-                int madon = reader.GetInt32(0);
+                int madon = reader.GetInt16(0);
                 string mamon = reader.GetString(1);
                 string ten = reader.GetString(2);
-                int soluong = reader.GetInt32(3);
+                int soluong = reader.GetInt16(3);
                 string gia = reader.GetSqlMoney(4).ToString();
                 string thoigian = reader.GetDateTime(5).ToShortDateString();
 

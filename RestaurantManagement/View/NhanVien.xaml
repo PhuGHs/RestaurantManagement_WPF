@@ -35,7 +35,7 @@
                          FontFamily="Comfortaa"
                          FontSize="16"
                          Foreground="#1C3879"
-                         Margin="10 40 50 32"
+                         Margin="10 40 50 40"
                          materialDesign:HintAssist.Hint="Tìm kiếm">
                 </TextBox>
 
@@ -127,14 +127,14 @@
                                  FontFamily="Comfortaa"
                                  Grid.Column="0"
                                  FontSize="16"
-                                 Margin="15 21 5 21"
+                                 Margin="15 26 5 26"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox materialDesign:HintAssist.Hint="Họ tên"
                                  Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                                  FontFamily="Comfortaa"
                                  Grid.Column="1"
                                  FontSize="16"
-                                 Margin="5 21 15 21"
+                                 Margin="5 26 15 26"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
                     <Grid Grid.Row="1">
@@ -170,7 +170,7 @@
                             <ComboBox FontFamily="Comfortaa"
                                       FontSize="16"
                                       Text="{Binding Fulltime, UpdateSourceTrigger=PropertyChanged}"
-                                      Margin="5 23 15 15">
+                                      Margin="5 23 15 12">
                                 <ComboBoxItem IsSelected="True">
                                     Full-time
                                 </ComboBoxItem>
@@ -190,7 +190,7 @@
                                      Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
-                                     Margin="15 21 5 21"
+                                     Margin="15 26 5 26"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                         <Grid Grid.Column="1">
@@ -198,7 +198,7 @@
                                      Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
-                                     Margin="5 21 15 21"
+                                     Margin="5 26 15 26"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                     </Grid>
@@ -232,7 +232,7 @@
                                      Text="{Binding Account, UpdateSourceTrigger=PropertyChanged}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
-                                     Margin="15 21 5 21"
+                                     Margin="15 26 5 26"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                         <Grid Grid.Column="1">
@@ -240,7 +240,7 @@
                                      Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
                                      FontFamily="Comfortaa"
                                      FontSize="16"
-                                     Margin="5 21 15 21"
+                                     Margin="5 26 15 26"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                     </Grid>
