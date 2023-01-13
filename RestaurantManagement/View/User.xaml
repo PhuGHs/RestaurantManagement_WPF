@@ -70,13 +70,13 @@
                 BorderBrush="#1C3879">
                     <Ellipse Height="120" Width="120">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="{Binding NhanVien.AnhDaiDien}" Stretch="UniformToFill"/>
+                            <ImageBrush ImageSource="{Binding CaiDatViewModel.NhanVien.AnhDaiDien}" Stretch="UniformToFill"/>
                         </Ellipse.Fill>
                     </Ellipse>
                 </Border>
                 <Button Background="Transparent" 
                         Width="60" 
-                        Command="{Binding ChangeProfileImage}"
+                        Command="{Binding CaiDatViewModel.ChangeProfileImage}"
                         BorderThickness="0" 
                         ToolTip="Đổi ảnh đại diện">
                     <fa:IconImage Icon="Edit" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#1C3879"/>
@@ -85,7 +85,7 @@
             <StackPanel Grid.Column="1">
                 <TextBlock 
                     Height="60"
-                    Text="{Binding NhanVien.HoTen}"
+                    Text="{Binding CaiDatViewModel.NhanVien.HoTen}"
                     FontSize="30"
                     FontWeight="SemiBold"
                     VerticalAlignment="Center" 
@@ -93,14 +93,14 @@
                     Margin="0,20,0,0"/>
                 <TextBlock 
                     Height="60"
-                    Text="{Binding NhanVien.ChucVu}"
+                    Text="{Binding CaiDatViewModel.NhanVien.ChucVu}"
                     FontSize="22"
                     FontStyle="Italic"
                     />
             </StackPanel>
             <Canvas Grid.Column="3">
                 <Button Background="Transparent" 
-                        Command="{Binding CloseWindowCommand}"
+                        Command="{Binding CaiDatViewModel.CloseWindowCommand}"
                         CommandParameter="{Binding ElementName=Window}"
                         BorderThickness="0" Canvas.Left="165" HorizontalAlignment="Center" VerticalAlignment="Top">
                     <fa:IconImage Icon="PowerOff" />
@@ -113,14 +113,14 @@
                     BorderBrush="#1C3879"
                     Background="Transparent"
                     Foreground="Black"
-                    Command="{Binding CancelCommand}"/>
+                    Command="{Binding CaiDatViewModel.CancelCommand}"/>
                 <Button 
                     Content="Lưu" 
                     Width="90" 
                     Foreground="White"
                     Background="#1C3879"
                     Margin="20,0,0,0"
-                    Command="{Binding UpdateInfoCommand}"/>
+                    Command="{Binding CaiDatViewModel.UpdateInfoCommand}"/>
             </StackPanel>
         </Grid>
         <Separator 
@@ -151,19 +151,19 @@
                             <StackPanel Margin="0 5 0 20">
                                 <Label Content="Họ tên" Style="{StaticResource label}"/>
                                 <Border Style="{StaticResource SearchBar}">
-                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding NhanVien.HoTen}"/>
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding CaiDatViewModel.NhanVien.HoTen}"/>
                                 </Border>
                             </StackPanel>
                             <StackPanel Margin="0 0 0 20">
                                 <Label Content="Ngày sinh" Style="{StaticResource label}"/>
                                 <Border Style="{StaticResource SearchBar}">
-                                    <DatePicker Height="45" FontSize="20" SelectedDate="{Binding NhanVien.NgaySinh}" Foreground="#413F42" Margin="10 0"/>
+                                    <DatePicker Height="45" FontSize="20" SelectedDate="{Binding CaiDatViewModel.NhanVien.NgaySinh}" Foreground="#413F42" Margin="10 0"/>
                                 </Border>
                             </StackPanel>
                             <StackPanel Margin="0 0 0 20">
                                 <Label Content="Ngày vào làm" Style="{StaticResource label}"/>
                                 <Border Style="{StaticResource SearchBar}">
-                                    <TextBox FontSize="20" Foreground="#413F42" Margin="10 0" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Style="{x:Null}" Text="{Binding NhanVien.NgayVaoLam, StringFormat='{}{0:dd/MM/yyyy}'}" IsReadOnly="True"/>
+                                    <TextBox FontSize="20" Foreground="#413F42" Margin="10 0" VerticalAlignment="Center" BorderThickness="0" Background="Transparent" Style="{x:Null}" Text="{Binding CaiDatViewModel.NhanVien.NgayVaoLam, StringFormat='{}{0:dd/MM/yyyy}'}" IsReadOnly="True"/>
                                 </Border>
                             </StackPanel>
                             <StackPanel Grid.Row="1" Margin="0 0 0 20">
@@ -181,25 +181,25 @@
                             <StackPanel Margin="0 5 0 20">
                                 <Label Content="Mã nhân viên" Style="{StaticResource label}"/>
                                 <Border Style="{StaticResource SearchBar}">
-                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding NhanVien.MaNV}" IsReadOnly="True"/>
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding CaiDatViewModel.NhanVien.MaNV}" IsReadOnly="True"/>
                                 </Border>
                             </StackPanel>
                             <StackPanel Margin="0 0 0 20">
                                 <Label Content="Chức vụ" Style="{StaticResource label}"/>
                                 <Border Style="{StaticResource SearchBar}">
-                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding NhanVien.ChucVu}" IsReadOnly="True"/>
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding CaiDatViewModel.NhanVien.ChucVu}" IsReadOnly="True"/>
                                 </Border>
                             </StackPanel>
                             <StackPanel Margin="0 0 0 20">
                                 <Label Content="Số điện thoại" Style="{StaticResource label}"/>
                                 <Border Style="{StaticResource SearchBar}">
-                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding NhanVien.SDT}"/>
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding CaiDatViewModel.NhanVien.SDT}"/>
                                 </Border>
                             </StackPanel>
                             <StackPanel Margin="0 0 0 20">
                                 <Label Content="Loại nhân viên" Style="{StaticResource label}"/>
                                 <Border Style="{StaticResource SearchBar}">
-                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding LoaiNhanVien_Str}" IsReadOnly="True"/>
+                                    <TextBox Style="{StaticResource Txtbox}" Text="{Binding CaiDatViewModel.LoaiNhanVien_Str}" IsReadOnly="True"/>
                                 </Border>
                             </StackPanel>
                         </StackPanel>
@@ -207,7 +207,7 @@
                     <StackPanel Grid.Row="1" Margin="0 0 0 20">
                         <Label Content="Địa chỉ" Style="{StaticResource label}"/>
                         <Border Width="730" Style="{StaticResource SearchBar}">
-                            <TextBox Style="{StaticResource Txtbox}"  Text="{Binding NhanVien.DiaChi}"/>
+                            <TextBox Style="{StaticResource Txtbox}"  Text="{Binding CaiDatViewModel.NhanVien.DiaChi}"/>
                         </Border>
                     </StackPanel>
                 </Grid>
@@ -232,7 +232,7 @@
                                   Style="{StaticResource MaterialDesignFloatingHintPasswordBox}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="PasswordChanged" >
-                                            <i:InvokeCommandAction Command="{Binding CurrentPasswordChangedCommand }"  CommandParameter="{Binding ElementName=currentPassword,  Mode=OneWay}"/>
+                                            <i:InvokeCommandAction Command="{Binding CaiDatViewModel.CurrentPasswordChangedCommand }"  CommandParameter="{Binding ElementName=currentPassword,  Mode=OneWay}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </PasswordBox>
@@ -267,7 +267,7 @@
                                   Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" Grid.ColumnSpan="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="PasswordChanged" >
-                                            <i:InvokeCommandAction Command="{Binding NewPasswordChangedCommand }"  CommandParameter="{Binding ElementName=newPassword,  Mode=OneWay}"/>
+                                            <i:InvokeCommandAction Command="{Binding CaiDatViewModel.NewPasswordChangedCommand }"  CommandParameter="{Binding ElementName=newPassword,  Mode=OneWay}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </PasswordBox>
@@ -302,7 +302,7 @@
                                   Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" Grid.ColumnSpan="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="PasswordChanged" >
-                                            <i:InvokeCommandAction Command="{Binding ConfirmPasswordChangedCommand }"  CommandParameter="{Binding ElementName=confirmPassword,  Mode=OneWay}"/>
+                                            <i:InvokeCommandAction Command="{Binding CaiDatViewModel.ConfirmPasswordChangedCommand }"  CommandParameter="{Binding ElementName=confirmPassword,  Mode=OneWay}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </PasswordBox>
@@ -324,7 +324,7 @@
                         </StackPanel>
                         <Button
                             Click="doimatkhau_click"
-                            Command="{Binding ChangePassword}"
+                            Command="{Binding CaiDatViewModel.ChangePassword}"
                             Margin="0 30 0 0" 
                             Content="Đổi mật khẩu"
                             Background="#1C3879"  />

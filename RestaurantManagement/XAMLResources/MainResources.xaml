@@ -6,6 +6,9 @@
     <DataTemplate DataType="{x:Type viewmodel:MenuViewModel}">
         <view:Menu />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewmodel:MenuAdminViewModel}">
+        <view:MenuAdmin />
+    </DataTemplate>
     <DataTemplate DataType="{x:Type viewmodel:LichSuBanViewModel}">
         <view:LichSuBan />
     </DataTemplate>
@@ -29,5 +32,6 @@
     </Style>
     <viewmodel:MainViewModel x:Key="MainVM"></viewmodel:MainViewModel>
     <viewmodel1:LoginWindowVM x:Key="LoginVM"></viewmodel1:LoginWindowVM>
+    
     <viewmodel:ChamCongViewModel x:Key="ChamCong"/>
 </ResourceDictionary>

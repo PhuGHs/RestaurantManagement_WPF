@@ -12,14 +12,15 @@ using QuanLyNhaHang.DataProvider;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace QuanLyNhaHang.ViewModel
 {
     public class CaiDatViewModel : BaseViewModel
     {
-        public CaiDatViewModel()
+        public CaiDatViewModel(string MaNV, string ID, string password)
         {
-            NhanVien = CaiDatDP.Flag.GetCurrentEmployee();
+            NhanVien = CaiDatDP.Flag.GetCurrentEmployee(MaNV, password);
             CaiDatDP.Flag.LoadProfileImage(NhanVien);
             UpdateInfoCommand = new RelayCommand<object>((p) => true, (p) =>
             {
@@ -27,7 +28,7 @@ namespace QuanLyNhaHang.ViewModel
             });
             CancelCommand = new RelayCommand<object>((p) => true, (p) =>
             {
-                NhanVien = CaiDatDP.Flag.GetCurrentEmployee();
+                NhanVien = CaiDatDP.Flag.GetCurrentEmployee(MaNV, password);
                 CaiDatDP.Flag.LoadProfileImage(NhanVien);
             });
             ChangeProfileImage = new RelayCommand<object>((p) => true, (p) =>
@@ -48,7 +49,7 @@ namespace QuanLyNhaHang.ViewModel
                     MyMessageBox msb = new MyMessageBox("Đã thay đổi ảnh đại diện!");
                     msb.Show();
                 }
-                CaiDatDP.Flag.ChangeProfileImage_SaveToDB(NhanVien);
+                CaiDatDP.Flag.ChangeProfileImage_SaveToDB(NhanVien, ID);
             });
             CurrentPasswordChangedCommand = new RelayCommand<PasswordBox>((p) => true, (p) =>
             {
@@ -66,9 +67,13 @@ namespace QuanLyNhaHang.ViewModel
             {
                 if(PasswordValidation())
                 {
-                    CaiDatDP.Flag.ChangePassword(NewPassword);
+                    CaiDatDP.Flag.ChangePassword(NewPassword, ID);
                 }
                 return;
+            });
+            CloseWindowCommand = new RelayCommand<Window>((p) => true, (p) =>
+            {
+                p.Close();
             });
         }
         #region attributes
@@ -134,6 +139,7 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand CurrentPasswordChangedCommand { get; set; }
         public ICommand NewPasswordChangedCommand { get; set; }
         public ICommand ConfirmPasswordChangedCommand { get; set; }
+        public ICommand CloseWindowCommand { get; set; }
         #endregion
         #region complementary functions
         public bool PasswordValidation()

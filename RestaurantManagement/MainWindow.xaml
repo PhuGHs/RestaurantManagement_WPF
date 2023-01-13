@@ -7,14 +7,20 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+        xmlns:vm="clr-namespace:QuanLyNhaHang.ViewModel"
         xmlns:uc="clr-namespace:QuanLyNhaHang.UserControlRS"
         mc:Ignorable="d"
+        x:Name="Window"
         Title="Restaurant Management" Height="820" Width="1360" WindowStartupLocation="CenterScreen" WindowStyle="None"
         AllowsTransparency="True" Background="Transparent"
-        DataContext="{StaticResource MainVM}"
+        DataContext="{DynamicResource MainVM}"
         Style="{StaticResource Font}"
         >
-    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded" >
+            <i:InvokeCommandAction Command="{Binding LoadWindowCommand }"  CommandParameter="{Binding ElementName=Window}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid MouseDown="Border_MouseDown">
         <Grid.Resources>
             <Style x:Key="ArrowDownButton" TargetType="Button">
@@ -51,14 +57,26 @@
 
         <!--LeftMenu-->
         <Border Background="#1C3879" CornerRadius="10 0 0 10">
-            <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
                 <!--logo-->
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
+                <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" >
                     <Image Source="pack://application:,,,/images/logo.png" Width="150" Height="150" />
                     <TextBlock Foreground="#BFACE0" TextAlignment="Center" FontFamily="{StaticResource MaterialDesignFont}" FontSize="20">Ninres RM</TextBlock>
                 </StackPanel>
-                <uc:Navigator DataContext="{Binding Navigator}"/>
-            </StackPanel>
+                <uc:EmployeeNavigator Grid.Row="1" DataContext="{Binding Navigator}" Visibility="{Binding EmployeeView}"/>
+                <uc:Navigator Grid.Row="1" DataContext="{Binding Navigator}" Visibility="{Binding AdminView}"/>
+                <Button Command="{Binding LogOutCommand}" CommandParameter="{Binding ElementName=Window}" Grid.Row="2" BorderThickness="0" Background="Transparent"  Height="40">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="RightFromBracket" Foreground="White"/>
+                        <TextBlock Margin="10 0 0 0" Text="Đăng xuất" VerticalAlignment="Center" FontSize="20"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
         </Border>
         <!--MainSection-->
         <Border Grid.Column="1" CornerRadius="0 10 10 0" Background="#EEEEEE">
@@ -169,15 +187,15 @@
                                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                     <Ellipse Height="50" Width="50">
                                         <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{Binding NhanVien.AnhDaiDien, Mode=OneWay}" Stretch="UniformToFill"/>
+                                            <ImageBrush ImageSource="{Binding CaiDatViewModel.NhanVien.AnhDaiDien, Mode=OneWay}" Stretch="UniformToFill"/>
                                         </Ellipse.Fill>
                                     </Ellipse>
-                                    <TextBlock Margin="5 0 0 0" Text="{Binding NhanVien.HoTen, Mode=OneWay}"  TextAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderProfileName}"/>
+                                    <TextBlock Margin="5 0 0 0" Text="{Binding CaiDatViewModel.NhanVien.HoTen, Mode=OneWay}"  TextAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderProfileName}"/>
                                 </StackPanel>
                             </Button>
 
                             <Button Width="40
-                                    " Style="{StaticResource HeaderButton}" Margin="20 0 20 0" BorderThickness="0" Command="{Binding Header.CloseWindowCommand}" CommandParameter="{Binding ElementName=HeaderControl}" HorizontalAlignment="Right">
+                                    " Style="{StaticResource HeaderButton}" Margin="20 0 20 0" BorderThickness="0" Command="{Binding HeaderViewModel.CloseWindowCommand}" CommandParameter="{Binding ElementName=HeaderControl}" HorizontalAlignment="Right">
                                 <fa:IconImage Icon="PowerOff" />
                             </Button>
                         </StackPanel>

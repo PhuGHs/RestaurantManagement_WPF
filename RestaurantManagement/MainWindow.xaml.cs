@@ -34,7 +34,6 @@ public partial class MainWindow : Window
             this.DragMove();
         }
     }
-
     private void ShowUser_Click(object sender, RoutedEventArgs e)
     {
         User userSettingPage = new User();

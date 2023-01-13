@@ -20,9 +20,11 @@ namespace RestaurantManagement.ViewModel
         private SqlConnection sqlCon = null;
         public bool IsLoggedIn { get; set; }
         private string _UserName;
+        private string _MaNV;
         public string UserName { get => _UserName; set { _UserName = value; OnPropertyChanged(); } }
         private string _Password;
         public string Password { get => _Password; set { _Password = value; OnPropertyChanged(); } }
+        public string MaNV { get => _MaNV; set { _MaNV = value; OnPropertyChanged(); } }
         public string Role { get; set; }
         public ICommand CloseLoginCM { get; set; }
         public ICommand LoginCM { get; set; }
@@ -41,11 +43,6 @@ namespace RestaurantManagement.ViewModel
                 Login(p);
                 if (IsLoggedIn)
                 {
-                    // dùng Role xử lý tiếp ^^
-
-                    p.Hide();
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
                     p.Close();
                     return;
                 }
@@ -70,7 +67,8 @@ namespace RestaurantManagement.ViewModel
                 while (reader.Read())
                 {
                     IsLoggedIn = true;
-                    Role = reader.GetString(2);
+                    Role = reader.GetString(3);
+                    MaNV = reader.GetString(4);
                 }
                 reader.Close();
 

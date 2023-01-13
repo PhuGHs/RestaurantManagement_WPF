@@ -24,11 +24,9 @@ namespace QuanLyNhaHang.DataProvider
                 flag = value;
             }
         }
-        public NhanVien GetCurrentEmployee()
+        public NhanVien GetCurrentEmployee(string MaNV, string pw)
         {
             NhanVien nv = null;
-            string MaNV = getMaNVFromTaiKhoan();
-            string pw = getAccountPasswordFromTaiKhoan();
             DataTable dt = new DataTable();
             dt = LoadInitialData("Select * from NhanVien where MaNV = '" + MaNV + "'");
             foreach(DataRow dr in dt.Rows)
@@ -38,13 +36,11 @@ namespace QuanLyNhaHang.DataProvider
             nv.MatKhau = pw;
             return nv;
         }
-        public void ChangePassword(string pw)
+        public void ChangePassword(string pw, string ID)
         {
             try
             {
                 SqlCommand cmd = new SqlCommand();
-                //var hashPassword = PasswordHasher.Hash(pw);
-                string ID = getAccountIDFromTaiKhoan();
                 cmd.CommandText = "Update TaiKhoan set MatKhau = @hashedPassword where ID = @id";
                 cmd.Parameters.AddWithValue("@hashedPassword", pw);
                 cmd.Parameters.AddWithValue("@id", ID);
@@ -104,12 +100,12 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
-        public void ChangeProfileImage_SaveToDB(NhanVien nv)
+        public void ChangeProfileImage_SaveToDB(NhanVien nv, string ID)
         {
             try
             {
                 SqlCommand cmd = new SqlCommand();
-                string ID = getAccountIDFromTaiKhoan();
+ 
                 cmd.CommandText = "Update TaiKhoan set AnhDaiDien = @anhdaidien where ID = @id";
                 cmd.Parameters.AddWithValue("@id", ID);
                 cmd.Parameters.AddWithValue("@anhdaidien", Converter.ImageConverter.ConvertImageToBytes(nv.AnhDaiDien));
@@ -124,17 +120,17 @@ namespace QuanLyNhaHang.DataProvider
             }
         }
         #region complementary methods
-        public string getMaNVFromTaiKhoan()
-        {
-            string MaNV = "";
-            DataTable dt = new DataTable();
-            dt = LoadInitialData("Select * from TaiKhoan");
-            foreach(DataRow dr in dt.Rows)
-            {
-                MaNV = dr["MaNV"].ToString();
-            }
-            return MaNV;
-        }
+        //public string getMaNVFromTaiKhoan()
+        //{
+        //    string MaNV = "";
+        //    DataTable dt = new DataTable();
+        //    dt = LoadInitialData("Select * from TaiKhoan");
+        //    foreach(DataRow dr in dt.Rows)
+        //    {
+        //        MaNV = dr["MaNV"].ToString();
+        //    }
+        //    return MaNV;
+        //}
         public string getAccountIDFromTaiKhoan()
         {
             string ID = "";
@@ -146,31 +142,31 @@ namespace QuanLyNhaHang.DataProvider
             }
             return ID;
         }
-        public string getAccountPasswordFromTaiKhoan()
-        {
-            try
-            {
-                string pw = "";
-                string ID = getAccountIDFromTaiKhoan();
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = "Select MatKhau from TAIKHOAN WHERE ID = @id";
-                cmd.Parameters.AddWithValue("@id", ID);
-                DBOpen();
-                cmd.Connection = SqlCon;
+        //public string getAccountPasswordFromTaiKhoan()
+        //{
+        //    try
+        //    {
+        //        string pw = "";
+        //        string ID = getAccountIDFromTaiKhoan();
+        //        SqlCommand cmd = new SqlCommand();
+        //        cmd.CommandText = "Select MatKhau from TAIKHOAN WHERE ID = @id";
+        //        cmd.Parameters.AddWithValue("@id", ID);
+        //        DBOpen();
+        //        cmd.Connection = SqlCon;
 
-                SqlDataReader reader = cmd.ExecuteReader();
-                if(reader.Read())
-                {
-                    pw = reader.GetString(0);
-                }
-                reader.Close();
-                return pw;
-            }
-            finally
-            {
-                DBClose();
-            }
-        }
+        //        SqlDataReader reader = cmd.ExecuteReader();
+        //        if(reader.Read())
+        //        {
+        //            pw = reader.GetString(0);
+        //        }
+        //        reader.Close();
+        //        return pw;
+        //    }
+        //    finally
+        //    {
+        //        DBClose();
+        //    }
+        //}
         #endregion
     }
 }
