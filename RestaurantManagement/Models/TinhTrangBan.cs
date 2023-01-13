@@ -126,4 +126,5 @@ namespace TinhTrangBan.Models
         }
         #endregion
     }
+    
 }

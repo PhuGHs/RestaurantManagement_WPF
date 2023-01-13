@@ -20,6 +20,7 @@ using OfficeOpenXml.ConditionalFormatting;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using QuanLyNhaHang.DataProvider;
+using Org.BouncyCastle.Math;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -30,21 +31,26 @@ namespace QuanLyNhaHang.ViewModel
         {
             StatusOfTableCommand = new RelayCommand<Table>((p) => true, (p) => GetStatusOfTable(p.ID));
             GetPaymentCommand = new RelayCommand<Table>((p) => true, (p) => Payment());
+            GetSwitchTableCommand = new RelayCommand<string>((p) => true, (p) => SwitchTable());
             LoadTables();
             LoadTableStatus();
+            LoadEmptyTables();
         }
         #region attributes
         private ObservableCollection<Table> _tables = new ObservableCollection<Table>();
         private ObservableCollection<SelectedMenuItems> _selectedItems = new ObservableCollection<SelectedMenuItems>();
+        private ObservableCollection<string> _emptytables = new ObservableCollection<string>();
         private string titleofbill = "";
         private decimal dec_sumofbill = 0;
         private string sumofbill = "0 VND";
+        private string selectedtable = "";
         int IDofPaidTable = 0;
         #endregion
 
         #region properties
         public ObservableCollection<Table> Tables { get { return _tables; } set { _tables = value; OnPropertyChanged(); } }
         public ObservableCollection<SelectedMenuItems> SelectedItems { get { return _selectedItems; } set { _selectedItems = value; } }
+        public ObservableCollection<string> EmptyTables { get { return _emptytables; } set { _emptytables = value; } }
         public string TitleOfBill
         {
             get { return titleofbill; }
@@ -60,11 +66,16 @@ namespace QuanLyNhaHang.ViewModel
             get { return sumofbill; }
             set { sumofbill = value; OnPropertyChanged(); }
         }
-
+        public string SelectedTable
+        {
+            get { return selectedtable; }
+            set { selectedtable = value; OnPropertyChanged(); }
+        }
         #endregion
         #region commands
         public ICommand StatusOfTableCommand { get; set; }
         public ICommand GetPaymentCommand { get; set; }
+        public ICommand GetSwitchTableCommand { get; set; }
         #endregion
 
         #region methods
@@ -87,6 +98,35 @@ namespace QuanLyNhaHang.ViewModel
             _tables.Add(new Table { NumOfTable = "Bàn 15", ID = 15 });
 
             Tables = _tables;
+        }
+        public void LoadEmptyTables()
+        {
+            string numoftable;
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+
+                cmd.CommandText = "Select SoBan from BAN where TrangThai = N'Có thể sử dụng'";                
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    try
+                    {
+                        numoftable = reader.GetInt16(0).ToString();
+                        _emptytables.Add(numoftable);
+
+                        EmptyTables = _emptytables;
+                    }
+                    catch
+                    {
+                        numoftable = "";                       
+                    }
+                }
+                con.Close();
+            }
         }
         public void LoadTableStatus()
         {
@@ -161,7 +201,7 @@ namespace QuanLyNhaHang.ViewModel
                         table.Coloroftable = "Red";
                         table.Status = 1;
                         TinhTrangBanDP.Flag.UpdateTable(table.ID, false);
-                        //table.Bill_ID = TinhTrangBanDP.Flag.LoadBill(table.ID);
+                        
                     }
                     else
                     {
@@ -192,6 +232,36 @@ namespace QuanLyNhaHang.ViewModel
                     MyMessageBox msb = new MyMessageBox("Đã thanh toán thành công!");
                     msb.Show();
                     break;
+                }
+            }
+        }
+        public void SwitchTable()
+        {
+            foreach(Table table in _tables)
+            {
+                if (table.ID == IDofPaidTable)
+                {
+                    table.Coloroftable = "Green";
+                    table.Status = 0;
+                    TinhTrangBanDP.Flag.UpdateTable(table.ID, true); 
+                    TinhTrangBanDP.Flag.SwitchTable(int.Parse(SelectedTable), table.Bill_ID);
+                    TinhTrangBanDP.Flag.UpdateTable(int.Parse(SelectedTable), false); 
+
+                    Dec_sumofbill = 0;
+                    SumofBill = String.Format("{0:0,0 VND}", Dec_sumofbill);
+                    SelectedItems.Clear();
+                    TitleOfBill = "";
+                    MyMessageBox msb = new MyMessageBox("Đã chuyển bàn thành công!");
+                    msb.Show();
+                    break;
+                }
+            }
+            foreach(Table table in _tables)
+            {
+                if (table.ID == int.Parse(SelectedTable))
+                {
+                    table.Coloroftable = "Red";
+                    table.Status = 1;
                 }
             }
         }
