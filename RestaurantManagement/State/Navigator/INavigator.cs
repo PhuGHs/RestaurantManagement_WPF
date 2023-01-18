@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace QuanLyNhaHang.State.Navigator
@@ -13,6 +14,7 @@ namespace QuanLyNhaHang.State.Navigator
         NhanVien,
         Kho,
         Menu,
+        MenuAdmin,
         LichSuBan,
         TinhTrangBan,
         CaiDat,
@@ -24,6 +26,8 @@ namespace QuanLyNhaHang.State.Navigator
     {
         BaseViewModel CurrentViewModel { get; set; }
         string CurrentTitle { get; set; }
+        Visibility AdminView { get; set; }
+        Visibility EmployeeView { get; set; }
         ICommand SelectViewModelCommand { get;  }
     }
 }

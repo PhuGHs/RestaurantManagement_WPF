@@ -376,7 +376,7 @@ namespace QuanLyNhaHang.ViewModel
                         ListProduct.Clear();
                         while (reader.Read())
                         {
-                            int madon = reader.GetInt32(0);
+                            int madon = reader.GetInt16(0);
                             string mamon = reader.GetString(1);
                             string ten = reader.GetString(2);
                             int soluong = reader.GetInt32(3);
