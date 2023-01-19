@@ -45,6 +45,7 @@ namespace QuanLyNhaHang.ViewModel
         private string sumofbill = "0 VND";
         private string selectedtable = "";
         int IDofPaidTable = 0;
+        bool isNull = false;
         #endregion
 
         #region properties
@@ -241,24 +242,44 @@ namespace QuanLyNhaHang.ViewModel
             {
                 if (table.ID == IDofPaidTable)
                 {
-                    table.Coloroftable = "Green";
-                    table.Status = 0;
-                    TinhTrangBanDP.Flag.UpdateTable(table.ID, true); 
-                    TinhTrangBanDP.Flag.SwitchTable(int.Parse(SelectedTable), table.Bill_ID);
-                    TinhTrangBanDP.Flag.UpdateTable(int.Parse(SelectedTable), false); 
+                    if (SelectedTable == "")
+                    {
+                        MyMessageBox msb = new MyMessageBox("Vui lòng chọn bàn để chuyển đến trong danh sách bàn trống!");
+                        msb.Show();
+                        isNull = true;
+                        break;
+                    }
+                    else
+                    {
+                        table.Coloroftable = "Green";
+                        table.Status = 0;
+                        TinhTrangBanDP.Flag.UpdateTable(table.ID, true);
+                        TinhTrangBanDP.Flag.SwitchTable(int.Parse(SelectedTable), table.Bill_ID);
+                        TinhTrangBanDP.Flag.UpdateTable(int.Parse(SelectedTable), false);
 
-                    Dec_sumofbill = 0;
-                    SumofBill = String.Format("{0:0,0 VND}", Dec_sumofbill);
-                    SelectedItems.Clear();
-                    TitleOfBill = "";
-                    MyMessageBox msb = new MyMessageBox("Đã chuyển bàn thành công!");
-                    msb.Show();
-                    break;
+                        Dec_sumofbill = 0;
+                        SumofBill = String.Format("{0:0,0 VND}", Dec_sumofbill);
+                        SelectedItems.Clear();
+                        TitleOfBill = "";
+                        MyMessageBox msb = new MyMessageBox("Đã chuyển bàn thành công!");
+                        msb.Show();
+                        break;
+                    }                       
                 }
             }
-            foreach(Table table in _tables)
+            if (IDofPaidTable == 0)
             {
-                if (table.ID == int.Parse(SelectedTable))
+                MyMessageBox msb = new MyMessageBox("Vui lòng ấn chọn 1 bàn cần chuyển trước khi nhấn nút Chuyển bàn!");
+                msb.Show();
+                isNull = true;
+            }
+            foreach (Table table in _tables)
+            {
+                if (isNull)
+                {
+                    break;
+                }
+                else if (table.ID == int.Parse(SelectedTable))
                 {
                     table.Coloroftable = "Red";
                     table.Status = 1;

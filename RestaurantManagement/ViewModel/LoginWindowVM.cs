@@ -55,34 +55,24 @@ namespace RestaurantManagement.ViewModel
             });
             void Login(Window p)
             {
-                try
-                {
-                    OpenConnect();
+                OpenConnect();
 
-                    if (p == null) return;
+                if (p == null) return;
 
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "SELECT * FROM TAIKHOAN WHERE ID = '" + UserName + "' AND MatKhau = '" + Password + "'";
-                    cmd.Connection = sqlCon;
-                    SqlDataReader reader = cmd.ExecuteReader();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "SELECT * FROM TAIKHOAN WHERE ID = '" + UserName + "' AND MatKhau = '" + Password + "'";
+                cmd.Connection = sqlCon;
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    IsLoggedIn = true;
+                    Role = reader.GetString(2);
+                    MaNV = reader.GetString(3);
+                }
+                reader.Close();
 
-                    while (reader.Read())
-                    {
-                        IsLoggedIn = true;
-                        Role = reader.GetString(3);
-                        MaNV = reader.GetString(4);
-                    }
-                    reader.Close();
-                }
-                catch (SqlNullValueException ex)
-                {
-                    MaNV = "";
-                }
-                finally
-                {
-                    CloseConnect();
-                }
+                CloseConnect();
             }
             void OpenConnect()
             {

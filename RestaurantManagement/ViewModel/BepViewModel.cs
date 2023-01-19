@@ -85,8 +85,6 @@ namespace QuanLyNhaHang.ViewModel
             GetListDone();
             GetListOrder();
 
-            OpenConnect();
-
             DoneCM = new RelayCommand<object>((p) =>
             {
 
@@ -98,7 +96,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "UPDATE CHEBIEN SET TrangThai = 'XONG' WHERE MaDatMon = " + DoneSelected.MaDM;
+                cmd.CommandText = "UPDATE CHEBIEN SET TrangThai = N'XONG' WHERE MaDatDon = " + DoneSelected.MaDM;
               
 
                 cmd.Connection = sqlCon;
@@ -116,7 +114,7 @@ namespace QuanLyNhaHang.ViewModel
                 }
                 List<string> listTenSP = new List<string>();
                 List<int> listSoLuong = new List<int>();
-                cmd.CommandText = "SELECT TenNL, SoLuong FROM CHITIETMON WHERE MaMon = " + DoneSelected.MaMon;
+                cmd.CommandText = "SELECT TenNL, SoLuong FROM CHITIETMON WHERE MaMon = '" + DoneSelected.MaMon + "'";
 
                 listTenSP.Clear();
                 listSoLuong.Clear();
@@ -149,7 +147,7 @@ namespace QuanLyNhaHang.ViewModel
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
 
-                cmd.CommandText = "DELETE FROM CHEBIEN WHERE MaDatMon = " + OrderSelected.MaDM;
+                cmd.CommandText = "DELETE FROM CHEBIEN WHERE MaDatDon = " + OrderSelected.MaDM;
               
 
                 cmd.Connection = sqlCon;
@@ -179,7 +177,7 @@ namespace QuanLyNhaHang.ViewModel
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT c.*, m.TenMon FROM CHEBIEN AS c JOIN MENU AS m ON c.MaMon = m.MaMon WHERE TrangThai = N'CHUA'  ORDER BY NGAYCB, ThoiGianLam ";
+            cmd.CommandText = "SELECT c.*, m.TenMon FROM CHEBIEN AS c JOIN MENU AS m ON c.MaMon = m.MaMon WHERE TrangThai = N'Đang chế biến'  ORDER BY NGAYCB, ThoiGianLam ";
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
             ListDone.Clear();
@@ -193,12 +191,13 @@ namespace QuanLyNhaHang.ViewModel
                 string tenMon = reader.GetString(6);
                 string ngayCB = reader.GetDateTime(4).ToShortDateString();
                 long maDM = reader.GetInt32(0);
-                ListDone.Add(new Bep(maDM, maMon, soBan, soLuong, ngayCB, "CHUA", tenMon));
-                CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
-                view.SortDescriptions.Add(new SortDescription("SELECT * FROM CHEBIEN ORDER BY NgayCB", ListSortDirection.Ascending));
+                ListDone.Add(new Bep(maDM, maMon, soBan, soLuong, ngayCB, "Đang chế biến", tenMon));
+                //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
+                //view.SortDescriptions.Add(new SortDescription("SELECT * FROM CHEBIEN ORDER BY NgayCB", ListSortDirection.Ascending));
 
 
             }
+            reader.Close();
 
             CloseConnect();
         }
@@ -224,9 +223,9 @@ namespace QuanLyNhaHang.ViewModel
                 string ngayCB = reader.GetDateTime(4).ToShortDateString();
                 long maDM = reader.GetInt32(0);
                 ListOrder.Add(new Bep(maDM, maMon, soBan, soLuong, ngayCB, "XONG", tenMon));
-                CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
+                //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
             }
-
+            reader.Close();
 
             CloseConnect();
         }
