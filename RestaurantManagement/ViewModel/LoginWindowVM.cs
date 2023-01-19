@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
 using QuanLyNhaHang;
+using System.Data.SqlTypes;
 
 namespace RestaurantManagement.ViewModel
 {
@@ -54,25 +55,34 @@ namespace RestaurantManagement.ViewModel
             });
             void Login(Window p)
             {
-                OpenConnect();
-
-                if (p == null) return;
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "SELECT * FROM TAIKHOAN WHERE ID = '" + UserName + "' AND MatKhau = '" + Password + "'";
-                cmd.Connection = sqlCon;
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                try
                 {
-                    IsLoggedIn = true;
-                    Role = reader.GetString(3);
-                    MaNV = reader.GetString(4);
-                }
-                reader.Close();
+                    OpenConnect();
 
-                CloseConnect();
+                    if (p == null) return;
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "SELECT * FROM TAIKHOAN WHERE ID = '" + UserName + "' AND MatKhau = '" + Password + "'";
+                    cmd.Connection = sqlCon;
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        IsLoggedIn = true;
+                        Role = reader.GetString(3);
+                        MaNV = reader.GetString(4);
+                    }
+                    reader.Close();
+                }
+                catch (SqlNullValueException ex)
+                {
+                    MaNV = "";
+                }
+                finally
+                {
+                    CloseConnect();
+                }
             }
             void OpenConnect()
             {

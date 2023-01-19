@@ -93,7 +93,7 @@
                     Margin="0,20,0,0"/>
                 <TextBlock 
                     Height="60"
-                    Text="{Binding CaiDatViewModel.NhanVien.ChucVu}"
+                    Text="{Binding CaiDatViewModel.Role}"
                     FontSize="22"
                     FontStyle="Italic"
                     />
@@ -133,10 +133,11 @@
                     materialDesign:ShadowAssist.ShadowDepth="Depth0" 
                     Margin="20,0,20,20">
             <TabItem 
+                Visibility="{Binding CaiDatViewModel.InfoVisib}"
                 Header="Thông tin cá nhân" 
                 Cursor="Hand"
-                IsSelected="True">
-                <Grid>
+                IsSelected="{Binding CaiDatViewModel.IsSelected1}">
+                <Grid Visibility="{Binding CaiDatViewModel.InfoVisib}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="400"/>
                         <RowDefinition Height="*" />
@@ -215,6 +216,7 @@
             <TabItem      
                 Header="Đổi mật khẩu" 
                 Cursor="Hand"
+                IsSelected="{Binding CaiDatViewModel.IsSelected2}"
                 Foreground="#1C3879">
                 <Grid x:Name="Container">
                     <StackPanel 

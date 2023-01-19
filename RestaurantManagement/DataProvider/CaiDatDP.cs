@@ -41,8 +41,8 @@ namespace QuanLyNhaHang.DataProvider
             try
             {
                 SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = "Update TaiKhoan set MatKhau = @hashedPassword where ID = @id";
-                cmd.Parameters.AddWithValue("@hashedPassword", pw);
+                cmd.CommandText = "Update TaiKhoan set MatKhau = @password where ID = @id";
+                cmd.Parameters.AddWithValue("@password", pw);
                 cmd.Parameters.AddWithValue("@id", ID);
                 DBOpen();
 
@@ -120,17 +120,6 @@ namespace QuanLyNhaHang.DataProvider
             }
         }
         #region complementary methods
-        //public string getMaNVFromTaiKhoan()
-        //{
-        //    string MaNV = "";
-        //    DataTable dt = new DataTable();
-        //    dt = LoadInitialData("Select * from TaiKhoan");
-        //    foreach(DataRow dr in dt.Rows)
-        //    {
-        //        MaNV = dr["MaNV"].ToString();
-        //    }
-        //    return MaNV;
-        //}
         public string getAccountIDFromTaiKhoan()
         {
             string ID = "";
@@ -142,31 +131,6 @@ namespace QuanLyNhaHang.DataProvider
             }
             return ID;
         }
-        //public string getAccountPasswordFromTaiKhoan()
-        //{
-        //    try
-        //    {
-        //        string pw = "";
-        //        string ID = getAccountIDFromTaiKhoan();
-        //        SqlCommand cmd = new SqlCommand();
-        //        cmd.CommandText = "Select MatKhau from TAIKHOAN WHERE ID = @id";
-        //        cmd.Parameters.AddWithValue("@id", ID);
-        //        DBOpen();
-        //        cmd.Connection = SqlCon;
-
-        //        SqlDataReader reader = cmd.ExecuteReader();
-        //        if(reader.Read())
-        //        {
-        //            pw = reader.GetString(0);
-        //        }
-        //        reader.Close();
-        //        return pw;
-        //    }
-        //    finally
-        //    {
-        //        DBClose();
-        //    }
-        //}
         #endregion
     }
 }

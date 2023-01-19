@@ -18,8 +18,9 @@ namespace QuanLyNhaHang.ViewModel
 {
     public class CaiDatViewModel : BaseViewModel
     {
-        public CaiDatViewModel(string MaNV, string ID, string password)
+        public CaiDatViewModel(string MaNV, string ID, string password, string role)
         {
+            Role = role;
             NhanVien = CaiDatDP.Flag.GetCurrentEmployee(MaNV, password);
             CaiDatDP.Flag.LoadProfileImage(NhanVien);
             UpdateInfoCommand = new RelayCommand<object>((p) => true, (p) =>
@@ -67,6 +68,8 @@ namespace QuanLyNhaHang.ViewModel
             {
                 if(PasswordValidation())
                 {
+                    NhanVien = CaiDatDP.Flag.GetCurrentEmployee(MaNV, NewPassword);
+                    CaiDatDP.Flag.LoadProfileImage(NhanVien);
                     CaiDatDP.Flag.ChangePassword(NewPassword, ID);
                 }
                 return;
@@ -130,6 +133,7 @@ namespace QuanLyNhaHang.ViewModel
                 _confirmPassword = value; OnPropertyChanged();
             }
         }
+        public string Role { get; set; }
         #endregion
         #region commands
         public ICommand UpdateInfoCommand { get; set; }
