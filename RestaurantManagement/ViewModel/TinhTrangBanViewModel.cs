@@ -21,6 +21,10 @@ using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using QuanLyNhaHang.DataProvider;
 using Org.BouncyCastle.Math;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using Documment = iTextSharp.text.Document;
+using System.IO;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -215,6 +219,116 @@ namespace QuanLyNhaHang.ViewModel
                 }
             }
         }
+        public void PrintBill(int BillID)
+        {
+            using (SqlConnection con = new SqlConnection(connectstring))
+            {
+                con.Open();
+                string strQuery = "Select TenMon, SoLuong, Gia * SoLuong " +
+                    "from CTHD inner join MENU on CTHD.MaMon = MENU.MaMon " +
+                    "where CTHD.SoHD = " + BillID;
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = strQuery;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                List<string> ten = new List<string>();
+                List<string> soluong = new List<string>();
+                List<string> gia = new List<string>();
+
+                while (reader.Read())
+                {
+                    ten.Add(reader.GetString(0));
+                    soluong.Add(reader.GetInt16(1).ToString());
+                    gia.Add(reader.GetDecimal(2).ToString());
+                }
+
+                if (ten.Count > 0)
+                {
+                    DisplayBill(BillID);
+                    MyMessageBox yesno = new MyMessageBox("Bạn có muốn in hóa đơn?", true);
+                    yesno.ShowDialog();
+                    if (yesno.ACCEPT())
+                    {
+                        SaveFileDialog sfd = new SaveFileDialog();
+                        sfd.Filter = "PDF (*.pdf)|*.pdf";
+                        sfd.FileName = "Hóa đơn ngày " + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year;
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+                            if (File.Exists(sfd.FileName))
+                            {
+                                try
+                                {
+                                    File.Delete(sfd.FileName);
+                                }
+                                catch (IOException ex)
+                                {
+                                    MyMessageBox msb = new MyMessageBox("Đã có lỗi xảy ra!");
+                                    msb.ShowDialog();
+                                }
+                            }
+                            try
+                            {
+                                PdfPTable pdfTable = new PdfPTable(3);
+                                pdfTable.DefaultCell.Padding = 3;
+                                pdfTable.WidthPercentage = 100;
+                                pdfTable.HorizontalAlignment = Element.ALIGN_MIDDLE;
+
+                                BaseFont bf = BaseFont.CreateFont(Environment.GetEnvironmentVariable("windir") + @"\fonts\TIMES.TTF", BaseFont.IDENTITY_H, true);
+                                Font f = new Font(bf, 16, Font.NORMAL);
+
+                                PdfPCell cell = new PdfPCell(new Phrase("Tên món", f));
+                                pdfTable.AddCell(cell);
+                                cell = new PdfPCell(new Phrase("Số lượng", f));
+                                pdfTable.AddCell(cell);
+                                cell = new PdfPCell(new Phrase("Giá", f));
+                                pdfTable.AddCell(cell);
+                                for (int i = 0; i < ten.Count; i++)
+                                {
+                                    pdfTable.AddCell(new Phrase(ten[i], f));
+                                    pdfTable.AddCell(new Phrase(soluong[i], f));
+                                    pdfTable.AddCell(new Phrase(gia[i], f));
+                                }
+
+                                using (FileStream stream = new FileStream(sfd.FileName, FileMode.Create))
+                                {
+                                    Document pdfDoc = new Document(PageSize.A4, 50f, 50f, 40f, 40f);
+                                    PdfWriter.GetInstance(pdfDoc, stream);
+                                    pdfDoc.Open();
+                                    pdfDoc.Add(new Paragraph("                                            HÓA ĐƠN " + DateTime.Now.Day.ToString() + "/" + DateTime.Now.Month.ToString() + "/" + DateTime.Now.Year.ToString(), f));
+                                    pdfDoc.Add(new Paragraph("    "));
+                                    pdfDoc.Add(pdfTable);
+                                    pdfDoc.Add(new Paragraph("Tổng cộng:                                                                    " + SumofBill, f));
+                                    pdfDoc.Add(new Paragraph("    "));
+                                    pdfDoc.Add(new Paragraph("                                      HẸN GẶP LẠI QUÝ KHÁCH", f));
+                                    pdfDoc.Close();
+                                    stream.Close();
+                                }
+
+                                MyMessageBox mess = new MyMessageBox("In thành công!");
+                                mess.ShowDialog();
+                            }
+                            catch (Exception ex)
+                            {
+                                MyMessageBox msb = new MyMessageBox("Đã có lỗi xảy ra!");
+                                msb.ShowDialog();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        DisplayBill(BillID);
+                    }
+                }
+                else
+                {
+                    MyMessageBox mess = new MyMessageBox("Không tồn tại hóa đơn!");
+                    mess.ShowDialog();
+                }
+            }
+        }
         public void Payment()
         {
             foreach (Table table in _tables)
@@ -226,6 +340,7 @@ namespace QuanLyNhaHang.ViewModel
                     TinhTrangBanDP.Flag.UpdateTable(table.ID, true);
                     TinhTrangBanDP.Flag.UpdateBillStatus(table.Bill_ID);
 
+                    PrintBill(table.Bill_ID);
                     Dec_sumofbill = 0;
                     SumofBill = String.Format("{0:0,0 VND}", Dec_sumofbill);
                     SelectedItems.Clear();
