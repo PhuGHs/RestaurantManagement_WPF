@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         x:Name="Window"
         DataContext="{StaticResource MainVM}"
-        Title="Thông tin cá nhân tài khoản" Height="800" Width="800" WindowStyle="None" WindowStartupLocation="CenterScreen">
+        Title="Thông tin cá nhân tài khoản" Height="700" Width="800" WindowStyle="None" WindowStartupLocation="CenterScreen">
     <Grid Margin="5" Background="White">
         <Grid.Resources>
             <Style x:Key="SearchBar" TargetType="Border">
@@ -133,16 +133,14 @@
                     materialDesign:ShadowAssist.ShadowDepth="Depth0" 
                     Margin="20,0,20,20">
             <TabItem 
-                Visibility="{Binding CaiDatViewModel.InfoVisib}"
                 Header="Thông tin cá nhân" 
-                Cursor="Hand"
-                IsSelected="{Binding CaiDatViewModel.IsSelected1}">
-                <Grid Visibility="{Binding CaiDatViewModel.InfoVisib}">
+                Cursor="Hand">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="400"/>
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Grid>
+                    <Grid Width="730">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40" />
@@ -168,13 +166,9 @@
                                 </Border>
                             </StackPanel>
                             <StackPanel Grid.Row="1" Margin="0 0 0 20">
-                                <Label Content="Giới tính" Style="{StaticResource label}"/>
+                                <Label Content="Địa chỉ" Style="{StaticResource label}"/>
                                 <Border Style="{StaticResource SearchBar}">
-                                    <ComboBox Style="{StaticResource combobox}">
-                                        <ComboBoxItem IsSelected="True">Nam</ComboBoxItem>
-                                        <ComboBoxItem>Nữ</ComboBoxItem>
-                                        <ComboBoxItem>Khác</ComboBoxItem>
-                                    </ComboBox>
+                                    <TextBox Style="{StaticResource Txtbox}"  Text="{Binding CaiDatViewModel.NhanVien.DiaChi}"/>
                                 </Border>
                             </StackPanel>
                         </StackPanel>
@@ -205,18 +199,11 @@
                             </StackPanel>
                         </StackPanel>
                     </Grid>
-                    <StackPanel Grid.Row="1" Margin="0 0 0 20">
-                        <Label Content="Địa chỉ" Style="{StaticResource label}"/>
-                        <Border Width="730" Style="{StaticResource SearchBar}">
-                            <TextBox Style="{StaticResource Txtbox}"  Text="{Binding CaiDatViewModel.NhanVien.DiaChi}"/>
-                        </Border>
-                    </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem      
                 Header="Đổi mật khẩu" 
                 Cursor="Hand"
-                IsSelected="{Binding CaiDatViewModel.IsSelected2}"
                 Foreground="#1C3879">
                 <Grid x:Name="Container">
                     <StackPanel 
