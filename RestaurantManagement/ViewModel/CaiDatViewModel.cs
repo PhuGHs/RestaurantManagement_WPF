@@ -156,7 +156,7 @@ namespace QuanLyNhaHang.ViewModel
             }
             else if (ConfirmPassword != NewPassword)
             {
-                MyMessageBox msb = new MyMessageBox("Mật khẩu xác nhận và mật khẩu mới \n \tkhông trùng với nhau!");
+                MyMessageBox msb = new MyMessageBox("Mật khẩu xác nhận và mật khẩu mới không trùng với nhau!");
                 msb.Show();
                 return false;
             }
