@@ -399,6 +399,8 @@ namespace QuanLyNhaHang.ViewModel
                     table.Status = 1;
                 }
             }
+            EmptyTables.Clear();
+            LoadEmptyTables();
         }
 
         #endregion
