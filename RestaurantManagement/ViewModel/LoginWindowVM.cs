@@ -21,11 +21,11 @@ namespace RestaurantManagement.ViewModel
         private SqlConnection sqlCon = null;
         public bool IsLoggedIn { get; set; }
         private string _UserName;
-        private string _MaNV;
+        private static string _MaNV;
         public string UserName { get => _UserName; set { _UserName = value; OnPropertyChanged(); } }
         private string _Password;
         public string Password { get => _Password; set { _Password = value; OnPropertyChanged(); } }
-        public string MaNV { get => _MaNV; set { _MaNV = value; OnPropertyChanged(); } }
+        public static string MaNV { get => _MaNV; set { _MaNV = value; } }
         public string Role { get; set; }
         public ICommand CloseLoginCM { get; set; }
         public ICommand LoginCM { get; set; }

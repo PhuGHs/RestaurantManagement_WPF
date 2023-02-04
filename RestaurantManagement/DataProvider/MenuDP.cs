@@ -73,7 +73,7 @@ namespace QuanLyNhaHang.DataProvider
             }
         }
 
-        public void PayABill(Int16 soban, Decimal sum)
+        public void PayABill(Int16 soban, Decimal sum, string MaNV)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace QuanLyNhaHang.DataProvider
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandText = "Exec PAY_A_BILL_PD @trigia, @manv, @soban, @ngayHD, @trangthai";
                 cmd.Parameters.AddWithValue("@trigia", sum);
-                cmd.Parameters.AddWithValue("@manv", "NV01");
+                cmd.Parameters.AddWithValue("@manv", MaNV);
                 cmd.Parameters.AddWithValue("@soban", soban);
                 cmd.Parameters.AddWithValue("@ngayHD", DateTime.Now);
                 cmd.Parameters.AddWithValue("@trangthai", "Chưa trả");

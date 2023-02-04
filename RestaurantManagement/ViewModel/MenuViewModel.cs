@@ -21,6 +21,7 @@ using System.Windows.Data;
 using System.ComponentModel;
 using TinhTrangBan.Models;
 using System.Windows;
+using RestaurantManagement.ViewModel;
 
 namespace QuanLyNhaHang.ViewModel
 {
@@ -28,7 +29,6 @@ namespace QuanLyNhaHang.ViewModel
     {
         public MenuViewModel()
         {
-            //                                                                                      CHỈ LOAD NHỮNG BÀN CÒN TRỐNG
             //LoadMenu
             LoadMenu();
             Tables = MenuDP.Flag.GetTables();
@@ -84,7 +84,8 @@ namespace QuanLyNhaHang.ViewModel
                         }
                         //FILL CTHD AFTER INFORM CHEF ORDERED DISHES
                         //FIX AFTER 
-                        MenuDP.Flag.PayABill(Convert.ToInt16(SelectedTable.NumOfTable), DecSubtotal);
+                        MaNV = getMaNV();
+                        MenuDP.Flag.PayABill(Convert.ToInt16(SelectedTable.NumOfTable), DecSubtotal, MaNV);
                         foreach (SelectedMenuItem orderdish in SelectedItems)
                         {
                             MenuDP.Flag.Fill_CTHD(orderdish.ID, orderdish.Quantity);
@@ -98,10 +99,6 @@ namespace QuanLyNhaHang.ViewModel
                     else if (SelectedTable == null)
                     {
                         mess = "Bạn chưa chọn bàn";
-                    }
-                    else
-                    {
-                        
                     }
                 }
                 catch (Exception ex)
@@ -131,6 +128,7 @@ namespace QuanLyNhaHang.ViewModel
         private decimal dec_subtotal = 0;
         private string str_subtotal = "0 VND";
         private string _searchText;
+        private string MaNV;
         #endregion
 
         #region properties
@@ -288,6 +286,11 @@ namespace QuanLyNhaHang.ViewModel
         private async Task LoadMenu()
         {
             _menuItems = await MenuDP.Flag.ConvertToCollection();
+        }
+
+        private string getMaNV()
+        {
+            return LoginWindowVM.MaNV;
         }
 
         #endregion

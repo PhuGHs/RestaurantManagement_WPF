@@ -40,7 +40,7 @@ namespace QuanLyNhaHang.ViewModel
                 if(loginVM.IsLoggedIn)
                 {
                     Navigator = new Navigator(loginVM.Role);
-                    CaiDatViewModel = new CaiDatViewModel(loginVM.MaNV, loginVM.UserName, loginVM.Password, loginVM.Role);
+                    CaiDatViewModel = new CaiDatViewModel(LoginWindowVM.MaNV, loginVM.UserName, loginVM.Password, loginVM.Role);
                     p.Show();
                 }
                 else
@@ -63,6 +63,7 @@ namespace QuanLyNhaHang.ViewModel
         CaiDatViewModel caiDatViewModel;
         HeaderViewModel headerViewModel;
         Navigator navigator;
+        public string MaNV;
         public ICommand LoadWindowCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
         public CaiDatViewModel CaiDatViewModel
