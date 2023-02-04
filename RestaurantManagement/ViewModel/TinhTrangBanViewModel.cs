@@ -203,9 +203,8 @@ namespace QuanLyNhaHang.ViewModel
                 {
                     if (table.Status == 0)
                     {
-                        table.Coloroftable = "Red";
-                        table.Status = 1;
-                        TinhTrangBanDP.Flag.UpdateTable(table.ID, false);
+                        table.Coloroftable = "Green";
+                        table.Status = 0;
                         
                     }
                     else
@@ -400,6 +399,8 @@ namespace QuanLyNhaHang.ViewModel
                     table.Status = 1;
                 }
             }
+            EmptyTables.Clear();
+            LoadEmptyTables();
         }
 
         #endregion

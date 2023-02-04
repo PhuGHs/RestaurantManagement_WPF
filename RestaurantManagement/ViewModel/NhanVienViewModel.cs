@@ -149,7 +149,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 if (!String.IsNullOrEmpty(Account))
                 {
-                    cmd.CommandText = "INSERT INTO TAIKHOAN VALUES('" + Account + "', '" + Password + "', 'Staff', '" + ID + "')";
+                    cmd.CommandText = "INSERT INTO TAIKHOAN(ID, MatKhau, Quyen, MaNV) VALUES('" + Account + "', '" + Password + "', 'nhan vien', '" + ID + "')";
                     cmd.ExecuteNonQuery();
                 }    
                 if (result > 0)
