@@ -218,7 +218,7 @@ namespace QuanLyNhaHang.ViewModel
                 }
             }
         }
-        public void PrintBill(int BillID)
+        public void PrintBill(int BillID, int TableID)
         {
             using (SqlConnection con = new SqlConnection(connectstring))
             {
@@ -253,7 +253,7 @@ namespace QuanLyNhaHang.ViewModel
                     {
                         SaveFileDialog sfd = new SaveFileDialog();
                         sfd.Filter = "PDF (*.pdf)|*.pdf";
-                        sfd.FileName = "Hóa đơn ngày " + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year;
+                        sfd.FileName = "Mã hóa đơn " + BillID.ToString() + " ngày " + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year;
                         if (sfd.ShowDialog() == DialogResult.OK)
                         {
                             if (File.Exists(sfd.FileName))
@@ -296,7 +296,10 @@ namespace QuanLyNhaHang.ViewModel
                                     Document pdfDoc = new Document(PageSize.A4, 50f, 50f, 40f, 40f);
                                     PdfWriter.GetInstance(pdfDoc, stream);
                                     pdfDoc.Open();
-                                    pdfDoc.Add(new Paragraph("                                            HÓA ĐƠN " + DateTime.Now.Day.ToString() + "/" + DateTime.Now.Month.ToString() + "/" + DateTime.Now.Year.ToString(), f));
+                                    pdfDoc.Add(new Paragraph("                                                 HÓA ĐƠN ", f));
+                                    pdfDoc.Add(new Paragraph("    "));
+                                    pdfDoc.Add(new Paragraph("Số bàn: " + TableID.ToString() + "                                                                    Mã hóa đơn: " + BillID.ToString(), f));
+                                    pdfDoc.Add(new Paragraph("Thời gian: " + DateTime.Now.Day.ToString() + "/" + DateTime.Now.Month.ToString() + "/" + DateTime.Now.Year.ToString() + " " + DateTime.Now.TimeOfDay.ToString(), f));
                                     pdfDoc.Add(new Paragraph("    "));
                                     pdfDoc.Add(pdfTable);
                                     pdfDoc.Add(new Paragraph("Tổng cộng:                                                                    " + SumofBill, f));
@@ -339,7 +342,7 @@ namespace QuanLyNhaHang.ViewModel
                     TinhTrangBanDP.Flag.UpdateTable(table.ID, true);
                     TinhTrangBanDP.Flag.UpdateBillStatus(table.Bill_ID);
 
-                    PrintBill(table.Bill_ID);
+                    PrintBill(table.Bill_ID, table.ID);
                     Dec_sumofbill = 0;
                     SumofBill = String.Format("{0:0,0 VND}", Dec_sumofbill);
                     SelectedItems.Clear();
