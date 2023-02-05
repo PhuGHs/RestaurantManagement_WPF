@@ -127,7 +127,7 @@ namespace QuanLyNhaHang.ViewModel
                 reader.Close();
                 for (int i = 0; i < listTenSP.Count(); i++)
                 {
-                    cmd.CommandText = "UPDATE KHO SET TonDu = TonDu - " + listSoLuong[i] + " WHERE TenSanPham = N'" + listTenSP[i] + "'";
+                    cmd.CommandText = "UPDATE KHO SET TonDu = TonDu - " + listSoLuong[i] * DoneSelected.SoLuong + " WHERE TenSanPham = N'" + listTenSP[i] + "'";
                     cmd.ExecuteNonQuery();
                 }
                 GetListDone();
