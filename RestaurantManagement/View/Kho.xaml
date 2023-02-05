@@ -193,7 +193,7 @@
                                       Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBoxItem>
-                                    Kg
+                                    Gam
                                 </ComboBoxItem>
                                 <ComboBoxItem>
                                     Chai
@@ -203,6 +203,15 @@
                                 </ComboBoxItem>
                                 <ComboBoxItem>
                                     Túi
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Con
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Lát
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Cây
                                 </ComboBoxItem>
                             </ComboBox>
                         </Grid>

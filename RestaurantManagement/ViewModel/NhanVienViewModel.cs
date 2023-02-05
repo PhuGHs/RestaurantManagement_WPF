@@ -44,6 +44,7 @@ namespace QuanLyNhaHang.ViewModel
 
                     IDBeforeEdit = ID;
                     AccBeforeEdit = Account;
+                    PosBeforeEdit = Position;
                 }
                 OnPropertyChanged();
             }
@@ -96,6 +97,7 @@ namespace QuanLyNhaHang.ViewModel
 
         string IDBeforeEdit;
         string AccBeforeEdit;
+        string PosBeforeEdit;
         public ICommand AddCM { get; set; }
         public ICommand EditCM { get; set; }
         public ICommand DeleteCM { get; set; }
@@ -185,6 +187,9 @@ namespace QuanLyNhaHang.ViewModel
                 if (!isNumber(Phone)) return false;
                 if ((!String.IsNullOrEmpty(Account) && String.IsNullOrEmpty(Password)) || (String.IsNullOrEmpty(Account) && !String.IsNullOrEmpty(Password))) return false;
                 
+                if (PosBeforeEdit == "Quản lý" && PosBeforeEdit != Position) return false;
+                if (PosBeforeEdit != Position && Position == "Quản lý") return false;
+
                 foreach(NhanVien item in ListStaff)
                 {
                     if (ID == item.MaNV) return true;
@@ -268,6 +273,7 @@ namespace QuanLyNhaHang.ViewModel
             DeleteCM = new RelayCommand<object>((p) =>
             {
                 if (Selected == null) return false;
+                if (Selected.ChucVu == "Quản lý") return false;
                 return true;
             }, (p) =>
             {

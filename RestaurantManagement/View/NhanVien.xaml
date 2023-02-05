@@ -150,6 +150,9 @@
                                       Margin="15 20 5 23"
                                       Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBoxItem>
+                                    Quản lý
+                                </ComboBoxItem>
+                                <ComboBoxItem>
                                     Bếp trưởng
                                 </ComboBoxItem>
                                 <ComboBoxItem>
