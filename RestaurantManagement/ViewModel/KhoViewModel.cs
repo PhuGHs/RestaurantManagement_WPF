@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using QuanLyNhaHang.Models;
 using System.Windows.Forms;
 using System.IO;
+using System.Configuration;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using Document = iTextSharp.text.Document;
@@ -117,7 +118,7 @@ namespace QuanLyNhaHang.ViewModel
         public ICommand CheckCM { get; set; }
 
 
-        private string strCon = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyNhaHang;Integrated Security=True";
+        private string strCon = ConfigurationManager.ConnectionStrings["QuanLyNhaHang"].ConnectionString;
         private SqlConnection sqlCon = null;
 
 

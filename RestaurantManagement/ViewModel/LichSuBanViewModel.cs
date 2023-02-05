@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Data;
+using System.Configuration;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Win32;
 using OfficeOpenXml;
@@ -115,7 +116,7 @@ namespace QuanLyNhaHang.ViewModel
                 ListViewDisplay(strQuery);
             }
         }
-        private string strCon = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyNhaHang;Integrated Security=True";
+        private string strCon = ConfigurationManager.ConnectionStrings["QuanLyNhaHang"].ConnectionString;
         private SqlConnection sqlCon = null;
 
 

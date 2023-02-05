@@ -9,6 +9,7 @@ using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.IO;
+using System.Configuration;
 using System.Windows.Forms;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 
@@ -53,7 +54,7 @@ namespace QuanLyNhaHang.ViewModel
         private ObservableCollection<ChamCong> _ListCheck;
         public ObservableCollection<ChamCong> ListCheck { get => _ListCheck; set { _ListCheck = value; OnPropertyChanged(); } }
 
-        private string strCon = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyNhaHang;Integrated Security=True";
+        private string strCon = ConfigurationManager.ConnectionStrings["QuanLyNhaHang"].ConnectionString;
         private SqlConnection sqlCon = null;
 
         public ICommand CloseCM { get; set; }
