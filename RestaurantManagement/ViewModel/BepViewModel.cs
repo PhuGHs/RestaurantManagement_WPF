@@ -191,7 +191,7 @@ namespace QuanLyNhaHang.ViewModel
                 string tenMon = reader.GetString(6);
                 string ngayCB = reader.GetDateTime(4).ToShortDateString();
                 long maDM = reader.GetInt32(0);
-                ListDone.Add(new Bep(maDM, maMon, soBan, soLuong, ngayCB, "Đang chế biến", tenMon));
+                ListDone.Add(new Bep(maDM, maMon, soLuong, soBan, ngayCB, "Đang chế biến", tenMon));
                 //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
                 //view.SortDescriptions.Add(new SortDescription("SELECT * FROM CHEBIEN ORDER BY NgayCB", ListSortDirection.Ascending));
 
@@ -222,7 +222,7 @@ namespace QuanLyNhaHang.ViewModel
                 string tenMon = reader.GetString(6);
                 string ngayCB = reader.GetDateTime(4).ToShortDateString();
                 long maDM = reader.GetInt32(0);
-                ListOrder.Add(new Bep(maDM, maMon, soBan, soLuong, ngayCB, "XONG", tenMon));
+                ListOrder.Add(new Bep(maDM, maMon, soLuong, soBan, ngayCB, "XONG", tenMon));
                 //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
             }
             reader.Close();
