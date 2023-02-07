@@ -7,8 +7,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:i1="clr-namespace:Microsoft.VisualBasic;assembly=Microsoft.VisualBasic.Core"
       xmlns:local="clr-namespace:QuanLyNhaHang.View" x:Class="QuanLyNhaHang.View.LichSuBan"
-       xmlns:vm="clr-namespace:QuanLyNhaHang.ViewModel"
-    
+      xmlns:vm="clr-namespace:QuanLyNhaHang.ViewModel"
       mc:Ignorable="d"
       d:DesignHeight="660"
       d:DesignWidth="1060"
@@ -19,203 +18,126 @@
     <UserControl.DataContext>
         <vm:LichSuBanViewModel />
     </UserControl.DataContext>
-
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="485*"/>
-            <ColumnDefinition Width="186*"/>
-            <ColumnDefinition Width="729*"/>
-        </Grid.ColumnDefinitions>
+    <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="10*" />
-            <RowDefinition Height="90*" />
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
-
-        <StackPanel Grid.Row="0"
-                    Orientation="Horizontal" Grid.ColumnSpan="3">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="338" />
-                    <ColumnDefinition Width="662"/>
-                    <ColumnDefinition Width="400" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0"
-                       
-                            Orientation="Horizontal" Background="#FFFDFDFD" Grid.ColumnSpan="3" Margin="0,0,200,0">
-
-                    <TextBox materialDesign:HintAssist.Hint="Tìm kiếm tên món"
-                             x:Name="FilterBox"
-                              Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"
-                             FontSize="18"
-                             Foreground="#DD000000"
-                             FontFamily="Comfortaa"
-                             AllowDrop="True"
-                             Width="300"
-                             Height="31"
-                             Padding="0"
-                             Margin="20,0,0,0"  Background="White" SelectionTextBrush="White"  />
-
-                    <ComboBox Height="30"
-                              Width="110"
-                              Margin="10 0 0 0"
-                              Padding="0,10,10,0"
-                              FontSize="14"
-                              SelectedIndex="1"
-                              x:Name="Filterbox"
-                              SelectedItem="{Binding SelectedItemFilter}" SelectionChanged="Filterbox_SelectionChanged">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding CheckItemFilterCM}"
-                                                       CommandParameter="{Binding ElementName=Filterbox}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <ComboBoxItem Content="Toàn bộ" />
-                        <ComboBoxItem Content="Theo ngày" />
-                        <ComboBoxItem Content="Theo tháng" />
-                    </ComboBox>
-                    <ComboBox Height="30"
-                              Width="100"
-                              Margin="10 0 0 0"
-                              Padding="0,10,10,0"
-                              Visibility="Collapsed"
-                              x:Name="cbbmonth"
-                              SelectedIndex="{Binding SelectedMonth, Mode=TwoWay}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding SelectedMonthCM}"
-                                                       CommandParameter="{Binding ElementName=cbbmonth}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <ComboBoxItem Content="Tháng 1" />
-                        <ComboBoxItem Content="Tháng 2" />
-                        <ComboBoxItem Content="Tháng 3" />
-                        <ComboBoxItem Content="Tháng 4" />
-                        <ComboBoxItem Content="Tháng 5" />
-                        <ComboBoxItem Content="Tháng 6" />
-                        <ComboBoxItem Content="Tháng 7" />
-                        <ComboBoxItem Content="Tháng 8" />
-                        <ComboBoxItem Content="Tháng 9" />
-                        <ComboBoxItem Content="Tháng 10" />
-                        <ComboBoxItem Content="Tháng 11" />
-                        <ComboBoxItem Content="Tháng 12" />
-                    </ComboBox>
-                    <DatePicker Height="30"
-                                Width="130"
-                                FontSize="15"
-                                Margin="10 0 0 0"
-                                Padding="0,10,10,0"
-                                Visibility="Visible"
-                                x:Name="timepicker"
-                                SelectedDate="{Binding SelectedDate, Mode=TwoWay}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectedDateChanged">
-                                <i:InvokeCommandAction Command="{Binding SelectedDateExportListCM}"
-                                                       CommandParameter="{Binding ElementName=timepicker}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </DatePicker>
-                </StackPanel>
-
-                <StackPanel Grid.Column="2"
-                            Orientation="Horizontal">
-                    <Button Height="40"
-                            Width="130"
-                            FontFamily="arial"
-                            FontWeight="Bold"
-                            Margin="-150,0,0,0"
-                            Padding="0"
-                            Content="Xuất file Excel"
-                            materialDesign:ButtonAssist.CornerRadius="8"
-                            Command="{Binding ExportFileCM}" Background="#FF2DA356">
-                    </Button>
-
-                </StackPanel>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <TextBox materialDesign:HintAssist.Hint="Tìm kiếm tên món"
+                         x:Name="FilterBox"
+                         Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"
+                         FontSize="18"
+                         AllowDrop="True"
+                         Width="300"
+                         Height="31" />
             </Grid>
-        </StackPanel>
-
-        <StackPanel  Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Left" Width="1060" Background="#FFF7F7F7">
-            <Border Background="White"
-                    CornerRadius="20"
-                    Grid.Column="1"
-                    Margin="10" Width="1051">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          Grid.Column="1">
-                    <ListView  x:Name="_ListView"
-                 
-                       Height="551"
-                       ItemsSource="{Binding ListProduct, UpdateSourceTrigger=PropertyChanged}"
-                       HorizontalContentAlignment="Stretch" Foreground="#DD080303" BorderBrush="{x:Null}" Background="#FFF1F0F0" Width="1060" d:ItemsSource="{d:SampleData ItemCount=5}" IsSynchronizedWithCurrentItem="False">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Mã đơn"
-                                        Width="130">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock  Text="{Binding SoHD}"
-                                                FontSize="16"
-                                               
-                                                Margin="10,0,0,0" />
-
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="Tên sản phẩm"
-                                        Width="300">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock  Text="{Binding TenMon}"
-                                                FontSize="16"
-                                                Margin="10,0,0,0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="Số lượng"
-                                        Width="200">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock  Text="{Binding SoLuong}"
-                                                FontSize="16"
-                                                Margin="20,0,0,0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="Thành tiền"
-                                        Width="200">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock  Text="{Binding TriGia}"
-                                                FontSize="16"
-                                                Margin="10,0,0,0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Ngày nhập"
-                                        Width="200">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock  Text="{Binding ngayHD, StringFormat=dd/MM/yyyy HH:mm:ss}"
-                                                FontSize="16"
-                                                Margin="10,0,0,0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header=""
-                                        Width="200">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-
-                                            <Image Source="/images/info.png"  Stretch="UniformToFill"/>
-
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </ScrollViewer>
-            </Border>
-        </StackPanel>
+            <Grid Grid.Column="1">
+                <ComboBox Height="30"
+                          Width="120"
+                          Margin="10"
+                          FontSize="15"
+                          SelectedIndex="1"
+                          x:Name="Filterbox"
+                          SelectedItem="{Binding SelectedItemFilter}" 
+                          SelectionChanged="Filterbox_SelectionChanged">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding CheckItemFilterCM}"
+                                                   CommandParameter="{Binding ElementName=Filterbox}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ComboBoxItem Content="Toàn bộ" />
+                    <ComboBoxItem Content="Theo ngày" />
+                    <ComboBoxItem Content="Theo tháng" />
+                </ComboBox>
+            </Grid>
+            <Grid Grid.Column="2">
+                <ComboBox Height="30"
+                          Width="100"
+                          Margin="10"
+                          FontSize="15"
+                          Visibility="Collapsed"
+                          x:Name="cbbmonth"
+                          SelectedIndex="{Binding SelectedMonth, Mode=TwoWay}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectedMonthCM}"
+                                                   CommandParameter="{Binding ElementName=cbbmonth}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ComboBoxItem Content="Tháng 1" />
+                    <ComboBoxItem Content="Tháng 2" />
+                    <ComboBoxItem Content="Tháng 3" />
+                    <ComboBoxItem Content="Tháng 4" />
+                    <ComboBoxItem Content="Tháng 5" />
+                    <ComboBoxItem Content="Tháng 6" />
+                    <ComboBoxItem Content="Tháng 7" />
+                    <ComboBoxItem Content="Tháng 8" />
+                    <ComboBoxItem Content="Tháng 9" />
+                    <ComboBoxItem Content="Tháng 10" />
+                    <ComboBoxItem Content="Tháng 11" />
+                    <ComboBoxItem Content="Tháng 12" />
+                </ComboBox>
+                <DatePicker Height="30"
+                            Width="130"
+                            FontSize="15"
+                            Margin="10"
+                            Visibility="Visible"
+                            x:Name="timepicker"
+                            SelectedDate="{Binding SelectedDate, Mode=TwoWay}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectedDateChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectedDateExportListCM}"
+                                                   CommandParameter="{Binding ElementName=timepicker}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </DatePicker>
+            </Grid>
+            <Grid Grid.Column="3">
+                <Button Height="40"
+                        Width="130"
+                        Padding="0"
+                        Content="Xuất file Excel"
+                        materialDesign:ButtonAssist.CornerRadius="8"
+                        Command="{Binding ExportFileCM}" 
+                        Background="#FF2DA356">
+                </Button>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ListView ItemsSource="{Binding ListProduct}"
+                          FontSize="16"
+                          Margin="20 0 20 20">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding SoHD}"
+                                            Width="200"
+                                            Header="Mã đơn" />
+                            <GridViewColumn DisplayMemberBinding="{Binding TenMon}"
+                                            Width="280"
+                                            Header="Tên sản phẩm" />
+                            <GridViewColumn DisplayMemberBinding="{Binding SoLuong}"
+                                            Width="150"
+                                            Header="Số lượng" />
+                            <GridViewColumn DisplayMemberBinding="{Binding TriGia}"
+                                            Width="190"
+                                            Header="Thành tiền" />
+                            <GridViewColumn DisplayMemberBinding="{Binding ngayHD}"
+                                            Width="190"
+                                            Header="Ngày hóa đơn" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </UserControl>

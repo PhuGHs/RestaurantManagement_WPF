@@ -293,24 +293,24 @@ namespace QuanLyNhaHang.ViewModel
         {
             ListProduct = new ObservableCollection<LichSuBanModel>();
             OpenConnect();
+
             DateTime dateToday = SelectedDate;
 
             string strDate = dateToday.ToString("yyyy-MM-dd");
 
-
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where NgayHD = '" + strDate + "'";
+            cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where CONVERT(date, NgayHD, 103) = '" + strDate + "'";
 
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
             ListProduct.Clear();
             while (reader.Read())
             {
-                int madon = reader.GetInt32(0);
+                int madon = reader.GetInt16(0);
                 string mamon = reader.GetString(1);
                 string ten = reader.GetString(2);
-                int soluong = reader.GetInt32(3);
+                int soluong = reader.GetInt16(3);
                 string gia = (reader.GetSqlMoney(4) * soluong).ToString();
                 string thoigian = reader.GetDateTime(5).ToShortDateString();
 
