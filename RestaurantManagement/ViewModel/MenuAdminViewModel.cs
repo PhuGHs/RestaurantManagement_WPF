@@ -202,7 +202,7 @@ namespace QuanLyNhaHang.ViewModel
                         {
                             if (CheckIfIngredientListInclude0InQuantity())
                             {
-                                message = "Lượng nguyên liệu không thể bằng 0";
+                                message = "Lượng nguyên liệu phải lớn hơn 0";
                             }
                             else
                             {
@@ -217,7 +217,7 @@ namespace QuanLyNhaHang.ViewModel
                         {
                             if (CheckIfIngredientListInclude0InQuantity())
                             {
-                                message = "Lượng nguyên liệu không thể bằng 0";
+                                message = "Lượng nguyên liệu phải lớn hơn 0";
                             }
                             else
                             {
@@ -234,12 +234,20 @@ namespace QuanLyNhaHang.ViewModel
                     }
                     catch (SqlException ex)
                     {
+                        int n = 0;
                         foreach (ChiTietMon ctm in Ingredients_ForDishes)
                         {
-                            MenuDP.Flag.UpdateIngredients(ctm);
+                            n = MenuDP.Flag.UpdateIngredients(ctm);
+                            if(n == 0)
+                            {
+                                MenuDP.Flag.SaveIngredients(ctm);
+                            }
+                            foreach (ChiTietMon x in Deleted_Ingredients)
+                            {
+                                MenuDP.Flag.RemoveIngredients(x);
+                            }
                         }
                         message = $"Đã thêm và cập nhật nguyên liệu cho món {MenuItem.FoodName}";
-
 
                         return;
                     }
@@ -376,7 +384,7 @@ namespace QuanLyNhaHang.ViewModel
         {
             foreach(ChiTietMon ctm in Ingredients_ForDishes)
             {
-                if(ctm.SoLuong == 0)
+                if(ctm.SoLuong <= 0)
                 {
                     return true;
                 }

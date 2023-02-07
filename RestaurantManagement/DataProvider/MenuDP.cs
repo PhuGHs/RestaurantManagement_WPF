@@ -302,8 +302,9 @@ namespace QuanLyNhaHang.DataProvider
                 DBClose();
             }
         }
-        public void UpdateIngredients(ChiTietMon ctm)
+        public int UpdateIngredients(ChiTietMon ctm)
         {
+            int n = 0;
             try
             {
                 DBOpen();
@@ -314,12 +315,13 @@ namespace QuanLyNhaHang.DataProvider
                 cmd.Parameters.AddWithValue("@mamon", ctm.MaMon);
                 cmd.Connection = SqlCon;
 
-                cmd.ExecuteNonQuery();
+                n = cmd.ExecuteNonQuery();
             }
             finally
             {
                 DBClose();
             }
+            return n;
         }
         public void RemoveIngredients(ChiTietMon ctm)
         {
