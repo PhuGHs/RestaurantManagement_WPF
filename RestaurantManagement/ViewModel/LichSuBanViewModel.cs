@@ -108,11 +108,11 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
                 if (!String.IsNullOrEmpty(Search))
                 {
-                    strQuery = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon WHERE TenMon LIKE N'%" + Search + "%'";
+                    strQuery = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon WHERE TenMon LIKE N'%" + Search + "%'";
                   
                 }
                 else
-                    strQuery = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon";
+                    strQuery = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon";
                 ListViewDisplay(strQuery);
             }
         }
@@ -135,7 +135,7 @@ namespace QuanLyNhaHang.ViewModel
             ListProduct = new ObservableCollection<LichSuBanModel>();
 
 
-            ListViewDisplay("select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon");
+            ListViewDisplay("select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon");
             OpenConnect();
 
             GetCurrentDate = DateTime.Today;
@@ -250,7 +250,7 @@ namespace QuanLyNhaHang.ViewModel
                 string mamon = reader.GetString(1);
                 string ten = reader.GetString(2);
                 int soluong = reader.GetInt16(3);
-                string gia = reader.GetSqlMoney(4).ToString();
+                string gia = (reader.GetSqlMoney(4) * soluong).ToString();
                 string thoigian = reader.GetDateTime(5).ToShortDateString();
 
                 ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));
@@ -269,7 +269,7 @@ namespace QuanLyNhaHang.ViewModel
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where MONTH(NgayHD) = '" + (SelectedMonth + 1 ) + "'";
+            cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where MONTH(NgayHD) = '" + (SelectedMonth + 1 ) + "'";
 
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
@@ -280,7 +280,7 @@ namespace QuanLyNhaHang.ViewModel
                 string mamon = reader.GetString(1);
                 string ten = reader.GetString(2);
                 int soluong = reader.GetInt16(3);
-                string gia = reader.GetSqlMoney(4).ToString();
+                string gia = (reader.GetSqlMoney(4) * soluong).ToString();
                 string thoigian = reader.GetDateTime(5).ToShortDateString();
 
                 ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));
@@ -293,25 +293,25 @@ namespace QuanLyNhaHang.ViewModel
         {
             ListProduct = new ObservableCollection<LichSuBanModel>();
             OpenConnect();
+
             DateTime dateToday = SelectedDate;
 
             string strDate = dateToday.ToString("yyyy-MM-dd");
 
-
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where NgayHD = '" + strDate + "'";
+            cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where CONVERT(date, NgayHD, 103) = '" + strDate + "'";
 
             cmd.Connection = sqlCon;
             SqlDataReader reader = cmd.ExecuteReader();
             ListProduct.Clear();
             while (reader.Read())
             {
-                int madon = reader.GetInt32(0);
+                int madon = reader.GetInt16(0);
                 string mamon = reader.GetString(1);
                 string ten = reader.GetString(2);
-                int soluong = reader.GetInt32(3);
-                string gia = reader.GetSqlMoney(4).ToString();
+                int soluong = reader.GetInt16(3);
+                string gia = (reader.GetSqlMoney(4) * soluong).ToString();
                 string thoigian = reader.GetDateTime(5).ToShortDateString();
 
                 ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));
@@ -328,7 +328,7 @@ namespace QuanLyNhaHang.ViewModel
             {
                 case "Toàn bộ":
                     {
-                        ListViewDisplay("select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon");
+                        ListViewDisplay("select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon");
                         OpenConnect();
                         CloseConnect();
 
@@ -344,7 +344,7 @@ namespace QuanLyNhaHang.ViewModel
                      
                         SqlCommand cmd = new SqlCommand();
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where NgayHD = '" + strDate + "'";
+                        cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where NgayHD = '" + strDate + "'";
                       
                         cmd.Connection = sqlCon;
                         SqlDataReader reader = cmd.ExecuteReader();
@@ -355,7 +355,7 @@ namespace QuanLyNhaHang.ViewModel
                             string mamon = reader.GetString(1);
                             string ten = reader.GetString(2);
                             int soluong = reader.GetInt32(3);
-                            string gia = reader.GetSqlMoney(4).ToString();
+                            string gia = (reader.GetSqlMoney(4) * soluong).ToString();
                             string thoigian = reader.GetDateTime(5).ToShortDateString();
 
                             ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));
@@ -370,7 +370,7 @@ namespace QuanLyNhaHang.ViewModel
                         OpenConnect();
                         SqlCommand cmd = new SqlCommand();
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, TriGia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where MONTH(NgayHD) = '" + (SelectedMonth + 1) + "'";
+                        cmd.CommandText = "select ct.SoHD, mn.MaMon, TenMon, SoLuong, mn.Gia, NgayHD from HOADON hd join CTHD ct on hd.SoHD = ct.SoHD join MENU mn on ct.MaMon = mn.MaMon where MONTH(NgayHD) = '" + (SelectedMonth + 1) + "'";
 
                         cmd.Connection = sqlCon;
                         SqlDataReader reader = cmd.ExecuteReader();
@@ -381,7 +381,7 @@ namespace QuanLyNhaHang.ViewModel
                             string mamon = reader.GetString(1);
                             string ten = reader.GetString(2);
                             int soluong = reader.GetInt16(3);
-                            string gia = reader.GetSqlMoney(4).ToString();
+                            string gia = (reader.GetSqlMoney(4) * soluong).ToString();
                             string thoigian = reader.GetDateTime(5).ToShortDateString();
 
                             ListProduct.Add(new LichSuBanModel(madon, mamon, ten, soluong, gia, thoigian));

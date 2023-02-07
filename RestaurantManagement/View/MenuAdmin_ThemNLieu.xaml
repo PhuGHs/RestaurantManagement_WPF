@@ -10,6 +10,7 @@
         xmlns:local="clr-namespace:RestaurantManagement.View"
         WindowStyle="None"
         x:Name="IngreWindow"
+        TextElement.FontFamily="Comfortaa Light"
         mc:Ignorable="d"
         Height="600" Width="900" WindowStartupLocation="CenterScreen">
     <Grid>
