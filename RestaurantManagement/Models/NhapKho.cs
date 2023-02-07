@@ -16,15 +16,15 @@ namespace QuanLyNhaHang.Models
         public string DonVi { get => _DonVi; set => _DonVi = value; }
         private string _DonGia;
         public string DonGia { get => _DonGia; set => _DonGia = value; }
-        private int _SoLuong;
-        public int SoLuong { get => _SoLuong; set => _SoLuong = value; }
+        private string _SoLuong;
+        public string SoLuong { get => _SoLuong; set => _SoLuong = value; }
         private string _NgayNhap;
         public string NgayNhap { get => _NgayNhap; set => _NgayNhap = value; }
         private string _NguonNhap;
         public string NguonNhap { get => _NguonNhap; set => _NguonNhap = value; }
         private string _LienLac;
         public string LienLac { get => _LienLac; set => _LienLac = value; }
-        public NhapKho(string ma, string ten, string donvi, string dongia, int soluong, string ngaynhap, string nguon, string lienlac)
+        public NhapKho(string ma, string ten, string donvi, string dongia, string soluong, string ngaynhap, string nguon, string lienlac)
         {
             MaNhap = ma;
             TenSP = ten;

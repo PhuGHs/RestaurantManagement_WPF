@@ -86,8 +86,8 @@
                                                 Width="130"
                                                 Header="Đơn vị" />
                                 <GridViewColumn DisplayMemberBinding="{Binding DonGia}"
-                                                Width="180"
-                                                Header="Đơn giá (VNĐ)" />
+                                                Width="190"
+                                                Header="Đơn giá(VNĐ)" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -202,7 +202,16 @@
                                     Quả
                                 </ComboBoxItem>
                                 <ComboBoxItem>
-                                    Túi
+                                    Gói
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Con
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Lát
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Cây
                                 </ComboBoxItem>
                             </ComboBox>
                         </Grid>
@@ -241,7 +250,7 @@
                                     Margin="10 5 5 10"
                                     Foreground="White"
                                     FontSize="16"
-                                    FontFamily="Comfortaa Light"
+                                    FontFamily="Comfortaa"
                                     BorderThickness="0"
                                     Cursor="Hand"
                                     Content="Nhập">
@@ -253,7 +262,7 @@
                                     Margin="5 5 5 10"
                                     Foreground="White"
                                     FontSize="16"
-                                    FontFamily="Comfortaa Light"
+                                    FontFamily="Comfortaa"
                                     BorderThickness="0"
                                     Cursor="Hand"
                                     Content="Sửa">

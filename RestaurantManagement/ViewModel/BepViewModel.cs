@@ -105,7 +105,7 @@ namespace QuanLyNhaHang.ViewModel
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
                 {
-                    MyMessageBox msb = new MyMessageBox("Đã chễ biến xong!");
+                    MyMessageBox msb = new MyMessageBox("Đã chế biến xong!");
                     msb.ShowDialog();
                 }
                 else
@@ -128,7 +128,7 @@ namespace QuanLyNhaHang.ViewModel
                 reader.Close();
                 for (int i = 0; i < listTenSP.Count(); i++)
                 {
-                    cmd.CommandText = "UPDATE KHO SET TonDu = TonDu - " + listSoLuong[i] + " WHERE TenSanPham = N'" + listTenSP[i] + "'";
+                    cmd.CommandText = "UPDATE KHO SET TonDu = TonDu - " + listSoLuong[i] * DoneSelected.SoLuong + " WHERE TenSanPham = N'" + listTenSP[i] + "'";
                     cmd.ExecuteNonQuery();
                 }
                 GetListDone();
@@ -192,7 +192,7 @@ namespace QuanLyNhaHang.ViewModel
                 string tenMon = reader.GetString(6);
                 string ngayCB = reader.GetDateTime(4).ToShortDateString();
                 long maDM = reader.GetInt32(0);
-                ListDone.Add(new Bep(maDM, maMon, soBan, soLuong, ngayCB, "Đang chế biến", tenMon));
+                ListDone.Add(new Bep(maDM, maMon, soLuong, soBan, ngayCB, "Đang chế biến", tenMon));
                 //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
                 //view.SortDescriptions.Add(new SortDescription("SELECT * FROM CHEBIEN ORDER BY NgayCB", ListSortDirection.Ascending));
 
@@ -223,7 +223,7 @@ namespace QuanLyNhaHang.ViewModel
                 string tenMon = reader.GetString(6);
                 string ngayCB = reader.GetDateTime(4).ToShortDateString();
                 long maDM = reader.GetInt32(0);
-                ListOrder.Add(new Bep(maDM, maMon, soBan, soLuong, ngayCB, "XONG", tenMon));
+                ListOrder.Add(new Bep(maDM, maMon, soLuong, soBan, ngayCB, "XONG", tenMon));
                 //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
             }
             reader.Close();

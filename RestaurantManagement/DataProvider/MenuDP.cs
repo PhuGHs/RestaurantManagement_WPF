@@ -207,7 +207,7 @@ namespace QuanLyNhaHang.DataProvider
                 foreach(DataRow dr in dt.Rows)
                 {
                     string tensp = dr["TenSanPham"].ToString();
-                    int tondu = Convert.ToInt32(dr["TonDu"]);
+                    float tondu = (float)Convert.ToDouble(dr["TonDu"]);
                     string donvi = dr["DonVi"].ToString();
                     string dongia = dr["DonGia"].ToString();
                     NLs.Add(new Kho(tensp, tondu, donvi, dongia));

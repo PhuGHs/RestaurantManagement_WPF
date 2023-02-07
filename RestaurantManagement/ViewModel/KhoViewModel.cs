@@ -76,8 +76,8 @@ namespace QuanLyNhaHang.ViewModel
         private string NameBeforeEdit;
         private string _Name;
         public string Name { get => _Name; set { _Name = value; OnPropertyChanged(); } }
-        private int _Count;
-        public int Count { get => _Count; set { _Count = value; OnPropertyChanged(); } }
+        private string _Count;
+        public string Count { get => _Count; set { _Count = value; OnPropertyChanged(); } }
         private string _Unit;
         public string Unit { get => _Unit; set { _Unit = value; OnPropertyChanged(); } }
         private string _Value;
@@ -137,7 +137,7 @@ namespace QuanLyNhaHang.ViewModel
             #region //add command
             AddCM = new RelayCommand<object>((p) =>
             {
-                if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
+                if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
                     return false;
                 OnPropertyChanged("ID");
 
@@ -157,7 +157,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 CloseConnect();
 
-                if (Count <= 0) return false;
+                if (Count == "0") return false;
                 if (!isMoney(Value)) return false;
                 if (SuplierInfo != null && !isNumber(SuplierInfo)) return false;
                 return true;
@@ -228,9 +228,9 @@ namespace QuanLyNhaHang.ViewModel
                     if (ID == item.MaNhap && Name == item.TenSP && Count == item.SoLuong && DateIn == item.NgayNhap && Value == item.DonGia && Unit == item.DonVi && Suplier == item.NguonNhap && SuplierInfo == item.LienLac)
                         return false;
                 }
-                if (string.IsNullOrEmpty(ID) || string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count.ToString()) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
+                if (string.IsNullOrEmpty(ID) || string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Count) || string.IsNullOrEmpty(DateIn.ToString()) || string.IsNullOrEmpty(Unit) || string.IsNullOrEmpty(Value))
                     return false;
-                if (Count <= 0) return false;
+                if (Count == "0") return false;
                 if (!isMoney(Value)) return false;
                 if (SuplierInfo != null && !isNumber(SuplierInfo)) return false;
                 foreach(NhapKho item in ListIn)
@@ -343,7 +343,7 @@ namespace QuanLyNhaHang.ViewModel
             {
                 OpenConnect();
 
-                string strQuery = "SELECT * FROM KHO WHERE (DonVi = N'Chai' AND TonDu <= 10) OR (DonVi = N'Kg' AND TonDu <= 5) OR (DonVi = N'Quả' AND TonDu <= 10) OR (DonVi = N'Túi' AND TonDu <= 10)";
+                string strQuery = "SELECT * FROM KHO WHERE (DonVi = N'Kg' AND TonDu <= 1) OR (DonVi != N'Gam' AND TonDu <= 5)";
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
@@ -477,7 +477,7 @@ namespace QuanLyNhaHang.ViewModel
             while (reader.Read())
             {
                 string ten = reader.GetString(0);
-                int tondu = reader.GetInt16(1);
+                float tondu = (float)reader.GetDouble(1);
                 string donvi = reader.GetString(2);
                 string dongia = reader.GetSqlMoney(3).ToString();
                 ListWareHouse.Add(new Kho(ten, tondu, donvi, dongia));
@@ -503,7 +503,7 @@ namespace QuanLyNhaHang.ViewModel
                 string ten = reader.GetString(1);
                 string donvi = reader.GetString(2);
                 string dongia = reader.GetSqlMoney(3).ToString();
-                int soluong = reader.GetInt16(4);
+                string soluong = reader.GetDouble(4).ToString();
                 string date = reader.GetDateTime(5).ToShortDateString();
                 string nguon = reader.GetString(6);
                 string lienlac = reader.GetString(7);
@@ -521,7 +521,7 @@ namespace QuanLyNhaHang.ViewModel
         {
             ID = "";
             Name = "";
-            Count = 0;
+            Count = "";
             Unit = "";
             Value = "";
             DateIn = "";
@@ -533,6 +533,7 @@ namespace QuanLyNhaHang.ViewModel
 
         private bool isNumber(string s)
         {
+            if (s == null) return false;
             for (int i = 0; i < s.Length; i++)
             {
                 if (s[i] < 48 || s[i] > 57) return false;
