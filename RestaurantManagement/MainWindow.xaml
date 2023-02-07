@@ -72,8 +72,8 @@
                 <uc:Navigator Grid.Row="1" DataContext="{Binding Navigator}" Visibility="{Binding AdminView}"/>
                 <Button Command="{Binding LogOutCommand}" CommandParameter="{Binding ElementName=Window}" Grid.Row="2" BorderThickness="0" Background="Transparent"  Height="40">
                     <StackPanel Orientation="Horizontal">
-                        <fa:IconImage Icon="RightFromBracket" Foreground="White"/>
-                        <TextBlock Margin="10 0 0 0" Text="Đăng xuất" VerticalAlignment="Center" FontSize="20"/>
+                        <fa:IconImage Icon="RightFromBracket" Foreground="#BAD7E9"/>
+                        <TextBlock Margin="10 0 0 0" Text="Đăng xuất" VerticalAlignment="Center" FontSize="20" Foreground="#BAD7E9"/>
                     </StackPanel>
                 </Button>
             </Grid>

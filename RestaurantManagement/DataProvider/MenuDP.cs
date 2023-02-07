@@ -219,6 +219,37 @@ namespace QuanLyNhaHang.DataProvider
             }
             return NLs;
         }
+
+        public ObservableCollection<ChiTietMon> getSumIngredients(ObservableCollection<SelectedMenuItem> arr)
+        {
+            ObservableCollection<ChiTietMon> ctm = new ObservableCollection<ChiTietMon>();
+            try
+            {
+                string fullQuery = string.Empty;
+                string outerquery = "select T.TenNL, SUM(T.SoLuong) as Tong from ( ";
+                string endquery = " ) as T group by T.TenNL";
+                string query = "select TenNL, SoLuong from CHITIETMON where ";
+                query += $"MaMon = '{arr[0].ID}'";
+                if(arr.Count > 1)
+                {
+                    for (int i = 1; i < arr.Count; i++)
+                    {
+                        query += $" or MaMon = '{arr[i].ID}'";
+                    }
+                }
+                fullQuery = outerquery + query + endquery;
+                DataTable dt = LoadInitialData(fullQuery);
+                foreach(DataRow dr in dt.Rows)
+                {
+                    ctm.Add(new ChiTietMon(dr["TenNL"].ToString(), Convert.ToInt32(dr["Tong"])));
+                }
+            } finally
+            {
+                DBClose();
+
+            }
+            return ctm;
+        }
         public ObservableCollection<ChiTietMon> GetIngredientsForDish(string MaMon)
         {
             ObservableCollection<ChiTietMon> Ingredients = new ObservableCollection<ChiTietMon>();

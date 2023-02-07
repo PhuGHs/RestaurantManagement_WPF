@@ -217,7 +217,7 @@
                                               HorizontalContentAlignment="Center">
                                         <ComboBox.ItemContainerStyle>
                                             <Style TargetType="ComboBoxItem">
-                                                <Setter Property="Foreground" Value="Black"/>
+                                                <Setter Property="Foreground" Value="White"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Status}" Value="0">
                                                         <Setter Property="Background" Value="Red"/>

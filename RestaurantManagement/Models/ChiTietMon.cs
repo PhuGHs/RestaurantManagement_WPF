@@ -22,5 +22,11 @@ namespace QuanLyNhaHang.Models
             _tenNL = TenNL;
             _soluong = SoLuong;
         }
+        
+        public ChiTietMon(string TenNL, int SoLuong)
+        {
+            _tenNL = TenNL;
+            _soluong= SoLuong;
+        }
     }
 }

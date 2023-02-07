@@ -32,6 +32,8 @@ namespace QuanLyNhaHang.ViewModel
             //LoadMenu
             LoadMenu();
             Tables = MenuDP.Flag.GetTables();
+            Kho = MenuDP.Flag.GetIngredients();
+            _selectedIngredientsName = new ObservableCollection<string>();
             _menuItemsView = new CollectionViewSource();
             _menuItemsView.Source = MenuItems;
             _menuItemsView.Filter += MenuItems_Filter;
@@ -64,10 +66,12 @@ namespace QuanLyNhaHang.ViewModel
             }, (p) =>
             {
                 string mess = "";
+                string tennl = String.Empty;
                 try
                 {
                     if (SelectedTable != null)
                     {
+                        HasEnoughIngredients();
                         if (SelectedTable.Status == 0)
                         {
                             MyMessageBox typeOfCustomerAnnouncement = new MyMessageBox("Bạn muốn order cho khách mới?", true);
@@ -77,6 +81,19 @@ namespace QuanLyNhaHang.ViewModel
                                 mess = "Bàn hiện đang được sử dụng! Hãy chọn bàn khác";
                                 return;
                             }
+                        }
+                        if (_selectedIngredientsName.Count > 0)
+                        {
+                            tennl += $"{_selectedIngredientsName[0]}";
+                            if (_selectedIngredientsName.Count > 1)
+                            {
+                                for (int i = 1; i < _selectedIngredientsName.Count; i++)
+                                {
+                                    tennl += $" , {_selectedIngredientsName[i]}";
+                                }
+                            }
+                            mess = $"Không đủ nguyên liệu ({tennl}). Hãy nhập thêm!";
+                            return;
                         }
                         foreach (SelectedMenuItem orderDish in SelectedItems)
                         {
@@ -110,6 +127,7 @@ namespace QuanLyNhaHang.ViewModel
                 {
                     MyMessageBox ms = new MyMessageBox(mess);
                     ms.Show();
+                    _selectedIngredientsName.Clear();
                 }
             });
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
@@ -121,6 +139,10 @@ namespace QuanLyNhaHang.ViewModel
         private ObservableCollection<MenuItem> _menuItems;
         private ObservableCollection<SelectedMenuItem> _selectedItems;
         private ObservableCollection<Table> _tables;
+        private ObservableCollection<ChiTietMon> _ingredients;
+        private ObservableCollection<ChiTietMon> _sumIngredients;
+        private ObservableCollection<Models.Kho> _kho;
+        private ObservableCollection<string> _selectedIngredientsName;
         private Table _selectedTable;
         private ObservableCollection<string> _comboBox_2Items;
         private CollectionViewSource _menuItemsView;
@@ -135,6 +157,8 @@ namespace QuanLyNhaHang.ViewModel
         public ObservableCollection<MenuItem> MenuItems { get { return _menuItems; } set { _menuItems = value; OnPropertyChanged(); } }
         public ObservableCollection<SelectedMenuItem> SelectedItems { get { return _selectedItems; } set { _selectedItems = value; OnPropertyChanged(); } }
         public ObservableCollection<Table> Tables { get { return _tables; } set { _tables = value;  OnPropertyChanged(); } }
+        public ObservableCollection<ChiTietMon> Ingredients { get { return _ingredients; } set { _ingredients = value; OnPropertyChanged(); } }
+        public ObservableCollection<Models.Kho> Kho { get { return _kho; } set { _kho = value; OnPropertyChanged(); } }
         public ObservableCollection<string> ComboBox_2Items { get { return _comboBox_2Items; } set { _comboBox_2Items = value; } }
         public string MyComboboxSelection { get { return myComboboxSelection; } set { myComboboxSelection = value; OnPropertyChanged(); }}
         public Table SelectedTable { get { return _selectedTable; } set { _selectedTable = value; OnPropertyChanged(); } }
@@ -292,7 +316,43 @@ namespace QuanLyNhaHang.ViewModel
         {
             return LoginWindowVM.MaNV;
         }
+        private void HasEnoughIngredients()
+        {
+            Models.Kho x = null;
+            _sumIngredients = MenuDP.Flag.getSumIngredients(SelectedItems);
+            foreach (SelectedMenuItem item in SelectedItems)
+            {
+                foreach (ChiTietMon ctm in _sumIngredients)
+                {
+                    x = getKhoItem(ctm.TenNL);
+                    if (x.TonDu - ctm.SoLuong * item.Quantity < 0)
+                    {
+                        if(!_selectedIngredientsName.Contains(ctm.TenNL))
+                        {
+                            _selectedIngredientsName.Add(ctm.TenNL);
+                        }
+                    }
+                }
+            }
+        }
 
+        private Models.Kho getKhoItem(string tensp) {
+            Models.Kho item = null;
+            try
+            {
+                foreach (Models.Kho x in Kho)
+                {
+                    if (String.Compare(x.TenSanPham, tensp) == 0)
+                    {
+                        item = x; break;
+                    }
+                }
+            } catch(Exception ex)
+            {
+                
+            }
+            return item;
+        }
         #endregion
     }
 }
