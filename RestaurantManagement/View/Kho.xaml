@@ -87,7 +87,7 @@
                                                 Header="Đơn vị" />
                                 <GridViewColumn DisplayMemberBinding="{Binding DonGia}"
                                                 Width="190"
-                                                Header="Giá nhập(VNĐ)" />
+                                                Header="Đơn giá(VNĐ)" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -193,7 +193,7 @@
                                       Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBoxItem>
-                                    Gam
+                                    Kg
                                 </ComboBoxItem>
                                 <ComboBoxItem>
                                     Chai
@@ -202,7 +202,7 @@
                                     Quả
                                 </ComboBoxItem>
                                 <ComboBoxItem>
-                                    Túi
+                                    Gói
                                 </ComboBoxItem>
                                 <ComboBoxItem>
                                     Con
@@ -250,7 +250,7 @@
                                     Margin="10 5 5 10"
                                     Foreground="White"
                                     FontSize="16"
-                                    FontFamily="Comfortaa Light"
+                                    FontFamily="Comfortaa"
                                     BorderThickness="0"
                                     Cursor="Hand"
                                     Content="Nhập">
@@ -262,7 +262,7 @@
                                     Margin="5 5 5 10"
                                     Foreground="White"
                                     FontSize="16"
-                                    FontFamily="Comfortaa Light"
+                                    FontFamily="Comfortaa"
                                     BorderThickness="0"
                                     Cursor="Hand"
                                     Content="Sửa">
