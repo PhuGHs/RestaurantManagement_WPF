@@ -116,6 +116,7 @@
                               Margin="15,59,15,0"
                               ItemsSource="{Binding ListTime}"
                               Text="{Binding TimeSelected}"
+                              SelectedIndex="{Binding TimeIndex, Mode=TwoWay}"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
                               VerticalAlignment="Top"/>
 

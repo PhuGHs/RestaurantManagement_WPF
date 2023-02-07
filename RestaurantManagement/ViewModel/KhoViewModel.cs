@@ -45,26 +45,22 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
                 if (!String.IsNullOrEmpty(TimeSelected))
                 {
-                    foreach (NhapKho item in ListIn)
-                    {
-                        if (item.NgayNhap.ToString() == TimeSelected)
-                        {
-                            ID = item.MaNhap;
-                            Name = item.TenSP;
-                            Count = item.SoLuong;
-                            Unit = item.DonVi;
-                            Value = item.DonGia;
-                            DateIn = item.NgayNhap;
-                            Suplier = item.NguonNhap;
-                            SuplierInfo = item.LienLac;
+                    ID = ListIn[TimeIndex].MaNhap;
+                    Name = ListIn[TimeIndex].TenSP;
+                    Count = ListIn[TimeIndex].SoLuong;
+                    Unit = ListIn[TimeIndex].DonVi;
+                    Value = ListIn[TimeIndex].DonGia;
+                    DateIn = ListIn[TimeIndex].NgayNhap;
+                    Suplier = ListIn[TimeIndex].NguonNhap;
+                    SuplierInfo = ListIn[TimeIndex].LienLac;
 
-                            IDBeforeEdit = ID;
-                            NameBeforeEdit = Name;
-                        }
-                    }
+                    IDBeforeEdit = ID;
+                    NameBeforeEdit = Name;
                 }
             } 
         }
+        private int _TimeIndex;
+        public int TimeIndex { get => _TimeIndex; set { _TimeIndex = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _ListTime;
         public ObservableCollection<string> ListTime { get => _ListTime; set { _ListTime = value; OnPropertyChanged(); } }
 
@@ -343,7 +339,7 @@ namespace QuanLyNhaHang.ViewModel
             {
                 OpenConnect();
 
-                string strQuery = "SELECT * FROM KHO WHERE (DonVi = N'Kg' AND TonDu <= 1) OR (DonVi != N'Gam' AND TonDu <= 5)";
+                string strQuery = "SELECT * FROM KHO WHERE (DonVi = N'Kg' AND TonDu <= 1) OR (DonVi != N'Kg' AND TonDu <= 5)";
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
