@@ -116,6 +116,8 @@ namespace QuanLyNhaHang.ViewModel
                         SelectedItems.Clear();
                         DecSubtotal = 0;
                         StrSubtotal = "0 VND";
+                        _selectedIngredientsName.Clear();
+                        _sumIngredients.Clear();
                         Tables = MenuDP.Flag.GetTables();
                     }
                     else if (SelectedTable == null)
@@ -132,8 +134,6 @@ namespace QuanLyNhaHang.ViewModel
                 {
                     MyMessageBox ms = new MyMessageBox(mess);
                     ms.Show();
-                    _selectedIngredientsName.Clear();
-                    _sumIngredients.Clear();
                 }
             });
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
