@@ -47,7 +47,7 @@
                     <TextBox materialDesign:HintAssist.Hint="Tìm kiếm tên món"
                              x:Name="FilterBox"
                               Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"
-                             FontSize="24"
+                             FontSize="18"
                              Foreground="#DD000000"
                              FontFamily="Comfortaa"
                              AllowDrop="True"
@@ -63,8 +63,7 @@
                               FontSize="14"
                               SelectedIndex="1"
                               x:Name="Filterbox"
-                              SelectedItem="{Binding SelectedItemFilter}" SelectionChanged="Filterbox_SelectionChanged"
-                           >
+                              SelectedItem="{Binding SelectedItemFilter}" SelectionChanged="Filterbox_SelectionChanged">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding CheckItemFilterCM}"
@@ -104,7 +103,6 @@
                     <DatePicker Height="30"
                                 Width="130"
                                 FontSize="15"
-                             
                                 Margin="10 0 0 0"
                                 Padding="0,10,10,0"
                                 Visibility="Visible"
@@ -127,16 +125,9 @@
                             FontWeight="Bold"
                             Margin="-150,0,0,0"
                             Padding="0"
+                            Content="Xuất file Excel"
                             materialDesign:ButtonAssist.CornerRadius="8"
                             Command="{Binding ExportFileCM}" Background="#FF2DA356">
-                        <StackPanel Orientation="Horizontal">
-                            <Label  Content="Xuất file Excel"
-                                        Foreground="Black" 
-                                        />
-                            <materialDesign:PackIcon Kind="FileExport"
-                                                         Width="25"
-                                                         Height="23" />
-                        </StackPanel>
                     </Button>
 
                 </StackPanel>
@@ -144,7 +135,7 @@
         </StackPanel>
 
         <StackPanel  Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Left" Width="1060" Background="#FFF7F7F7">
-            <Border Background="#EEEE"
+            <Border Background="White"
                     CornerRadius="20"
                     Grid.Column="1"
                     Margin="10" Width="1051">
@@ -155,61 +146,61 @@
                        Height="551"
                        ItemsSource="{Binding ListProduct, UpdateSourceTrigger=PropertyChanged}"
                        HorizontalContentAlignment="Stretch" Foreground="#DD080303" BorderBrush="{x:Null}" Background="#FFF1F0F0" Width="1060" d:ItemsSource="{d:SampleData ItemCount=5}" IsSynchronizedWithCurrentItem="False">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Mã đơn"
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Mã đơn"
                                         Width="130">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock  Text="{Binding SoHD}"
-                                                FontSize="18"
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock  Text="{Binding SoHD}"
+                                                FontSize="16"
                                                
                                                 Margin="10,0,0,0" />
 
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Tên sản phẩm"
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Tên sản phẩm"
                                         Width="300">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock  Text="{Binding TenMon}"
-                                                FontSize="18"
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock  Text="{Binding TenMon}"
+                                                FontSize="16"
                                                 Margin="10,0,0,0" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Số lượng"
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Số lượng"
                                         Width="200">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock  Text="{Binding SoLuong}"
-                                                FontSize="18"
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock  Text="{Binding SoLuong}"
+                                                FontSize="16"
                                                 Margin="20,0,0,0" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Tổng giá"
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Thành tiền"
                                         Width="200">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock  Text="{Binding TriGia}"
-                                                FontSize="18"
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock  Text="{Binding TriGia}"
+                                                FontSize="16"
                                                 Margin="10,0,0,0" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
 
-                        <GridViewColumn Header="Ngày nhập"
+                                <GridViewColumn Header="Ngày nhập"
                                         Width="200">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock  Text="{Binding ngayHD, StringFormat=dd/MM/yyyy HH:mm:ss}"
-                                                FontSize="18"
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock  Text="{Binding ngayHD, StringFormat=dd/MM/yyyy HH:mm:ss}"
+                                                FontSize="16"
                                                 Margin="10,0,0,0" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Header=""
                                         Width="200">
                                     <GridViewColumn.CellTemplate>
@@ -221,23 +212,10 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                             </GridView>
-                </ListView.View>
-            </ListView>
+                        </ListView.View>
+                    </ListView>
                 </ScrollViewer>
             </Border>
-            <Grid>
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Right"
-                            Margin="0,-100,100,0">
-                    <Label Content="Kết quả: "
-                           FontSize="15" />
-                    <Label Content="{Binding ListProduct.Count}"
-                           x:Name="result"
-                           FontSize="15"/>
-
-                </StackPanel>
-
-            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>

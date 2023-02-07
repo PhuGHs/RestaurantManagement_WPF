@@ -226,7 +226,6 @@ namespace QuanLyNhaHang.ViewModel
                 ListOrder.Add(new Bep(maDM, maMon, soLuong, soBan, ngayCB, "XONG", tenMon));
                 //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
             }
-            MainViewModel.NumDishesNeedToServe = ListOrder.Count();
             reader.Close();
 
             CloseConnect();

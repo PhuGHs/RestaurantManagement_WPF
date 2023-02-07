@@ -59,11 +59,19 @@ namespace QuanLyNhaHang.ViewModel
                 p.Close();
             });
             HeaderViewModel = new HeaderViewModel();
+            BepViewModel = new BepViewModel();
+            NumDishesNeedToServe = BepViewModel.ListOrder.Count();
         }
         CaiDatViewModel caiDatViewModel;
         HeaderViewModel headerViewModel;
+        BepViewModel bepViewModel;
         Navigator navigator;
-        public static int NumDishesNeedToServe = 0;
+        private int _NumDishesNeedToServe;
+        public int NumDishesNeedToServe
+        {
+            get { return _NumDishesNeedToServe; }
+            set { _NumDishesNeedToServe = value; OnPropertyChanged(); }
+        }
         public string MaNV;
         public ICommand LoadWindowCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
@@ -77,6 +85,11 @@ namespace QuanLyNhaHang.ViewModel
         {
             get { return headerViewModel; }
             set { headerViewModel = value; OnPropertyChanged(); }
+        }
+        public BepViewModel BepViewModel
+        {
+            get { return bepViewModel; }
+            set { bepViewModel = value; OnPropertyChanged(); }
         }
 
         public Navigator Navigator
