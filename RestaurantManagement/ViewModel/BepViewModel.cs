@@ -104,7 +104,7 @@ namespace QuanLyNhaHang.ViewModel
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
                 {
-                    MyMessageBox msb = new MyMessageBox("Đã chễ biến xong!");
+                    MyMessageBox msb = new MyMessageBox("Đã chế biến xong!");
                     msb.ShowDialog();
                 }
                 else

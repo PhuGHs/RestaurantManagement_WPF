@@ -86,8 +86,8 @@
                                                 Width="130"
                                                 Header="Đơn vị" />
                                 <GridViewColumn DisplayMemberBinding="{Binding DonGia}"
-                                                Width="180"
-                                                Header="Đơn giá (VNĐ)" />
+                                                Width="190"
+                                                Header="Giá nhập(VNĐ)" />
                             </GridView>
                         </ListView.View>
                     </ListView>

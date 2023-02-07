@@ -387,6 +387,7 @@ namespace QuanLyNhaHang.ViewModel
         }
         private bool isNumber(string s)
         {
+            if (s == null) return false;
             for (int i = 0; i < s.Length; i++)
             {
                 if (s[i] < 48 || s[i] > 57) return false;
