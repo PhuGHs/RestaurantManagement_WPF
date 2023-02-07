@@ -358,7 +358,7 @@ namespace QuanLyNhaHang.ViewModel
                 while (reader.Read())
                 {
                     ten.Add(reader.GetString(0));
-                    soluong.Add(reader.GetInt16(1).ToString());
+                    soluong.Add(reader.GetDouble(1).ToString());
                     donvi.Add(reader.GetString(2));
                 }
 
