@@ -71,6 +71,7 @@ namespace QuanLyNhaHang.ViewModel
                 {
                     if (SelectedTable != null)
                     {
+                        HasEnoughIngredients();
                         if (SelectedTable.Status == 0)
                         {
                             MyMessageBox typeOfCustomerAnnouncement = new MyMessageBox("Bạn muốn order cho khách mới?", true);
@@ -81,8 +82,7 @@ namespace QuanLyNhaHang.ViewModel
                                 return;
                             }
                         }
-                        HasEnoughIngredients();
-                        if (_sumIngredients == null)
+                        if (_sumIngredients.Count == 0)
                         {
                             mess = "Hãy thêm thông tin nguyên liệu cho món!";
                             return;
@@ -133,6 +133,7 @@ namespace QuanLyNhaHang.ViewModel
                     MyMessageBox ms = new MyMessageBox(mess);
                     ms.Show();
                     _selectedIngredientsName.Clear();
+                    _sumIngredients.Clear();
                 }
             });
             _selectedItems = new ObservableCollection<SelectedMenuItem>();
