@@ -241,7 +241,7 @@ namespace QuanLyNhaHang.DataProvider
                 DataTable dt = LoadInitialData(fullQuery);
                 foreach(DataRow dr in dt.Rows)
                 {
-                    ctm.Add(new ChiTietMon(dr["TenNL"].ToString(), Convert.ToInt32(dr["Tong"])));
+                    ctm.Add(new ChiTietMon(dr["TenNL"].ToString(), (float)Convert.ToDouble(dr["Tong"])));
                 }
             } finally
             {
@@ -258,7 +258,7 @@ namespace QuanLyNhaHang.DataProvider
                 DataTable dt = LoadInitialData($"Select * from CHITIETMON where MaMon = '{MaMon}'");
                 foreach(DataRow dr in dt.Rows)
                 {
-                    Ingredients.Add(new ChiTietMon(dr["TenNL"].ToString(), dr["MaMon"].ToString(), Convert.ToInt32(dr["SoLuong"])));
+                    Ingredients.Add(new ChiTietMon(dr["TenNL"].ToString(), dr["MaMon"].ToString(), (float)Convert.ToDouble(dr["SoLuong"])));
                 }
             }
             finally
