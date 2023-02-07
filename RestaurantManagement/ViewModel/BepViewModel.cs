@@ -114,7 +114,7 @@ namespace QuanLyNhaHang.ViewModel
                     msb.ShowDialog();
                 }
                 List<string> listTenSP = new List<string>();
-                List<int> listSoLuong = new List<int>();
+                List<float> listSoLuong = new List<float>();
                 cmd.CommandText = "SELECT TenNL, SoLuong FROM CHITIETMON WHERE MaMon = '" + DoneSelected.MaMon + "'";
 
                 listTenSP.Clear();
@@ -123,7 +123,7 @@ namespace QuanLyNhaHang.ViewModel
                 while (reader.Read())
                 {
                     listTenSP.Add(reader.GetString(0));
-                    listSoLuong.Add(reader.GetInt16(1));
+                    listSoLuong.Add((float)reader.GetDouble(1));
                 }
                 reader.Close();
                 for (int i = 0; i < listTenSP.Count(); i++)
