@@ -9,6 +9,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         x:Name="Window"
+        TextElement.FontFamily="Comfortaa Light"
         DataContext="{StaticResource MainVM}"
         Title="Thông tin cá nhân tài khoản" Height="700" Width="800" WindowStyle="None" WindowStartupLocation="CenterScreen">
     <Grid Margin="5" Background="White">

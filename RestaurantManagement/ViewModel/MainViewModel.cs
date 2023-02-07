@@ -63,6 +63,7 @@ namespace QuanLyNhaHang.ViewModel
         CaiDatViewModel caiDatViewModel;
         HeaderViewModel headerViewModel;
         Navigator navigator;
+        public static int NumDishesNeedToServe = 0;
         public string MaNV;
         public ICommand LoadWindowCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
