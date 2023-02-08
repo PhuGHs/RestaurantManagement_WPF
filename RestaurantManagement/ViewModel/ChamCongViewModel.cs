@@ -365,6 +365,30 @@ namespace QuanLyNhaHang.ViewModel
                     }
                 }    
             }
+            reader.Close();
+
+            cmd = new SqlCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "SELECT MaNV, NgayVaoLam FROM NHANVIEN ORDER BY MaNV ASC";
+            cmd.Connection = sqlCon;
+            reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                string maNV = reader.GetString(0);
+                string dateIn = reader.GetDateTime(1).ToShortDateString();
+                foreach(ChamCong nv in ListCheck)
+                {
+                    if (nv.MaNV == maNV)
+                    {
+                        if (Convert.ToDateTime(dateIn) > Convert.ToDateTime(DaySelected))
+                        {
+                            nv.Set(DaySelected, "0", "Chưa vào làm");
+                        }    
+                    }    
+                }    
+            }
+            reader.Close();
 
             CloseConnect();
         }
