@@ -185,15 +185,6 @@
                                     <Button Style="{StaticResource HeaderButton}" Margin="30 0 20 0" BorderThickness="0">
                                         <fa:IconImage Icon="Bell" Height="25" Margin="0,0,-4,0" />
                                     </Button>
-                                    <Grid Margin="47,28,10,14">
-                                        <Border Background="Red"
-                                                CornerRadius="9">
-                                            <Label Content="{Binding NumDishesNeedToServe, UpdateSourceTrigger=PropertyChanged}"
-                                                   Foreground="White"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Top" Margin="0,-2,0,0"/>
-                                        </Border>
-                                    </Grid>
                                 </Grid>
 
                                 <Button Style="{StaticResource HeaderProfileButton}" Click="ShowUser_Click">

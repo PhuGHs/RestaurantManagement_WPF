@@ -121,7 +121,7 @@
                         <GridView>
                             <GridViewColumn DisplayMemberBinding="{Binding SoHD}"
                                             Width="200"
-                                            Header="Mã đơn" />
+                                            Header="Số hóa đơn" />
                             <GridViewColumn DisplayMemberBinding="{Binding TenMon}"
                                             Width="280"
                                             Header="Tên sản phẩm" />

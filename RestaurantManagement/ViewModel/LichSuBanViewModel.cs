@@ -183,17 +183,17 @@ namespace QuanLyNhaHang.ViewModel
                     Worksheet ws = (Worksheet)app.ActiveSheet;
 
 
-                    ws.Cells[1, 1] = "Mã đơn";
+                    ws.Cells[1, 1] = "Số hóa đơn";
                     ws.Cells[1, 2] = "Tên sản phẩm";
                     ws.Cells[1, 3] = "Số lượng";
-                    ws.Cells[1, 4] = "Tổng giá";
+                    ws.Cells[1, 4] = "Thành tiền(VNĐ)";
                     ws.Cells[1, 5] = "Ngày nhập";
 
                     int i2 = 2;
                     foreach (var item in ListProduct)
                     {
 
-                        ws.Cells[i2, 1] = item.MaMon;
+                        ws.Cells[i2, 1] = item.SoHD;
                         ws.Cells[i2, 2] = item.TenMon;
                         ws.Cells[i2, 3] = item.SoLuong;
                         ws.Cells[i2, 4] = item.TriGia;
