@@ -11,6 +11,7 @@
              xmlns:vm="clr-namespace:QuanLyNhaHang.ViewModel"
              d:DesignHeight="660" d:DesignWidth="1060"
              Background="Transparent"
+             TextElement.FontFamily="Comfortaa"
              x:Name="page">
     <UserControl.DataContext>
         <vm:MenuViewModel x:Name="vm"/>
@@ -302,7 +303,7 @@
                                     <Button Background="#1C3879" 
                                             BorderBrush="#1C3879" 
                                             BorderThickness="1"
-                                            Width="150"
+                                            Width="155"
                                             Command="{Binding ClearAllSelectedDishes}"
                                            >
                                         <TextBlock 
@@ -314,7 +315,7 @@
                                     <Button Command="{Binding Inform_Chef_Of_OrderedDishes}"
                                             Background="#1C3879" 
                                             BorderThickness="0" 
-                                            Width="150" 
+                                            Width="155" 
                                             Margin="50 0 0 0">
                                         <TextBlock Foreground="White" 
                                                    Text="Báo chế biến" 

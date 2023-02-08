@@ -32,8 +32,8 @@ namespace QuanLyNhaHang.ViewModel
         private ObservableCollection<string> months = new ObservableCollection<string>();
         private ObservableCollection<string> years = new ObservableCollection<string>();
 
-        private string selectedMonth = "12";
-        private string selectedYear = "2022";
+        private string selectedMonth = DateTime.Now.Month.ToString();
+        private string selectedYear = DateTime.Now.Year.ToString();
         private string[] labels;
         private double dec_sumofprofit = 0;
         private string sumofprofit = "0 VND";
