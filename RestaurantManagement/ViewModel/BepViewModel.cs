@@ -60,9 +60,6 @@ namespace QuanLyNhaHang.ViewModel
         {
             get
             {
-               if(Convert.ToInt32(_NumberOfDishesNeedServing) > 9) {
-                    return "9+";
-               }
                return _NumberOfDishesNeedServing;
             }
             set

@@ -59,6 +59,8 @@ namespace QuanLyNhaHang.ViewModel
                 p.Close();
             });
             HeaderViewModel = new HeaderViewModel();
+            bep = new BepViewModel();
+            NumberOfDishesNeedServing = bep.NumberOfDishesNeedServing;
             Mediator.Instance.Subscribe("PropertyBChanged", (obj) =>
             {
                 NumberOfDishesNeedServing = (string)obj;
@@ -67,11 +69,18 @@ namespace QuanLyNhaHang.ViewModel
         CaiDatViewModel caiDatViewModel;
         HeaderViewModel headerViewModel;
         Navigator navigator;
-        string _NumberOfDishesNeedServing = "1";
+        BepViewModel bep;
+        string _NumberOfDishesNeedServing;
         public string MaNV;
         public string NumberOfDishesNeedServing
         {
-            get { return _NumberOfDishesNeedServing; }
+            get {
+                if (Convert.ToInt32(_NumberOfDishesNeedServing) > 9)
+                {
+                    return "9+";
+                }
+                return _NumberOfDishesNeedServing;
+            }
             set
             {
                 _NumberOfDishesNeedServing = value;
