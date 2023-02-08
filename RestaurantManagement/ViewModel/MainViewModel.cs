@@ -58,11 +58,6 @@ namespace QuanLyNhaHang.ViewModel
                 System.Windows.Forms.Application.Restart();
                 p.Close();
             });
-
-            Test = new RelayCommand<object>((p) => true, (p) =>
-            {
-                Random();
-            });
             HeaderViewModel = new HeaderViewModel();
             Mediator.Instance.Subscribe("PropertyBChanged", (obj) =>
             {
@@ -83,19 +78,8 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
             }
         }
-        public void Random()
-        {
-            int i = 0;
-            while(i < 100000)
-            {
-                NumberOfDishesNeedServing = i.ToString();
-                i++;
-                Thread.Sleep(1000);
-            }
-        }
         public ICommand LoadWindowCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
-        public ICommand Test { get; set; }
         public CaiDatViewModel CaiDatViewModel
         {
             get { return caiDatViewModel; }
@@ -113,11 +97,5 @@ namespace QuanLyNhaHang.ViewModel
             get { return navigator; }
             set { navigator = value; OnPropertyChanged(); }
         }
-        //public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(MainViewModel));
-        //public string Text
-        //{
-        //    get { return (string)GetValue(TextProperty); }
-        //    set { SetValue(TextProperty, value); }
-        //}
     }
 }
