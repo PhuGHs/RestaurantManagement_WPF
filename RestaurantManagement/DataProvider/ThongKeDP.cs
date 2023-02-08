@@ -42,7 +42,7 @@ namespace QuanLyNhaHang.DataProvider
                 {
                     try
                     {
-                        d = reader.GetSqlMoney(0).ToDouble();
+                        d = reader.GetDouble(0);
                     }
                     catch
                     {
@@ -75,7 +75,7 @@ namespace QuanLyNhaHang.DataProvider
                 {
                     try
                     {
-                        d = reader.GetSqlMoney(0).ToDouble();
+                        d = reader.GetDouble(0);
                     }
                     catch
                     {
