@@ -13,14 +13,12 @@ namespace QuanLyNhaHang.ViewModel
     public class HeaderViewModel : BaseViewModel
     {
         #region commands
-            public INavigator Navigator { get; set; }
             public ICommand CloseWindowCommand { get; set; }
             public ICommand MinimizeWindowCommand { get; set; }
         #endregion
 
         public HeaderViewModel()
         {
-            Navigator = new Navigator();
             CloseWindowCommand = new RelayCommand<UserControl>((p) => { return p == null ? false : true; }, (p) => { FrameworkElement window = GetWindowParent(p);
                 var windows = window as Window;
                 if(windows != null)

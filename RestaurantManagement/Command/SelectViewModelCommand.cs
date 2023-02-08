@@ -18,11 +18,20 @@ namespace QuanLyNhaHang.Command
 
         public SelectViewModelCommand(INavigator navigator, INavigator navigator1) // Constructor
         {
-            //start up page
-            navigator.CurrentViewModel = new MenuViewModel();
-            navigator1.CurrentTitle = "Menu";
-            _navigator = navigator;
-            _navigator1 = navigator1;
+            if (navigator.AdminView == System.Windows.Visibility.Visible)
+            {
+                navigator.CurrentViewModel = new MenuAdminViewModel();
+                navigator1.CurrentTitle = "Menu Admin";
+                _navigator = navigator;
+                _navigator1 = navigator1;
+            }
+            else
+            {
+                navigator.CurrentViewModel = new MenuViewModel();
+                navigator1.CurrentTitle = "Menu";
+                _navigator = navigator;
+                _navigator1 = navigator1;
+            }
         }
 
         public bool CanExecute(object? parameter)
@@ -44,6 +53,10 @@ namespace QuanLyNhaHang.Command
                     case TypeOfView.Menu:
                         _navigator1.CurrentTitle = "Menu";
                         _navigator.CurrentViewModel = new MenuViewModel();
+                        break;
+                    case TypeOfView.MenuAdmin:
+                        _navigator1.CurrentTitle = "Menu Admin";
+                        _navigator.CurrentViewModel = new MenuAdminViewModel();
                         break;
                     case TypeOfView.LichSuBan:
                         _navigator1.CurrentTitle = "Lịch sử bàn";

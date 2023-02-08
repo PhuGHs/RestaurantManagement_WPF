@@ -6,7 +6,7 @@
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" 
              xmlns:nav="clr-namespace:QuanLyNhaHang.State.Navigator" d:DataContext="{d:DesignInstance Type=nav:Navigator}"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="800"
+             d:DesignHeight="450" d:DesignWidth="800"
              >
              
     <Grid>
@@ -16,6 +16,7 @@
                 <Setter Property="Foreground" Value="#707db2"/>
                 <Setter Property="Margin" Value="0 0 0 5"/>
                 <Setter Property="Height" Value="45"/>
+                <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                 <Setter Property="Tag" Value="#6673b7"/>
                 <Setter Property="Template">
@@ -92,16 +93,12 @@
             </Style>
         </Grid.Resources>
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="50" />
-            </Grid.RowDefinitions>
+            
             <StackPanel>
                 <Separator Height="0.8" Margin="20 30" Background="#46558a"/>
                 <!--sidebarRadioButton-->
                 <!--Menu-->
-                <RadioButton IsChecked="True"  Style="{StaticResource sidebarRadioButton}" Command="{Binding SelectViewModelCommand}" CommandParameter="{x:Static nav:TypeOfView.Menu}">
+                <RadioButton IsChecked="True"  Style="{StaticResource sidebarRadioButton}" Command="{Binding SelectViewModelCommand}" CommandParameter="{x:Static nav:TypeOfView.MenuAdmin}">
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="BowlFood" Style="{StaticResource sidebarRadioButtonIcon}" />
                         <TextBlock Text="Menu" Style="{StaticResource sideBarRadioButtonText}" />
@@ -119,6 +116,13 @@
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="History" Style="{StaticResource sidebarRadioButtonIcon}" />
                         <TextBlock Text="Lịch Sử Bàn" Style="{StaticResource sideBarRadioButtonText}" />
+                    </StackPanel>
+                </RadioButton>
+                <!--Bếp-->
+                <RadioButton Style="{StaticResource sidebarRadioButton}" Command="{Binding SelectViewModelCommand}" CommandParameter="{x:Static nav:TypeOfView.Bep}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="KitchenSet" Style="{StaticResource sidebarRadioButtonIcon}" />
+                        <TextBlock Text="Bếp" Style="{StaticResource sideBarRadioButtonText}" />
                     </StackPanel>
                 </RadioButton>
                 <!--storage-->
@@ -140,13 +144,6 @@
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="ChartLine" Style="{StaticResource sidebarRadioButtonIcon}" />
                         <TextBlock Text="Thống Kê" Style="{StaticResource sideBarRadioButtonText}" />
-                    </StackPanel>
-                </RadioButton>
-                <!--Bếp-->
-                <RadioButton Style="{StaticResource sidebarRadioButton}" Command="{Binding SelectViewModelCommand}" CommandParameter="{x:Static nav:TypeOfView.Bep}">
-                    <StackPanel Orientation="Horizontal">
-                        <fa:IconImage Icon="KitchenSet" Style="{StaticResource sidebarRadioButtonIcon}" />
-                        <TextBlock Text="Bếp" Style="{StaticResource sideBarRadioButtonText}" />
                     </StackPanel>
                 </RadioButton>
             </StackPanel>
