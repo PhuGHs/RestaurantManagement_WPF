@@ -34,7 +34,7 @@ namespace QuanLyNhaHang.DataProvider
                 cmd.Connection = SqlCon;
                 cmd.CommandType = CommandType.Text;
 
-                cmd.CommandText = "Select SUM(TriGia) from HOADON where CONVERT(date, NgayHD, 103) = @nghd";
+                cmd.CommandText = "Select SUM(TriGia) from HOADON where CONVERT(date, NgayHD, 103) = @nghd and TrangThai = N'Đã trả'";
                 cmd.Parameters.AddWithValue("@nghd", day);
 
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -66,7 +66,7 @@ namespace QuanLyNhaHang.DataProvider
                 cmd.Connection = SqlCon;
                 cmd.CommandType = CommandType.Text;
 
-                cmd.CommandText = "Select SUM(TriGia) from HOADON where MONTH(CONVERT(date, NgayHD, 103)) = @month and YEAR(CONVERT(date, NgayHD, 103)) = @year";
+                cmd.CommandText = "Select SUM(TriGia) from HOADON where MONTH(CONVERT(date, NgayHD, 103)) = @month and YEAR(CONVERT(date, NgayHD, 103)) = @year and TrangThai = N'Đã trả'";
                 cmd.Parameters.AddWithValue("@month", month);
                 cmd.Parameters.AddWithValue("@year", year);
 
