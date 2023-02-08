@@ -291,7 +291,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 if (Selected.TonDu > 0)
                 {
-                    MyMessageBox yn = new MyMessageBox("Sản phẩm này đang còn trong kho!\n         Bạn có chắc chắn xóa?", true);
+                    MyMessageBox yn = new MyMessageBox("Sản phẩm này đang còn trong kho!\n   Bạn có chắc chắn xóa?", true);
                     yn.ShowDialog();
                     if (yn.ACCEPT())
                     {
@@ -426,6 +426,7 @@ namespace QuanLyNhaHang.ViewModel
                                 msb.ShowDialog();
                             }
                         }
+                        ListViewDisplay("SELECT * FROM KHO");
                     }
                     else
                         ListViewDisplay("SELECT * FROM KHO");
