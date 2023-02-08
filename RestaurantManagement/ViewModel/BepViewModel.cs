@@ -55,6 +55,23 @@ namespace QuanLyNhaHang.ViewModel
                 OnPropertyChanged();
             }
         }
+        private string _NumberOfDishesNeedServing;
+        public string NumberOfDishesNeedServing
+        {
+            get
+            {
+               if(Convert.ToInt32(_NumberOfDishesNeedServing) > 9) {
+                    return "9+";
+               }
+               return _NumberOfDishesNeedServing;
+            }
+            set
+            {
+                _NumberOfDishesNeedServing = value;
+                OnPropertyChanged("PropertyB");
+                Mediator.Instance.NotifyColleagues("PropertyBChanged", value);
+            }
+        }
 
         private string strCon = ConfigurationManager.ConnectionStrings["QuanLyNhaHang"].ConnectionString;
         private SqlConnection sqlCon = null;
@@ -133,7 +150,7 @@ namespace QuanLyNhaHang.ViewModel
                 }
                 GetListDone();
                 GetListOrder();
-
+                NumberOfDishesNeedServing = ListOrder.Count.ToString();
                 CloseConnect();
             });
 
@@ -167,7 +184,7 @@ namespace QuanLyNhaHang.ViewModel
 
                 GetListOrder();
                 GetListDone();
-
+                NumberOfDishesNeedServing = ListOrder.Count.ToString();
                 CloseConnect();
             });
 
@@ -227,7 +244,7 @@ namespace QuanLyNhaHang.ViewModel
                 //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListDone);
             }
             reader.Close();
-
+            NumberOfDishesNeedServing = ListOrder.Count.ToString();
             CloseConnect();
         }
     }
