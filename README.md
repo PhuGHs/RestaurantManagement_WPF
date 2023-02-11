@@ -27,5 +27,5 @@ https://github.com/PhuGHs/RestaurantManagement_WPF.git
 ![image](https://user-images.githubusercontent.com/96371073/217537262-f229cd56-1896-4d2e-a5b2-94d298bae8cf.png)
 
 - Nhấn Ctrl + F5 để chạy chương trình
-- Đăng nhập lần đầu bằng tài khoản: admin và mật khẩu: admin
+- Đăng nhập lần đầu bằng tài khoản: admin và mật khẩu: 123456
 - Sau đó vào tab 'Nhân viên', thêm mới nhân viên cùng tài khoản để có thể đăng nhập bằng quyền nhân viên.
